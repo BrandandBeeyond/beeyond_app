@@ -5,20 +5,23 @@ import Profile from '../screens/Profile/Profile';
 import {scaleFontSize} from '../assets/styles/Scaling';
 import Cart from '../screens/Cart/Cart';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {
-  faArrowLeft,
-  faCartShopping,
-  faHome,
-  faList,
-} from '@fortawesome/free-solid-svg-icons';
+import {faArrowLeft} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import Products from '../screens/Products/Products';
 import Orders from '../screens/Orders/Orders';
-import {faClipboard} from '@fortawesome/free-regular-svg-icons';
-import {TouchableOpacity} from 'react-native';
+import {Text, TouchableOpacity, View} from 'react-native';
 import Login from '../screens/Login/Login';
 import LoginMobile from '../screens/Login/LoginMobile';
 import Otpscreen from '../screens/Otpscreen/Otpscreen';
+import HomeIcon from 'react-native-vector-icons/Feather';
+import ProductIcon from 'react-native-vector-icons/Ionicons';
+import CartIcon from 'react-native-vector-icons/Feather';
+import NotePadIcon from 'react-native-vector-icons/Feather';
+import SearchIcon from 'react-native-vector-icons/Feather';
+import {useCart} from '../context/CartContext';
+import {globalStyle} from '../assets/styles/globalStyle';
+import {CartStyle} from '../screens/Cart/Style';
+import { useNavigation } from '@react-navigation/native';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -33,21 +36,55 @@ const CustomBackButton = ({navigation}) => {
   );
 };
 
+const CustomHeaderIcons = () => {
+  const navigation = useNavigation();
+  const {cart} = useCart();
+
+  return (
+    <View
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        columnGap: 20,
+        marginRight: 15,
+      }}>
+      <TouchableOpacity>
+        <SearchIcon name="search" size={20} />
+      </TouchableOpacity>
+      <TouchableOpacity style={globalStyle.relative} onPress={()=>navigation.navigate(Routes.Cart)}>
+        <CartIcon name="shopping-cart" size={20} />
+        {cart.length > 0 && (
+          <View style={CartStyle.CountCart}>
+            <Text
+              style={{
+                color: '#fff',
+                fontSize: scaleFontSize(10),
+                fontWeight: 'bold',
+              }}>
+              {cart.length}
+            </Text>
+          </View>
+        )}
+      </TouchableOpacity>
+    </View>
+  );
+};
+
 export const BottomTabs = () => {
   return (
     <Tab.Navigator
       screenOptions={({route}) => ({
         tabBarIcon: ({color, size}) => {
           let iconName;
-          if (route.name === 'Home') iconName = faHome;
-          else if (route.name === 'Cart') iconName = faCartShopping;
-          else if (route.name === 'Products') iconName = faList;
-          else if (route.name === 'Orders') iconName = faClipboard;
-
-          const iconSize = 18;
-          return (
-            <FontAwesomeIcon icon={iconName} size={iconSize} color={color} />
-          );
+          if (route.name === 'Home') {
+            return <HomeIcon name="home" size={22} color={color} />;
+          } else if (route.name === 'Cart') {
+            return <CartIcon name="shopping-cart" size={22} color={color} />;
+          } else if (route.name === 'Products') {
+            return <ProductIcon name="grid-outline" size={22} color={color} />;
+          } else if (route.name === 'Orders') {
+            return <NotePadIcon name="clipboard" size={22} color={color} />;
+          }
         },
 
         tabBarActiveTintColor: '#f9b000',
@@ -63,18 +100,32 @@ export const BottomTabs = () => {
         tabBarIconStyle: {fontSize: 10, alignSelf: 'center'},
       })}>
       <Tab.Screen name="Home" component={Home} options={{header: () => null}} />
-      <Tab.Screen name="Products" component={Products} options={({navigation})=>({
-          headerTitleStyle:{fontSize:scaleFontSize(17)},
-          headerLeft:()=><CustomBackButton navigation={navigation}/>
-      })}/>
-      <Tab.Screen name="Orders" component={Orders} options={({navigation})=>({
-          headerTitleStyle:{fontSize:scaleFontSize(17)},
-          headerLeft:()=><CustomBackButton navigation={navigation}/>
-      })}/>
-      <Tab.Screen name="Cart" component={Cart} options={({navigation})=>({
-          headerTitleStyle:{fontSize:scaleFontSize(17)},
-          headerLeft:()=><CustomBackButton navigation={navigation}/>
-      })}/>
+      <Tab.Screen
+        name="Products"
+        component={Products}
+        options={({navigation}) => ({
+          headerTitleStyle: {fontSize: scaleFontSize(17)},
+          headerLeft: () => <CustomBackButton navigation={navigation} />,
+          headerRight: () => <CustomHeaderIcons />,
+        })}
+      />
+
+      <Tab.Screen
+        name="Orders"
+        component={Orders}
+        options={({navigation}) => ({
+          headerTitleStyle: {fontSize: scaleFontSize(17)},
+          headerLeft: () => <CustomBackButton navigation={navigation} />,
+        })}
+      />
+      <Tab.Screen
+        name="Cart"
+        component={Cart}
+        options={({navigation}) => ({
+          headerTitleStyle: {fontSize: scaleFontSize(17)},
+          headerLeft: () => <CustomBackButton navigation={navigation} />,
+        })}
+      />
     </Tab.Navigator>
   );
 };
@@ -96,6 +147,7 @@ export const MainNavigation = () => {
         options={({navigation}) => ({
           headerLeft: () => <CustomBackButton navigation={navigation} />,
           headerTitleStyle: {fontSize: scaleFontSize(17)},
+          headerRight: () => <Text>Hello</Text>,
         })}
       />
 
@@ -123,15 +175,44 @@ export const MainNavigation = () => {
         options={{headerTitleStyle: {fontSize: scaleFontSize(17)}}}
       />
 
-      <Stack.Screen name={Routes.Login} component={Login} options={{
-        headerTitleStyle:{fontSize:scaleFontSize(17)},headerStyle:{backgroundColor:'#f9b000',elevation:0,shadowOpacity:0}}
-      } />
-      <Stack.Screen name={Routes.Mobilelogin} component={LoginMobile} options={{headerTitle:()=>null,
-        headerTitleStyle:{fontSize:scaleFontSize(17)},headerStyle:{backgroundColor:'#f9b000',elevation:0,shadowOpacity:0}}
-      } />
-      <Stack.Screen name={Routes.OtpScreen} component={Otpscreen} options={{headerTitle:()=>null,
-        headerTitleStyle:{fontSize:scaleFontSize(17)},headerStyle:{backgroundColor:'#f9b000',elevation:0,shadowOpacity:0}}
-      } />
+      <Stack.Screen
+        name={Routes.Login}
+        component={Login}
+        options={{
+          headerTitleStyle: {fontSize: scaleFontSize(17)},
+          headerStyle: {
+            backgroundColor: '#f9b000',
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+        }}
+      />
+      <Stack.Screen
+        name={Routes.Mobilelogin}
+        component={LoginMobile}
+        options={{
+          headerTitle: () => null,
+          headerTitleStyle: {fontSize: scaleFontSize(17)},
+          headerStyle: {
+            backgroundColor: '#f9b000',
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+        }}
+      />
+      <Stack.Screen
+        name={Routes.OtpScreen}
+        component={Otpscreen}
+        options={{
+          headerTitle: () => null,
+          headerTitleStyle: {fontSize: scaleFontSize(17)},
+          headerStyle: {
+            backgroundColor: '#f9b000',
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+        }}
+      />
     </Stack.Navigator>
   );
 };

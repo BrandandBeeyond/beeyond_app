@@ -27,5 +27,6 @@ export const TopbarStyle = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     columnGap: 20,
+    marginRight: 8,
   },
 });

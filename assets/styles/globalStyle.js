@@ -13,7 +13,35 @@ export const globalStyle = StyleSheet.create({
     display: 'flex',
   },
   alignCenter: {
+    display: 'flex',
     alignItems: 'center',
+  },
+  textWhite: {
+    color: '#fff',
+  },
+  textSlate: {
+    color: '#575757',
+    fontWeight: '700',
+  },
+  drow: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  dcol: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  g2: {
+    display: 'flex',
+    gap: verticalScale(5),
+  },
+  cg3: {
+    display: 'flex',
+    gap: verticalScale(4),
+  },
+  cg5: {
+    display: 'flex',
+    gap: verticalScale(8),
   },
   justifyCenter: {
     justifyContent: 'center',
@@ -27,6 +55,12 @@ export const globalStyle = StyleSheet.create({
     color: '#000',
     fontFamily: 'Roboto',
     fontWeight: 400,
+  },
+  justifyBetween: {
+    justifyContent: 'space-between',
+  },
+  cg20: {
+    columnGap: 120,
   },
   HelloText: {
     fontSize: 12,
@@ -50,6 +84,16 @@ export const globalStyle = StyleSheet.create({
     lineHeight: verticalScale(14),
     fontWeight: 400,
   },
+  fw700: {
+    fontWeight: 700,
+    opacity: 0.8,
+  },
+  rounded3: {
+    borderRadius: horizontalScale(10),
+  },
+  mx10: {
+    marginHorizontal: horizontalScale(10),
+  },
   pt10: {
     paddingTop: verticalScale(10),
   },
@@ -68,9 +112,15 @@ export const globalStyle = StyleSheet.create({
     textTransform: 'capitalize',
     fontFamily: getFontFamily('Roboto'),
   },
+  medium: {
+    color: '#232222',
+    fontSize: scaleFontSize(14.3),
+    textTransform: 'capitalize',
+    fontFamily: getFontFamily('Roboto'),
+  },
   xsSmall: {
-    fontSize: scaleFontSize(12),
-    lineHeight: verticalScale(14),
+    fontSize: scaleFontSize(11),
+    lineHeight: verticalScale(13),
   },
   shadowSm: {
     boxShadow:
@@ -78,6 +128,12 @@ export const globalStyle = StyleSheet.create({
   },
   bgTheme: {
     backgroundColor: '#f3ebd8',
+  },
+  mt3: {
+    marginTop: verticalScale(3),
+  },
+  mt5: {
+    marginTop: verticalScale(5),
   },
   mt10: {
     marginTop: verticalScale(10),
