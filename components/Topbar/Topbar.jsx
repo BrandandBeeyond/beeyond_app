@@ -7,12 +7,13 @@ import CartIcon from 'react-native-vector-icons/Feather';
 import BellIcon from 'react-native-vector-icons/Feather';
 import HeartIcon from 'react-native-vector-icons/Feather';
 import ProfileIcon from 'react-native-vector-icons/FontAwesome6';
-import {useCart} from '../../context/CartContext';
 import {CartStyle} from '../../screens/Cart/Style';
 import {scaleFontSize} from '../../assets/styles/Scaling';
+import {useSelector} from 'react-redux';
 
 const Topbar = ({navigation}) => {
-  const {cart} = useCart();
+  const {cart} = useSelector(state => state.cart);
+  const {isAuthenticated, user} = useSelector(state => state.user);
 
   return (
     <View style={TopbarStyle.topbar}>
@@ -22,7 +23,13 @@ const Topbar = ({navigation}) => {
             <ProfileIcon name="circle-user" size={20} />
             <View style={globalStyle.vertical}>
               <Text style={globalStyle.small}>Hello,</Text>
-              <Text style={globalStyle.HelloText}>Join us!</Text>
+              {isAuthenticated ? (
+                <>
+                <Text style={globalStyle.HelloText}>{user.name}</Text>
+                </>
+              ) : (
+                <Text style={globalStyle.HelloText}>Join us!</Text>
+              )}
             </View>
           </View>
         </Pressable>
@@ -33,7 +40,7 @@ const Topbar = ({navigation}) => {
           <Pressable
             onPress={() => navigation.navigate(Routes.Cart)}
             style={globalStyle.relative}>
-            <CartIcon name="shopping-cart" size={20} />
+            <CartIcon name="shopping-bag" size={20} />
             {cart.length > 0 && (
               <View style={CartStyle.CountCart}>
                 <Text

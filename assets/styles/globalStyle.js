@@ -192,4 +192,29 @@ export const globalStyle = StyleSheet.create({
     alignItems: 'center',
     marginVertical: 20,
   },
+  card: {
+    paddingHorizontal: horizontalScale(12),
+    paddingVertical: verticalScale(6),
+    backgroundColor: '#fff',
+  },
+  borderTopRadius: {
+    borderTopLeftRadius: verticalScale(6),
+    borderTopRightRadius: verticalScale(6),
+  },
+  borderBottomRadius: {
+    borderBottomLeftRadius: verticalScale(6),
+    borderBottomRightRadius: verticalScale(6),
+  },
+  cardOuter: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: horizontalScale(6),
+  },
+  xxsSmall:{
+    fontSize:scaleFontSize(9),
+    lineHeight:verticalScale(12)
+  },
+  mb80:{
+    marginBottom:verticalScale(80)
+  }
 });

@@ -33,7 +33,7 @@ const Profile = ({navigation}) => {
             globalStyle.bgWhite,
             globalStyle.py10,
           ]}>
-          <Pressable onPress={() => navigation.navigate(Routes.Login)}>
+          <Pressable onPress={() => navigation.navigate(Routes.EmailEntry)}>
             <Image
               source={require('../../assets/images/profilebann.jpg')}
               style={[ProfileStyle.profileBanner, globalStyle.shadowSm]}

@@ -71,7 +71,7 @@ const LoginMobile = ({navigation}) => {
         <View style={globalStyle.px10}>
           <Pressable
             style={LoginStyle.mobilebtn}
-            onPress={() => navigation.navigate(Routes.Login)}>
+            onPress={() => navigation.navigate(Routes.EmailEntry)}>
             <Text style={LoginStyle.mobilebtnText}>continue with email</Text>
           </Pressable>
         </View>

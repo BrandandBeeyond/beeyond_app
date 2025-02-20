@@ -10,18 +10,20 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import Products from '../screens/Products/Products';
 import Orders from '../screens/Orders/Orders';
 import {Text, TouchableOpacity, View} from 'react-native';
-import Login from '../screens/Login/Login';
 import LoginMobile from '../screens/Login/LoginMobile';
 import Otpscreen from '../screens/Otpscreen/Otpscreen';
 import HomeIcon from 'react-native-vector-icons/Feather';
 import ProductIcon from 'react-native-vector-icons/Ionicons';
-import CartIcon from 'react-native-vector-icons/Feather';
+import BagIcon from 'react-native-vector-icons/Feather';
 import NotePadIcon from 'react-native-vector-icons/Feather';
 import SearchIcon from 'react-native-vector-icons/Feather';
-import {useCart} from '../context/CartContext';
 import {globalStyle} from '../assets/styles/globalStyle';
 import {CartStyle} from '../screens/Cart/Style';
 import { useNavigation } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
+import ProductDetail from '../screens/ProductDetail/ProductDetail';
+import EmailEntry from '../screens/Login/EmailEntry';
+import PasswordEntry from '../screens/Login/PasswordEntry';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -38,7 +40,7 @@ const CustomBackButton = ({navigation}) => {
 
 const CustomHeaderIcons = () => {
   const navigation = useNavigation();
-  const {cart} = useCart();
+  const {cart} = useSelector((state)=>state.cart);
 
   return (
     <View
@@ -52,7 +54,7 @@ const CustomHeaderIcons = () => {
         <SearchIcon name="search" size={20} />
       </TouchableOpacity>
       <TouchableOpacity style={globalStyle.relative} onPress={()=>navigation.navigate(Routes.Cart)}>
-        <CartIcon name="shopping-cart" size={20} />
+        <BagIcon name="shopping-bag" size={20} />
         {cart.length > 0 && (
           <View style={CartStyle.CountCart}>
             <Text
@@ -79,7 +81,7 @@ export const BottomTabs = () => {
           if (route.name === 'Home') {
             return <HomeIcon name="home" size={22} color={color} />;
           } else if (route.name === 'Cart') {
-            return <CartIcon name="shopping-cart" size={22} color={color} />;
+            return <BagIcon name="shopping-bag" size={22} color={color} />;
           } else if (route.name === 'Products') {
             return <ProductIcon name="grid-outline" size={22} color={color} />;
           } else if (route.name === 'Orders') {
@@ -140,17 +142,23 @@ export const MainNavigation = () => {
         options={{headerShown: false}}
       />
 
+      <Stack.Screen name="Home" component={Home} options={{header: () => null}}/>
       {/* Adding Screens in StackNavigator with Back Button */}
       <Stack.Screen
         name="Products"
         component={Products}
         options={({navigation}) => ({
-          headerLeft: () => <CustomBackButton navigation={navigation} />,
           headerTitleStyle: {fontSize: scaleFontSize(17)},
-          headerRight: () => <Text>Hello</Text>,
+          headerLeft: () => <CustomBackButton navigation={navigation} />,
+          headerRight: () => <CustomHeaderIcons />,
         })}
       />
 
+      <Stack.Screen name="ProductDetail" component={ProductDetail} options={({navigation}) => ({
+          headerTitle:()=>null,
+          headerLeft: () => <CustomBackButton navigation={navigation} />,
+          headerRight: () => <CustomHeaderIcons />,
+        })}/>
       <Stack.Screen
         name="Orders"
         component={Orders}
@@ -176,10 +184,25 @@ export const MainNavigation = () => {
       />
 
       <Stack.Screen
-        name={Routes.Login}
-        component={Login}
+        name={Routes.EmailEntry}
+        component={EmailEntry}
         options={{
           headerTitleStyle: {fontSize: scaleFontSize(17)},
+          headerTitle:'Login',
+          headerStyle: {
+            backgroundColor: '#f9b000',
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+        }}
+      />
+
+      <Stack.Screen
+        name={Routes.PasswordEntry}
+        component={PasswordEntry}
+        options={{
+          headerTitleStyle: {fontSize: scaleFontSize(17)},
+          headerTitle:()=>null,
           headerStyle: {
             backgroundColor: '#f9b000',
             elevation: 0,

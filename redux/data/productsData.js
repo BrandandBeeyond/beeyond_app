@@ -1,0 +1,38 @@
+export const ProductData = [
+    {
+      id: 1,
+      title: 'Dream Manifestation Journal',
+      cuttedPrice: 1200,
+      thumbnail: require('../../assets/images/book_mockup.png'),
+      price: 1000,
+      reviews: 17,
+      ratings: 4,
+    },
+    {
+      id: 2,
+      title: 'Self-Care Planner',
+      cuttedPrice: 1500,
+      thumbnail: require('../../assets/images/book_mockup.png'),
+      price: 1250,
+      reviews: 10,
+      ratings: 4.5,
+    },
+    {
+      id: 3,
+      title: 'Daily Gratitude Notebook',
+      cuttedPrice: 900,
+      thumbnail: require('../../assets/images/book_mockup.png'),
+      price: 750,
+      reviews: 20,
+      ratings: 4.2,
+    },
+    {
+      id: 4,
+      title: 'Mindfulness Journal',
+      cuttedPrice: 1300,
+      thumbnail: require('../../assets/images/book_mockup.png'),
+      price: 1100,
+      reviews: 5,
+      ratings: 4.3,
+    },
+  ];

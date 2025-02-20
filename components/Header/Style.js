@@ -16,8 +16,8 @@ export const HeaderStyle = StyleSheet.create({
     textTransform: 'capitalize',
   },
   title3: {
-    fontSize: scaleFontSize(16),
-    lineHeight: scaleFontSize(19),
+    fontSize: scaleFontSize(14),
+    lineHeight: scaleFontSize(17),
     fontFamily: getFontFamily('Roboto', 600),
     letterSpacing: 0.5,
     textTransform: 'capitalize',

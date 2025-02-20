@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   ScrollView,
   View,
@@ -13,76 +13,68 @@ import {globalStyle} from '../../assets/styles/globalStyle';
 import {productStyle} from './Style';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faStar} from '@fortawesome/free-solid-svg-icons';
-import {useCart} from '../../context/CartContext';
+import {useDispatch, useSelector} from 'react-redux';
+import {fetchProducts} from '../../redux/actions/ProductAction';
+import {AddtoCart} from '../../redux/actions/CartAction';
+import {INCREMENT_QUANTITY} from '../../redux/constants/CartConstants';
+import Notification from '../../components/Notification/Notification';
+import {AddNotification} from '../../redux/actions/NotificationAction';
+import { useNavigation } from '@react-navigation/native';
 
 const Products = () => {
-  const {addToCart} = useCart();
+  const dispatch = useDispatch();
+  const {products} = useSelector(state => state.products);
+  const {cart} = useSelector(state => state.cart);
   const [loadingId, setLoadingId] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const {notifications} = useSelector(state => state.notifications);
+  const navigation = useNavigation();
 
-  const ProductData = [
-    {
-      id: 1,
-      title: 'Dream Manifestation Journal',
-      cuttedPrice: 1200,
-      thumbnail: require('../../assets/images/book_mockup.png'),
-      price: 1000,
-      reviews: 17,
-      ratings: 4,
-    },
-    {
-      id: 2,
-      title: 'Self-Care Planner',
-      cuttedPrice: 1500,
-      thumbnail: require('../../assets/images/book_mockup.png'),
-      price: 1250,
-      reviews: 10,
-      ratings: 4.5,
-    },
-    {
-      id: 3,
-      title: 'Daily Gratitude Notebook',
-      cuttedPrice: 900,
-      thumbnail: require('../../assets/images/book_mockup.png'),
-      price: 750,
-      reviews: 20,
-      ratings: 4.2,
-    },
-    {
-      id: 4,
-      title: 'Mindfulness Journal',
-      cuttedPrice: 1300,
-      thumbnail: require('../../assets/images/book_mockup.png'),
-      price: 1100,
-      reviews: 5,
-      ratings: 4.3,
-    },
-  ];
+  useEffect(() => {
+    dispatch(fetchProducts());
+  }, [dispatch]);
 
   const handleAddtoCart = product => {
     setLoadingId(product.id);
+
     setTimeout(() => {
+      const isProductInCart = cart.some(item => item.id === product.id);
+
+      if (!isProductInCart) {
+        setSelectedProduct(product);
+        setModalVisible(true);
+      } else {
+        dispatch({
+          type: INCREMENT_QUANTITY,
+          payload: product.id,
+        });
+        dispatch(AddNotification('Product added to cart'));
+      }
+
       setLoadingId(null);
-      setSelectedProduct(product);
-      setModalVisible(true);
     }, 2000);
   };
 
   const handleContinue = () => {
     if (selectedProduct) {
-      addToCart(selectedProduct);
+      dispatch(AddtoCart(selectedProduct));
       setModalVisible(false);
+      dispatch(AddNotification('Product added to cart'));
     }
   };
 
   return (
     <SafeAreaView style={[globalStyle.bgTheme, globalStyle.flex]}>
-      <ScrollView contentContainerStyle={productStyle.container}>
-        {ProductData.map((item, i) => (
+      <ScrollView
+        contentContainerStyle={productStyle.container}
+        showsVerticalScrollIndicator={false}>
+        {products.map((item, i) => (
           <View style={productStyle.productCard} key={i}>
             <View style={productStyle.productCardBody}>
-              <Image source={item.thumbnail} style={productStyle.mockup} />
+              <Pressable onPress={()=>navigation.navigate('ProductDetail',{product:item})}>
+                <Image source={item.thumbnail} style={productStyle.mockup} />
+              </Pressable>
               <View style={globalStyle.mt3}>
                 <View
                   style={[
@@ -100,27 +92,38 @@ const Products = () => {
                     </Text>
                   </View>
                 </View>
-                <View style={globalStyle.mt3}>
-                  <Text style={productStyle.title}>{item.title}</Text>
-                  <View
-                    style={[
-                      globalStyle.drow,
-                      globalStyle.alignCenter,
-                      globalStyle.cg5,
-                      globalStyle.mt3,
-                    ]}>
-                    <Text style={productStyle.cuttedPrice}>
-                      Rs.{item.cuttedPrice}
-                    </Text>
+                <Pressable onPress={()=>navigation.navigate('ProductDetail',{product:item})}>
+                  <View style={globalStyle.mt3}>
+                    <Text style={productStyle.title}>{item.title}</Text>
+                    <View
+                      style={[
+                        globalStyle.drow,
+                        globalStyle.alignCenter,
+                        globalStyle.cg5,
+                        globalStyle.mt3,
+                      ]}>
+                      <Text style={productStyle.cuttedPrice}>
+                        Rs.{item.cuttedPrice}
+                      </Text>
+                    </View>
+                    <Text style={productStyle.price}>Rs.{item.price}</Text>
                   </View>
-                  <Text style={productStyle.price}>Rs.{item.price}</Text>
-                </View>
+                </Pressable>
+
                 <View style={globalStyle.mt10}>
                   <Pressable
                     style={productStyle.addtocart}
                     onPress={() => handleAddtoCart(item)}>
                     {loadingId === item.id ? (
-                      <ActivityIndicator size="small" color={'#fff'} />
+                      <View
+                        style={[
+                          globalStyle.drow,
+                          globalStyle.alignCenter,
+                          globalStyle.cg3,
+                        ]}>
+                        <ActivityIndicator size="small" color={'#fff'} />
+                        <Text style={globalStyle.textWhite}>Add to cart</Text>
+                      </View>
                     ) : (
                       <Text style={globalStyle.textWhite}>Add to cart</Text>
                     )}
@@ -149,7 +152,7 @@ const Products = () => {
                   {selectedProduct.title}
                 </Text>
                 <Text style={productStyle.modalPrice}>
-                  Rs.{selectedProduct.price}
+                ₹ {selectedProduct.price}
                 </Text>
                 <Pressable
                   style={productStyle.continueBtn}
@@ -161,6 +164,13 @@ const Products = () => {
           </View>
         </View>
       </Modal>
+      {notifications.map(notification => (
+        <Notification
+          key={notification.id}
+          message={notification.message}
+          showCartButton={true}
+        />
+      ))}
     </SafeAreaView>
   );
 };

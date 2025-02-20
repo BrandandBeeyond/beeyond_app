@@ -6,7 +6,7 @@ import Searchbar from '../../components/Searchbar/Searchbar';
 import {HomeStyle} from './Style';
 import Categories from '../../components/Categories/Categories';
 import Mostbuys from '../../components/Mostbuys/Mostbuys';
-import LottieView from 'lottie-react-native';
+
 
 const Home = ({navigation}) => {
   const categoryData = [
