@@ -39,7 +39,7 @@ const Orders = ({navigation}) => {
             ) : (
               <Pressable
                 style={OrderStyle.mainBtn}
-                onPress={() => navigation.navigate(Routes.LoginEmail)}>
+                onPress={() => navigation.navigate(Routes.EmailEntry)}>
                 <View>
                   <Text style={OrderStyle.mainBtnText}>login now</Text>
                 </View>

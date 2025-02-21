@@ -1,5 +1,8 @@
 import axios from 'axios';
 import {
+  CHECK_USER_FAIL,
+  CHECK_USER_REQUEST,
+  CHECK_USER_SUCCESS,
   LOGIN_USER_FAIL,
   LOGIN_USER_REQUEST,
   LOGIN_USER_SUCCESS,
@@ -7,40 +10,25 @@ import {
 } from '../constants/UserConstants';
 import {serverApi} from '../../config/serverApi';
 
-// export const checkUserExists = email => async dispatch => {
-//   try {
-//     dispatch({ type: CHECK_USER_REQUEST });
+export const checkUserExists = email => async dispatch => {
+  try {
+    dispatch({type: CHECK_USER_REQUEST});
 
-//     const { data } = await axios.post(
-//       `${serverApi}/check-user`,
-//       { email },
-//       {
-//         timeout: 5000,
-//         headers: { 'Content-Type': 'application/json' },
-//       }
-//     );
+    const {data} = await axios.post(`${serverApi}/check-user`, {email});
 
-//     console.log('Raw API Response:', data);
+    dispatch({type: CHECK_USER_SUCCESS, payload: data.userExists});
+    return data.userExists;
+  } catch (error) {
+    console.error('something wents wrong');
 
-//     if (data?.success && typeof data?.userExists === 'boolean') {
-//       const userExists = data.userExists;
-//       dispatch({ type: CHECK_USER_SUCCESS, payload: userExists });
-//       return userExists;
-//     }
+    dispatch({
+      type: CHECK_USER_FAIL,
+      payload: error.response?.data?.message || error.message,
+    });
 
-//     throw new Error('Invalid API response structure');
-
-//   } catch (error) {
-//     console.error('API Error:', error.response?.data || error.message);
-
-//     dispatch({
-//       type: CHECK_USER_FAIL,
-//       payload: error.response?.data?.message || error.message,
-//     });
-
-//     return false;
-//   }
-// };
+    return false;
+  }
+};
 
 export const UserLogin = (email, password) => async dispatch => {
   try {

@@ -19,11 +19,13 @@ import NotePadIcon from 'react-native-vector-icons/Feather';
 import SearchIcon from 'react-native-vector-icons/Feather';
 import {globalStyle} from '../assets/styles/globalStyle';
 import {CartStyle} from '../screens/Cart/Style';
-import { useNavigation } from '@react-navigation/native';
-import { useSelector } from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
 import ProductDetail from '../screens/ProductDetail/ProductDetail';
 import Signup from '../screens/Login/SignUp';
 import LoginEmail from '../screens/Login/LoginEmail';
+import EmailEntry from '../screens/Login/EmailEntry';
+import PasswordEntry from '../screens/Login/PasswordEntry';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -40,7 +42,7 @@ const CustomBackButton = ({navigation}) => {
 
 const CustomHeaderIcons = () => {
   const navigation = useNavigation();
-  const {cart} = useSelector((state)=>state.cart);
+  const {cart} = useSelector(state => state.cart);
 
   return (
     <View
@@ -53,7 +55,9 @@ const CustomHeaderIcons = () => {
       <TouchableOpacity>
         <SearchIcon name="search" size={20} />
       </TouchableOpacity>
-      <TouchableOpacity style={globalStyle.relative} onPress={()=>navigation.navigate(Routes.Cart)}>
+      <TouchableOpacity
+        style={globalStyle.relative}
+        onPress={() => navigation.navigate(Routes.Cart)}>
         <BagIcon name="shopping-bag" size={20} />
         {cart.length > 0 && (
           <View style={CartStyle.CountCart}>
@@ -142,7 +146,11 @@ export const MainNavigation = () => {
         options={{headerShown: false}}
       />
 
-      <Stack.Screen name="Home" component={Home} options={{header: () => null}}/>
+      <Stack.Screen
+        name="Home"
+        component={Home}
+        options={{header: () => null}}
+      />
       {/* Adding Screens in StackNavigator with Back Button */}
       <Stack.Screen
         name="Products"
@@ -154,11 +162,15 @@ export const MainNavigation = () => {
         })}
       />
 
-      <Stack.Screen name="ProductDetail" component={ProductDetail} options={({navigation}) => ({
-          headerTitle:()=>null,
+      <Stack.Screen
+        name="ProductDetail"
+        component={ProductDetail}
+        options={({navigation}) => ({
+          headerTitle: () => null,
           headerLeft: () => <CustomBackButton navigation={navigation} />,
           headerRight: () => <CustomHeaderIcons />,
-        })}/>
+        })}
+      />
       <Stack.Screen
         name="Orders"
         component={Orders}
@@ -183,12 +195,29 @@ export const MainNavigation = () => {
         options={{headerTitleStyle: {fontSize: scaleFontSize(17)}}}
       />
 
-      <Stack.Screen
+      {/* <Stack.Screen
         name={Routes.LoginEmail}
         component={LoginEmail}
         options={{
           headerTitleStyle: {fontSize: scaleFontSize(17)},
-          headerTitle:'Login',
+          headerTitle: 'Login',
+          headerStyle: {
+            backgroundColor: '#f9b000',
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+        }}
+      /> */}
+
+
+      {/* Email entry screen */}
+
+      <Stack.Screen
+        name={Routes.EmailEntry}
+        component={EmailEntry}
+        options={{
+          headerTitleStyle: {fontSize: scaleFontSize(17)},
+          headerTitle: 'Login',
           headerStyle: {
             backgroundColor: '#f9b000',
             elevation: 0,
@@ -197,14 +226,28 @@ export const MainNavigation = () => {
         }}
       />
 
-      
 
+  {/* password entry screen */}
+
+      <Stack.Screen
+        name={Routes.PasswordEntry}
+        component={PasswordEntry}
+        options={{
+          headerTitleStyle: {fontSize: scaleFontSize(17)},
+          headerTitle: 'Login',
+          headerStyle: {
+            backgroundColor: '#f9b000',
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+        }}
+      />
       <Stack.Screen
         name={Routes.Signup}
         component={Signup}
         options={{
           headerTitleStyle: {fontSize: scaleFontSize(17)},
-          headerTitle:()=>null,
+          headerTitle: () => null,
           headerStyle: {
             backgroundColor: '#f9b000',
             elevation: 0,

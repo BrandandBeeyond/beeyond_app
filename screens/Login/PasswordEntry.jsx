@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -6,19 +6,19 @@ import {
   SafeAreaView,
   Text,
   View,
-  TextInput
+  TextInput,
 } from 'react-native';
-import { LoginStyle } from './Style';
-import { globalStyle } from '../../assets/styles/globalStyle';
+import {LoginStyle} from './Style';
+import {globalStyle} from '../../assets/styles/globalStyle';
 import AuthHeader from './AuthHeader';
-import { useDispatch, useSelector } from 'react-redux';
-import { UserLogin } from '../../redux/actions/UserAction';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
+import {useDispatch, useSelector} from 'react-redux';
+import {UserLogin} from '../../redux/actions/UserAction';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import {faEye, faEyeSlash} from '@fortawesome/free-regular-svg-icons';
 
-const PasswordEntry = ({ route, navigation }) => {
-  const { email } = route.params;
-  const { isAuthenticated } = useSelector(state => state.user);
+const PasswordEntry = ({route, navigation}) => {
+  const {email} = route.params;
+  const {isAuthenticated} = useSelector(state => state.user);
   const [password, setPassword] = useState('');
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
@@ -30,22 +30,40 @@ const PasswordEntry = ({ route, navigation }) => {
     setIsButtonDisabled(password.trim().length === 0);
   }, [password]);
 
-  const handleSignIn = () => {
+  const handleSignIn = async () => {
     setLoading(true);
-    dispatch(UserLogin(email, password)).then(() => {
+    try {
+      await dispatch(UserLogin(email, password));
+    } catch (error) {
+        console.error(error);
+    }
+    finally{
       setLoading(false);
-      if (isAuthenticated) {
-        navigation.navigate('BottomTabs');
-      } else {
-        Alert.alert('Login failed');
-      }
-    });
+    }
   };
+
+
+  useEffect(()=>{
+      setIsButtonDisabled(password.trim().length < 6);
+
+      if(setIsButtonDisabled(password.trim().length < 6)){
+           const timer = setTimeout(()=>{
+                handleSignIn();
+           },1000);
+           return () => clearTimeout(timer);
+      }
+  },[password]);
 
   return (
     <SafeAreaView style={[LoginStyle.loginBg, globalStyle.flex]}>
       <AuthHeader title={'Enter Password'} />
-      <View style={[globalStyle.bgWhite, globalStyle.px10, globalStyle.roundedCorners, globalStyle.h100]}>
+      <View
+        style={[
+          globalStyle.bgWhite,
+          globalStyle.px10,
+          globalStyle.roundedCorners,
+          globalStyle.h100,
+        ]}>
         <View style={globalStyle.mt20}>
           <View style={LoginStyle.emailinput}>
             <View style={globalStyle.relative}>
@@ -58,28 +76,37 @@ const PasswordEntry = ({ route, navigation }) => {
               />
               <Pressable
                 style={LoginStyle.showCloseIcon}
-                onPress={() => setPasswordVisible(!passwordVisible)}
-              >
-                <FontAwesomeIcon icon={passwordVisible ? faEye : faEyeSlash} size={18} color={'#010101'} />
+                onPress={() => setPasswordVisible(!passwordVisible)}>
+                <FontAwesomeIcon
+                  icon={passwordVisible ? faEye : faEyeSlash}
+                  size={18}
+                  color={'#010101'}
+                />
               </Pressable>
             </View>
           </View>
           <View style={[globalStyle.mt10, globalStyle.px20]}>
             <Pressable>
-              <Text style={[globalStyle.textEnd, globalStyle.subtext]}>Forgot password ?</Text>
+              <Text style={[globalStyle.textEnd, globalStyle.subtext]}>
+                Forgot password ?
+              </Text>
             </Pressable>
           </View>
           <View style={globalStyle.px10}>
             <Pressable
               style={[
                 LoginStyle.loginBtn,
-                { backgroundColor: isButtonDisabled ? '#b4b3b3' : '#010101' },
+                {backgroundColor: isButtonDisabled ? '#b4b3b3' : '#010101'},
               ]}
               onPress={handleSignIn}
-              disabled={isButtonDisabled}
-            >
+              disabled={isButtonDisabled}>
               {loading ? (
-                <View style={[globalStyle.drow, globalStyle.alignCenter, globalStyle.cg5]}>
+                <View
+                  style={[
+                    globalStyle.drow,
+                    globalStyle.alignCenter,
+                    globalStyle.cg5,
+                  ]}>
                   <ActivityIndicator size={20} color={'#fff'} />
                   <Text style={LoginStyle.loginBtnText}>Sign in</Text>
                 </View>
@@ -97,8 +124,7 @@ const PasswordEntry = ({ route, navigation }) => {
         <View style={globalStyle.px10}>
           <Pressable
             style={LoginStyle.mobilebtn}
-            onPress={() => navigation.navigate('MobileLogin')}
-          >
+            onPress={() => navigation.navigate('MobileLogin')}>
             <Text style={LoginStyle.mobilebtnText}>Sign in with OTP</Text>
           </Pressable>
         </View>
