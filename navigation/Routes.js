@@ -4,9 +4,10 @@ export const Routes = {
   Cart: 'Cart',
   Products: 'Products',
   Orders: 'Orders',
-  EmailEntry: 'EmailEntry',
+  LoginEmail: 'LoginEmail',
   PasswordEntry: 'PasswordEntry',
   Mobilelogin: 'Mobilelogin',
   OtpScreen: 'OtpScreen',
   ProductDetail: 'ProductDetail',
+  Signup: 'Signup',
 };

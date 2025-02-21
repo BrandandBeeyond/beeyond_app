@@ -22,8 +22,8 @@ import {CartStyle} from '../screens/Cart/Style';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import ProductDetail from '../screens/ProductDetail/ProductDetail';
-import EmailEntry from '../screens/Login/EmailEntry';
-import PasswordEntry from '../screens/Login/PasswordEntry';
+import Signup from '../screens/Login/SignUp';
+import LoginEmail from '../screens/Login/LoginEmail';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -184,8 +184,8 @@ export const MainNavigation = () => {
       />
 
       <Stack.Screen
-        name={Routes.EmailEntry}
-        component={EmailEntry}
+        name={Routes.LoginEmail}
+        component={LoginEmail}
         options={{
           headerTitleStyle: {fontSize: scaleFontSize(17)},
           headerTitle:'Login',
@@ -197,9 +197,11 @@ export const MainNavigation = () => {
         }}
       />
 
+      
+
       <Stack.Screen
-        name={Routes.PasswordEntry}
-        component={PasswordEntry}
+        name={Routes.Signup}
+        component={Signup}
         options={{
           headerTitleStyle: {fontSize: scaleFontSize(17)},
           headerTitle:()=>null,

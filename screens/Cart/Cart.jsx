@@ -302,7 +302,7 @@ const Cart = ({navigation}) => {
 
               {!isAuthenticated && (
                 <View>
-                  <Pressable onPress={() => navigation.navigate(Routes.EmailEntry)}>
+                  <Pressable onPress={() => navigation.navigate(Routes.LoginEmail)}>
                     <Text
                       style={[globalStyle.warnText, globalStyle.textCenter]}>
                       SIGN IN NOW
