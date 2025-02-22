@@ -3,6 +3,8 @@ import {
   CHECK_USER_FAIL,
   CHECK_USER_REQUEST,
   CHECK_USER_SUCCESS,
+  LOAD_USER_FAIL,
+  LOAD_USER_SUCCESS,
   LOGIN_USER_FAIL,
   LOGIN_USER_REQUEST,
   LOGIN_USER_SUCCESS,
@@ -12,6 +14,7 @@ import {
   REGISTER_USER_SUCCESS,
 } from '../constants/UserConstants';
 import {serverApi} from '../../config/serverApi';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const checkUserExists = email => async dispatch => {
   try {
@@ -30,6 +33,21 @@ export const checkUserExists = email => async dispatch => {
     });
 
     return false;
+  }
+};
+
+export const loadUser = () => async dispatch => {
+  try {
+    const storedUser = await AsyncStorage.getItem('user');
+
+    if (storedUser) {
+      dispatch({type: LOAD_USER_SUCCESS, payload: JSON.parse(storedUser)});
+    } else {
+      dispatch({type: LOAD_USER_FAIL});
+    }
+  } catch (error) {
+    console.error('Error loading user from AsyncStorage:', error);
+    dispatch({type: LOAD_USER_FAIL});
   }
 };
 

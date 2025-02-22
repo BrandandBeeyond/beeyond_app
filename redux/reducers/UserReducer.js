@@ -1,8 +1,11 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   CHECK_USER_FAIL,
   CHECK_USER_REQUEST,
   CHECK_USER_SUCCESS,
   CLEAR_ERRORS,
+  LOAD_USER_FAIL,
+  LOAD_USER_SUCCESS,
   LOGIN_USER_FAIL,
   LOGIN_USER_REQUEST,
   LOGIN_USER_SUCCESS,
@@ -20,6 +23,17 @@ const initialState = {
   userExists: null,
 };
 
+const loadUserfromStorage = async () => {
+  try {
+    const storedUser = await AsyncStorage.getItem('user');
+
+    return storedUser ? JSON.parse(storedUser) : null;
+  } catch (error) {
+    console.error('Error loading user from AsyncStorage:', error);
+    return null;
+  }
+};
+
 export const UserReducer = (state = initialState, action) => {
   switch (action.type) {
     case LOGIN_USER_REQUEST:
@@ -30,6 +44,14 @@ export const UserReducer = (state = initialState, action) => {
         loading: true,
       };
 
+    case LOAD_USER_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        isAuthenticated: !!action.payload,
+        user: action.payload,
+      };
+
     case CHECK_USER_SUCCESS:
       return {
         ...state,
@@ -38,14 +60,8 @@ export const UserReducer = (state = initialState, action) => {
       };
 
     case LOGIN_USER_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        isAuthenticated: true,
-        user: action.payload,
-      };
-
     case REGISTER_USER_SUCCESS:
+      AsyncStorage.setItem('user', JSON.stringify(action.payload));
       return {
         ...state,
         loading: false,
@@ -60,14 +76,14 @@ export const UserReducer = (state = initialState, action) => {
         userExists: false,
         error: action.payload,
       };
-
-    case LOGIN_USER_FAIL:
+    case LOAD_USER_FAIL:
       return {
         ...state,
         loading: false,
         isAuthenticated: false,
-        error: action.payload,
+        user: null,
       };
+    case LOGIN_USER_FAIL:
     case REGISTER_USER_FAIL:
       return {
         ...state,
@@ -77,6 +93,7 @@ export const UserReducer = (state = initialState, action) => {
       };
 
     case LOGOUT_USER_SUCCESS:
+      AsyncStorage.removeItem('user');
       return {
         ...state,
         loading: false,
