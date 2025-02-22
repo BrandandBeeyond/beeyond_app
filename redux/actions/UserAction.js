@@ -61,31 +61,35 @@ export const UserLogin = (email, password) => async dispatch => {
   }
 };
 
-export const UserRegister = (name, mobile, password) => async dispatch => {
-  try {
-    dispatch({type: REGISTER_USER_REQUEST});
+export const UserRegister =
+  (name, mobile, email, password) => async dispatch => {
+    try {
+      dispatch({type: REGISTER_USER_REQUEST});
 
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
 
-    const {data} = await axios.post(
-      `${serverApi}/register`,
-      {name, mobile, password},
-      config,
-    );
+      const {data} = await axios.post(
+        `${serverApi}/register`,
+        {name, mobile, password, email},
+        config,
+      );
 
-    dispatch({type: REGISTER_USER_SUCCESS, payload: data.user});
-  } catch (error) {
-    console.error('Registration Error:', error.response?.data || error.message);
-    dispatch({
-      type: REGISTER_USER_FAIL,
-      payload: error.response?.data?.message || 'Something went wrong',
-    });
-  }
-};
+      dispatch({type: REGISTER_USER_SUCCESS, payload: data.user});
+    } catch (error) {
+      console.error(
+        'Registration Error:',
+        error.response?.data || error.message,
+      );
+      dispatch({
+        type: REGISTER_USER_FAIL,
+        payload: error.response?.data?.message || 'Something went wrong',
+      });
+    }
+  };
 
 export const logoutUser = () => async dispatch => {
   dispatch({type: LOGOUT_USER_SUCCESS});

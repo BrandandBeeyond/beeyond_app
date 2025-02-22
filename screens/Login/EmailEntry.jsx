@@ -50,7 +50,7 @@ const EmailEntry = ({navigation}) => {
       if (userExist) {
         navigation.navigate(Routes.PasswordEntry,{email});
       } else {
-        navigation.navigate(Routes.Signup);
+        navigation.navigate(Routes.Signup,{email});
       }
     } catch (error) {
       console.error('Error checking user:', error);

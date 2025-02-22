@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {
   ActivityIndicator,
+  Alert,
   Pressable,
   SafeAreaView,
   Text,
@@ -16,17 +17,22 @@ import {faEye, faEyeSlash} from '@fortawesome/free-regular-svg-icons';
 import {useDispatch, useSelector} from 'react-redux';
 import {UserRegister} from '../../redux/actions/UserAction';
 
-const Signup = ({navigation}) => {
+const Signup = ({navigation, route}) => {
   const dispatch = useDispatch();
+  const {email} = route.params || {};
   const [name, setName] = useState('');
   const [mobile, setMobile] = useState('');
   const [password, setPassword] = useState('');
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
-  const {loading} = useSelector(state => state.user);
+  const {loading, isAuthenticated} = useSelector(state => state.user);
 
   useEffect(() => {
-    if (name.trim() && /^[6-9]\d{9}$/.test(mobile) && password.length >= 6) {
+    if (
+      name.trim() &&
+      /^[6-9]\d{9}$/.test(mobile.trim()) &&
+      password.trim().length >= 6
+    ) {
       setIsButtonDisabled(false);
     } else {
       setIsButtonDisabled(true);
@@ -35,11 +41,17 @@ const Signup = ({navigation}) => {
 
   const handleRegister = async () => {
     try {
-      await dispatch(UserRegister(name, mobile, password));
+      await dispatch(UserRegister(name, mobile, email, password));
     } catch (error) {
       console.error('Registration failed:', error);
     }
   };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigation.replace('BottomTabs');
+    }
+  }, [isAuthenticated, navigation]);
 
   return (
     <SafeAreaView style={[LoginStyle.loginBg, globalStyle.flex]}>
@@ -97,7 +109,8 @@ const Signup = ({navigation}) => {
               style={[
                 LoginStyle.loginBtn,
                 {backgroundColor: isButtonDisabled ? '#b4b3b3' : '#010101'},
-              ]} onPress={handleRegister}>
+              ]}
+              onPress={handleRegister}>
               {loading ? (
                 <View
                   style={[
