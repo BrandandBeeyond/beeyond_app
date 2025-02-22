@@ -13,17 +13,17 @@ const Home = ({navigation}) => {
     {
       id: 1,
       title: 'Diaries',
-      heroimage: require('../../assets/images/categories/diary.png'),
+      image: require('../../assets/images/categories/diary.png'),
     },
     {
       id: 2,
       title: 'Journals',
-      heroimage: require('../../assets/images/categories/journal.png'),
+      image: require('../../assets/images/categories/journal.png'),
     },
     {
       id: 3,
       title: 'Gifts',
-      heroimage: require('../../assets/images/categories/gift-box.png'),
+      image: require('../../assets/images/categories/gift-box.png'),
     },
   ];
 

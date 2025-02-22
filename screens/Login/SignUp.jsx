@@ -13,20 +13,31 @@ import {Routes} from '../../navigation/Routes';
 import {TextInput} from 'react-native-gesture-handler';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faEye, faEyeSlash} from '@fortawesome/free-regular-svg-icons';
+import {useDispatch, useSelector} from 'react-redux';
+import {UserRegister} from '../../redux/actions/UserAction';
 
 const Signup = ({navigation}) => {
+  const dispatch = useDispatch();
   const [name, setName] = useState('');
   const [mobile, setMobile] = useState('');
   const [password, setPassword] = useState('');
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
-  const [loading, setLoading] = useState(false);
+  const {loading} = useSelector(state => state.user);
 
-  const validateInputs = () => {
+  useEffect(() => {
     if (name.trim() && /^[6-9]\d{9}$/.test(mobile) && password.length >= 6) {
       setIsButtonDisabled(false);
     } else {
       setIsButtonDisabled(true);
+    }
+  }, [name, mobile, password]);
+
+  const handleRegister = async () => {
+    try {
+      await dispatch(UserRegister(name, mobile, password));
+    } catch (error) {
+      console.error('Registration failed:', error);
     }
   };
 
@@ -49,10 +60,7 @@ const Signup = ({navigation}) => {
               placeholder="User Name"
               style={LoginStyle.emailpass}
               value={name}
-              onChangeText={text => {
-                setName(text);
-                validateInputs();
-              }}
+              onChangeText={text => setName(text)}
             />
           </View>
           <View style={LoginStyle.emailinput}>
@@ -60,10 +68,7 @@ const Signup = ({navigation}) => {
               placeholder="Mobile No"
               style={LoginStyle.emailpass}
               value={mobile}
-              onChangeText={text => {
-                setMobile(text);
-                validateInputs();
-              }}
+              onChangeText={text => setMobile(text)}
             />
           </View>
 
@@ -73,7 +78,7 @@ const Signup = ({navigation}) => {
                 placeholder="Password"
                 style={LoginStyle.emailpass}
                 value={password}
-                onChangeText={setPassword}
+                onChangeText={text => setPassword(text)}
                 secureTextEntry={!passwordVisible}
               />
               <Pressable
@@ -92,7 +97,7 @@ const Signup = ({navigation}) => {
               style={[
                 LoginStyle.loginBtn,
                 {backgroundColor: isButtonDisabled ? '#b4b3b3' : '#010101'},
-              ]}>
+              ]} onPress={handleRegister}>
               {loading ? (
                 <View
                   style={[

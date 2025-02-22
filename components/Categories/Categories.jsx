@@ -19,7 +19,7 @@ const Categories = ({categories}) => {
           <View >
             <View style={CategoryStyle.featured}>
               <Image
-                source={item.heroimage}
+                source={item.image}
                 style={CategoryStyle.featuredImg}
               />
             </View>
@@ -36,7 +36,7 @@ Categories.propTypes = {
     PropTypes.shape({
       id: PropTypes.number.isRequired,
       title: PropTypes.string.isRequired,
-      image: PropTypes.string.isRequired,
+      image: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     }),
   ).isRequired,
   title: PropTypes.string,

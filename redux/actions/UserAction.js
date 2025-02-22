@@ -7,6 +7,9 @@ import {
   LOGIN_USER_REQUEST,
   LOGIN_USER_SUCCESS,
   LOGOUT_USER_SUCCESS,
+  REGISTER_USER_FAIL,
+  REGISTER_USER_REQUEST,
+  REGISTER_USER_SUCCESS,
 } from '../constants/UserConstants';
 import {serverApi} from '../../config/serverApi';
 
@@ -53,6 +56,32 @@ export const UserLogin = (email, password) => async dispatch => {
     console.error('Login Error:', error.response?.data || error.message);
     dispatch({
       type: LOGIN_USER_FAIL,
+      payload: error.response?.data?.message || 'Something went wrong',
+    });
+  }
+};
+
+export const UserRegister = (name, mobile, password) => async dispatch => {
+  try {
+    dispatch({type: REGISTER_USER_REQUEST});
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    const {data} = await axios.post(
+      `${serverApi}/register`,
+      {name, mobile, password},
+      config,
+    );
+
+    dispatch({type: REGISTER_USER_SUCCESS, payload: data.user});
+  } catch (error) {
+    console.error('Registration Error:', error.response?.data || error.message);
+    dispatch({
+      type: REGISTER_USER_FAIL,
       payload: error.response?.data?.message || 'Something went wrong',
     });
   }

@@ -10,7 +10,7 @@ import {LoginStyle} from './Style';
 import {globalStyle} from '../../assets/styles/globalStyle';
 import AuthHeader from './AuthHeader';
 import {Routes} from '../../navigation/Routes';
-import {checkUserExists, UserLogin} from '../../redux/actions/UserAction';
+import { UserLogin} from '../../redux/actions/UserAction';
 import {TextInput} from 'react-native-gesture-handler';
 import {useDispatch, useSelector} from 'react-redux';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';

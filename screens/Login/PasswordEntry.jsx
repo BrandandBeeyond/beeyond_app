@@ -18,41 +18,26 @@ import {faEye, faEyeSlash} from '@fortawesome/free-regular-svg-icons';
 
 const PasswordEntry = ({route, navigation}) => {
   const {email} = route.params;
-  const {isAuthenticated} = useSelector(state => state.user);
+  const {isAuthenticated, loading} = useSelector(state => state.user);
   const [password, setPassword] = useState('');
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
-  const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setIsButtonDisabled(password.trim().length === 0);
+    setIsButtonDisabled(password.trim().length < 6);
   }, [password]);
 
   const handleSignIn = async () => {
-    setLoading(true);
-    try {
-      await dispatch(UserLogin(email, password));
-    } catch (error) {
-        console.error(error);
-    }
-    finally{
-      setLoading(false);
-    }
+    await dispatch(UserLogin(email, password));
   };
 
-
   useEffect(()=>{
-      setIsButtonDisabled(password.trim().length < 6);
-
-      if(setIsButtonDisabled(password.trim().length < 6)){
-           const timer = setTimeout(()=>{
-                handleSignIn();
-           },1000);
-           return () => clearTimeout(timer);
-      }
-  },[password]);
+     if(isAuthenticated){
+        navigation.replace('BottomTabs')
+     }
+  },[isAuthenticated,navigation]);
 
   return (
     <SafeAreaView style={[LoginStyle.loginBg, globalStyle.flex]}>
