@@ -20,8 +20,13 @@ import {
 import {faHeadphones} from '@fortawesome/free-solid-svg-icons/faHeadphones';
 import {faShareNodes} from '@fortawesome/free-solid-svg-icons/faShareNodes';
 import {Routes} from '../../navigation/Routes';
+import {useSelector} from 'react-redux';
+import ArrowIcon from 'react-native-vector-icons/Entypo';
+import CheckIcon from 'react-native-vector-icons/Ionicons';
 
 const Profile = ({navigation}) => {
+  const {user, isAuthenticated} = useSelector(state => state.user);
+
   return (
     <SafeAreaView style={[globalStyle.bgTheme, globalStyle.flex]}>
       <ScrollView>
@@ -33,35 +38,115 @@ const Profile = ({navigation}) => {
             globalStyle.bgWhite,
             globalStyle.py10,
           ]}>
-          <Pressable onPress={() => navigation.navigate(Routes.EmailEntry)}>
-            <Image
-              source={require('../../assets/images/profilebann.jpg')}
-              style={[ProfileStyle.profileBanner, globalStyle.shadowSm]}
-            />
-            <View style={ProfileStyle.profileBannerText}>
-              <Header type={3} title={'Login / signup'} />
-              <Text style={globalStyle.subtext}>Get amazing offers</Text>
-              <View style={ProfileStyle.chevron}>
-                <FontAwesomeIcon
-                  color={'#444242'}
-                  icon={faChevronCircleRight}
-                  size={22}
-                />
+          {isAuthenticated ? (
+            <Pressable style={ProfileStyle.userAccount} onPress={()=>navigation.navigate(Routes.MyAccount)}>
+              <View style={[globalStyle.drow, globalStyle.cg5, globalStyle.p5]}>
+                <View style={globalStyle.avatar}>
+                  <View style={globalStyle.avatarInner}>
+                    <Image
+                      source={require('../../assets/images/man.png')}
+                      style={ProfileStyle.Profileimg}
+                    />
+                  </View>
+                </View>
+                <View style={[globalStyle.dcol]}>
+                  <View
+                    style={[
+                      globalStyle.drow,
+                      globalStyle.alignCenter,
+                      globalStyle.justifyBetween,
+                      globalStyle.relative,
+                    ]}>
+                    <View>
+                      <Text style={globalStyle.userName}>{user.name}</Text>
+                    </View>
+                    <View style={globalStyle.rightarricon}>
+                      <ArrowIcon
+                        name="chevron-right"
+                        size={22}
+                        color={'#fff'}
+                      />
+                    </View>
+                  </View>
+                  <View style={globalStyle.mt10}>
+                    <View
+                      style={[
+                        globalStyle.drow,
+                        globalStyle.alignCenter,
+                        globalStyle.cg3,
+                      ]}>
+                      <View>
+                        <CheckIcon
+                          name="checkmark-circle-sharp"
+                          color={'#F1F1F1'}
+                          size={16}
+                        />
+                      </View>
+                      <View>
+                        <Text
+                          style={[globalStyle.small, globalStyle.userdetail]}>
+                          {user.email}
+                        </Text>
+                      </View>
+                    </View>
+                    <View
+                      style={[
+                        globalStyle.drow,
+                        globalStyle.alignCenter,
+                        globalStyle.cg3,
+                        globalStyle.mt5,
+                      ]}>
+                      <View>
+                        <CheckIcon
+                          name="checkmark-circle-sharp"
+                          color={'#F1F1F1'}
+                          size={16}
+                        />
+                      </View>
+                      <View>
+                        <Text
+                          style={[globalStyle.small, globalStyle.userdetail]}>
+                          +91-{user.mobile}
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                </View>
               </View>
-            </View>
-          </Pressable>
+            </Pressable>
+          ) : (
+            <Pressable onPress={() => navigation.navigate(Routes.EmailEntry)}>
+              <Image
+                source={require('../../assets/images/profilebann.jpg')}
+                style={[ProfileStyle.profileBanner, globalStyle.shadowSm]}
+              />
+              <View style={ProfileStyle.profileBannerText}>
+                <Header type={3} title={'Login / signup'} />
+                <Text style={globalStyle.subtext}>Get amazing offers</Text>
+                <View style={ProfileStyle.chevron}>
+                  <FontAwesomeIcon
+                    color={'#444242'}
+                    icon={faChevronCircleRight}
+                    size={22}
+                  />
+                </View>
+              </View>
+            </Pressable>
+          )}
 
-          <View style={[globalStyle.px10]}>
-            <Text
-              style={[
-                globalStyle.textCenter,
-                globalStyle.xsSmall,
-                globalStyle.pt10,
-              ]}>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus
-              animi vero iure.
-            </Text>
-          </View>
+          {!isAuthenticated && (
+            <View style={[globalStyle.px10]}>
+              <Text
+                style={[
+                  globalStyle.textCenter,
+                  globalStyle.xsSmall,
+                  globalStyle.pt10,
+                ]}>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus
+                animi vero iure.
+              </Text>
+            </View>
+          )}
         </View>
 
         <View style={globalStyle.px10}>

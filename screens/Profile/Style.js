@@ -40,4 +40,14 @@ export const ProfileStyle = StyleSheet.create({
     borderBottomWidth: horizontalScale(0.18),
     borderColor: '#ccc',
   },
+
+  userAccount: {
+    backgroundColor: '#f5bd3a',
+    borderRadius: horizontalScale(20),
+  },
+  Profileimg:{
+    height:verticalScale(60),
+    width:'auto',
+    objectFit:'contain'
+  }
 });

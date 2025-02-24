@@ -1,11 +1,12 @@
 export const Routes = {
   Home: 'Home',
   Profile: 'Profile',
+  MyAccount: 'MyAccount',
   Cart: 'Cart',
   Products: 'Products',
   Orders: 'Orders',
   // LoginEmail: 'LoginEmail',
-  EmailEntry:'EmailEntry',
+  EmailEntry: 'EmailEntry',
   PasswordEntry: 'PasswordEntry',
   Mobilelogin: 'Mobilelogin',
   OtpScreen: 'OtpScreen',

@@ -26,6 +26,7 @@ import Signup from '../screens/Login/SignUp';
 import LoginEmail from '../screens/Login/LoginEmail';
 import EmailEntry from '../screens/Login/EmailEntry';
 import PasswordEntry from '../screens/Login/PasswordEntry';
+import MyAccount from '../screens/Account/MyAccount';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -193,6 +194,11 @@ export const MainNavigation = () => {
         name={Routes.Profile}
         component={Profile}
         options={{headerTitleStyle: {fontSize: scaleFontSize(17)}}}
+      />
+      <Stack.Screen
+        name={Routes.MyAccount}
+        component={MyAccount}
+        options={{headerTitleStyle: {fontSize: scaleFontSize(17)},headerTitle:'My Account'}}
       />
 
       {/* <Stack.Screen

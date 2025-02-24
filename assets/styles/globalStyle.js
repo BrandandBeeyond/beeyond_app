@@ -210,11 +210,66 @@ export const globalStyle = StyleSheet.create({
     borderColor: '#ccc',
     borderRadius: horizontalScale(6),
   },
-  xxsSmall:{
-    fontSize:scaleFontSize(9),
-    lineHeight:verticalScale(12)
+  xxsSmall: {
+    fontSize: scaleFontSize(9),
+    lineHeight: verticalScale(12),
   },
-  mb80:{
-    marginBottom:verticalScale(80)
-  }
+  mb80: {
+    marginBottom: verticalScale(80),
+  },
+  p5: {
+    padding: horizontalScale(8),
+  },
+  avatar: {
+    backgroundColor: '#fff',
+    borderRadius: horizontalScale(10),
+    width: horizontalScale(85),
+    height: verticalScale(80),
+    padding: horizontalScale(4),
+  },
+  avatarInner: {
+    backgroundColor: '#f4eee0',
+    height: '100%',
+    width: '100%',
+    borderRadius: horizontalScale(10),
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  userName: {
+    color: '#fff',
+    fontSize: scaleFontSize(14),
+    fontWeight: '700',
+  },
+  rightarricon: {
+    left: horizontalScale(40),
+    top: verticalScale(2),
+  },
+  userdetail: {
+    color: '#f1f1f1',
+  },
+  textLight: {
+    color: '#F1F1F1',
+  },
+  textGray: {
+    color: '#111',
+  },
+  breakable: {
+    height: verticalScale(0.6),
+    backgroundColor: '#ccc',
+    marginVertical: verticalScale(10),
+  },
+  emailInputUpdate: {
+    borderWidth: 0.5,
+    borderStyle:'solid',
+    borderColor: '#111',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderRadius: horizontalScale(5),
+    paddingHorizontal: horizontalScale(9),
+  },
+  p8: {
+    padding: verticalScale(12),
+  },
 });
