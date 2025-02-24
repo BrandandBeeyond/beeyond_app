@@ -1,14 +1,18 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Pressable, SafeAreaView, Text, View} from 'react-native';
+import {Alert, Pressable, SafeAreaView, Text, View} from 'react-native';
 import {LoginStyle} from './Style';
 import {globalStyle} from '../../assets/styles/globalStyle';
 import AuthHeader from './AuthHeader';
 import {Routes} from '../../navigation/Routes';
 import {TextInput} from 'react-native-gesture-handler';
+import {useSelector} from 'react-redux';
+import axios from 'axios';
+import {serverApi} from '../../config/serverApi';
 
 const LoginMobile = ({navigation}) => {
   const [mobileNumber, setMobileNumber] = useState('');
   const inputRef = useRef(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (inputRef.current) {
@@ -24,6 +28,26 @@ const LoginMobile = ({navigation}) => {
   };
 
   const isValidMobileNumber = mobileNumber.length === 10;
+
+  const sendOtp = async () => {
+    if (!isValidMobileNumber) return;
+    setLoading(true);
+    try {
+      const response = await axios.post(`${serverApi}/send-otp`, {
+        mobile: mobileNumber,
+      });
+
+      if (response.data.success) {
+        navigation.navigate(Routes.OtpScreen, {mobile: mobileNumber});
+      } else {
+        Alert.alert('Error', response.data.message || 'Failed to send OTP');
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Something went wrong, please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <SafeAreaView style={[LoginStyle.loginBg, globalStyle.flex]}>
       <AuthHeader title={'Continue with mobile'} />
@@ -54,10 +78,12 @@ const LoginMobile = ({navigation}) => {
               LoginStyle.loginBtn,
               {backgroundColor: isValidMobileNumber ? '#010101' : '#b4b3b3'},
             ]}
-            onPress={()=>navigation.navigate(Routes.OtpScreen,{mobile:mobileNumber})}
-            disabled={!isValidMobileNumber}>
+           onPress={sendOtp}
+            disabled={!isValidMobileNumber || loading}>
             <View>
-              <Text style={LoginStyle.loginBtnText}>Send OTP</Text>
+              <Text style={LoginStyle.loginBtnText}>
+                {loading ? 'Sending...' : 'Send OTP'}
+              </Text>
             </View>
           </Pressable>
         </View>

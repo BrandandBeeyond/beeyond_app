@@ -41,7 +41,7 @@ const PasswordEntry = ({route, navigation}) => {
 
   return (
     <SafeAreaView style={[LoginStyle.loginBg, globalStyle.flex]}>
-      <AuthHeader title={'Enter Password'} />
+      <AuthHeader title={'Enter Password'} description={`Linked with ${email}`}/>
       <View
         style={[
           globalStyle.bgWhite,
