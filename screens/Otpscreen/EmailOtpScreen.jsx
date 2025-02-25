@@ -1,15 +1,32 @@
 import React, {useEffect, useState} from 'react';
-import {Pressable, SafeAreaView, Text, View} from 'react-native';
+import {
+  Pressable,
+  SafeAreaView,
+  Text,
+  View,
+  ActivityIndicator,
+} from 'react-native';
 import {LoginStyle} from '../Login/Style';
 import {globalStyle} from '../../assets/styles/globalStyle';
 import AuthHeader from '../Login/AuthHeader';
 import {OtpInput} from 'react-native-otp-entry';
 import {OtpStyle} from './Style';
+import {useDispatch, useSelector} from 'react-redux';
+import {VerifyOTPEmail} from '../../redux/actions/UserAction';
 
-const EmailOtpScreen = ({route}) => {
+const EmailOtpScreen = ({route, navigation}) => {
   const {email} = route.params || '';
+  const [otp, setOtp] = useState('');
   const [timer, setTimer] = useState(60);
   const [isTimerActive, setIsTimerActive] = useState(true);
+  const dispatch = useDispatch();
+  const {loading, isAuthenticated} = useSelector(state => state.user);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigation.replace('BottomTabs');
+    }
+  }, [isAuthenticated, navigation]);
 
   useEffect(() => {
     if (timer > 0) {
@@ -32,18 +49,15 @@ const EmailOtpScreen = ({route}) => {
     setIsTimerActive(true);
   };
 
-  const formattedTimer = time => {
-    const minutes = Math.floor(time / 60);
-    const seconds = time % 60;
-    return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(
-      2,
-      '0',
-    )}`;
+  const handleVerifyOtp = async () => {
+    if (otp.length === 6) {
+      await dispatch(VerifyOTPEmail(email, otp));
+    }
   };
 
   return (
     <SafeAreaView style={[LoginStyle.loginBg, globalStyle.flex]}>
-      <AuthHeader title={`Enter 6 Digit OTP sent on your ${email}`} />
+      <AuthHeader title={`Enter 6 Digit OTP sent to ${email}`} />
       <View
         style={[
           globalStyle.bgWhite,
@@ -56,6 +70,7 @@ const EmailOtpScreen = ({route}) => {
             numberOfDigits={6}
             focusColor={'#f9b000'}
             type="numeric"
+            onFilled={setOtp}
             theme={{
               pinCodeContainerStyle: OtpStyle.pinCodeContainer,
               pinCodeTextStyle: OtpStyle.pincodeText,
@@ -64,14 +79,14 @@ const EmailOtpScreen = ({route}) => {
         </View>
         <View
           style={[OtpStyle.otpNotRecived, globalStyle.px10, globalStyle.mt20]}>
-          <Text style={OtpStyle.otpText}>did'nt recive code?</Text>
+          <Text style={OtpStyle.otpText}>Didn't receive code?</Text>
           <Pressable disabled={isTimerActive} onPress={handleResendOtpTimer}>
             <Text
               style={[
                 OtpStyle.resendOtpText,
                 {color: isTimerActive ? '#807f7f' : '#f9b000'},
               ]}>
-              Resend otp
+              Resend OTP
             </Text>
           </Pressable>
         </View>
@@ -80,11 +95,35 @@ const EmailOtpScreen = ({route}) => {
             <Text
               style={[
                 globalStyle.xsSmall,
-                {fontWeight: 700, color: '#010101'},
+                {fontWeight: '700', color: '#010101'},
               ]}>
-              Resend OTP in {formattedTimer(timer)}
+              Resend OTP in {`0${Math.floor(timer / 60)}`}:
+              {(timer % 60).toString().padStart(2, '0')}
             </Text>
           ) : null}
+        </View>
+        <View style={globalStyle.px10}>
+          <Pressable
+            style={[
+              LoginStyle.loginBtn,
+              {backgroundColor: otp.length === 6 ? '#010101' : '#b4b3b3'},
+            ]}
+            onPress={handleVerifyOtp}
+            disabled={otp.length !== 6 || loading}>
+            {loading ? (
+              <View
+                style={[
+                  globalStyle.drow,
+                  globalStyle.alignCenter,
+                  globalStyle.cg5,
+                ]}>
+                <ActivityIndicator size={20} color={'#fff'} />
+                <Text style={LoginStyle.loginBtnText}>Verifying...</Text>
+              </View>
+            ) : (
+              <Text style={LoginStyle.loginBtnText}>Verify</Text>
+            )}
+          </Pressable>
         </View>
       </View>
     </SafeAreaView>

@@ -13,6 +13,18 @@ import {
   REGISTER_USER_FAIL,
   REGISTER_USER_REQUEST,
   REGISTER_USER_SUCCESS,
+  SEND_EMAIL_OTP_FAIL,
+  SEND_EMAIL_OTP_REQUEST,
+  SEND_EMAIL_OTP_SUCCESS,
+  SEND_MOBILE_OTP_FAIL,
+  SEND_MOBILE_OTP_REQUEST,
+  SEND_MOBILE_OTP_SUCCESS,
+  VERIFY_EMAIL_OTP_FAIL,
+  VERIFY_EMAIL_OTP_REQUEST,
+  VERIFY_EMAIL_OTP_SUCCESS,
+  VERIFY_MOBILE_OTP_FAIL,
+  VERIFY_MOBILE_OTP_REQUEST,
+  VERIFY_MOBILE_OTP_SUCCESS,
 } from '../constants/UserConstants';
 
 const initialState = {
@@ -21,17 +33,10 @@ const initialState = {
   loading: false,
   error: null,
   userExists: null,
-};
-
-const loadUserfromStorage = async () => {
-  try {
-    const storedUser = await AsyncStorage.getItem('user');
-
-    return storedUser ? JSON.parse(storedUser) : null;
-  } catch (error) {
-    console.error('Error loading user from AsyncStorage:', error);
-    return null;
-  }
+  otpSentEmail: false,
+  otpVerfiedEmail: false,
+  otpSentMobile: false,
+  otpVerfiedMobile: false,
 };
 
 export const UserReducer = (state = initialState, action) => {
@@ -39,6 +44,10 @@ export const UserReducer = (state = initialState, action) => {
     case LOGIN_USER_REQUEST:
     case CHECK_USER_REQUEST:
     case REGISTER_USER_REQUEST:
+    case SEND_EMAIL_OTP_REQUEST:
+    case SEND_MOBILE_OTP_REQUEST:
+    case VERIFY_MOBILE_OTP_REQUEST:
+    case VERIFY_EMAIL_OTP_REQUEST:
       return {
         ...state,
         loading: true,
@@ -61,21 +70,48 @@ export const UserReducer = (state = initialState, action) => {
 
     case LOGIN_USER_SUCCESS:
     case REGISTER_USER_SUCCESS:
+    case VERIFY_EMAIL_OTP_SUCCESS:
+    case VERIFY_MOBILE_OTP_SUCCESS:
       AsyncStorage.setItem('user', JSON.stringify(action.payload));
       return {
         ...state,
         loading: false,
         isAuthenticated: true,
         user: action.payload,
+        otpVerfiedEmail: action.type || VERIFY_EMAIL_OTP_SUCCESS,
+        otpVerfiedMobile: action.type || VERIFY_MOBILE_OTP_SUCCESS,
+      };
+
+    case SEND_EMAIL_OTP_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        otpSentEmail: true,
+      };
+
+    case SEND_MOBILE_OTP_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        otpSentMobile: true,
       };
 
     case CHECK_USER_FAIL:
+    case SEND_EMAIL_OTP_FAIL:
+    case SEND_MOBILE_OTP_FAIL:
+    case VERIFY_MOBILE_OTP_FAIL:
+    case VERIFY_EMAIL_OTP_FAIL:
       return {
         ...state,
         loading: false,
         userExists: false,
         error: action.payload,
+        otpSentEmail: false,
+        otpSentMobile: false,
+        otpVerfiedEmail: false,
+        otpVerfiedMobile: false,
       };
+
     case LOAD_USER_FAIL:
       return {
         ...state,
@@ -83,6 +119,7 @@ export const UserReducer = (state = initialState, action) => {
         isAuthenticated: false,
         user: null,
       };
+
     case LOGIN_USER_FAIL:
     case REGISTER_USER_FAIL:
       return {

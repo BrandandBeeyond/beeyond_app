@@ -12,6 +12,12 @@ import {
   REGISTER_USER_FAIL,
   REGISTER_USER_REQUEST,
   REGISTER_USER_SUCCESS,
+  SEND_EMAIL_OTP_FAIL,
+  SEND_EMAIL_OTP_REQUEST,
+  SEND_EMAIL_OTP_SUCCESS,
+  VERIFY_EMAIL_OTP_FAIL,
+  VERIFY_EMAIL_OTP_REQUEST,
+  VERIFY_EMAIL_OTP_SUCCESS,
 } from '../constants/UserConstants';
 import {serverApi} from '../../config/serverApi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -108,6 +114,47 @@ export const UserRegister =
       });
     }
   };
+
+export const SendOTPEmail = email => async dispatch => {
+  try {
+    dispatch({type: SEND_EMAIL_OTP_REQUEST});
+
+    const {data} = await axios.post(`${serverApi}/send-email-otp`, {email});
+
+    dispatch({
+      type: SEND_EMAIL_OTP_SUCCESS,
+      payload: data.message,
+    });
+
+    return {success: true, message: data.message};
+  } catch (error) {
+    dispatch({
+      type: SEND_EMAIL_OTP_FAIL,
+      payload: error.response?.data?.message || 'Failed to send OTP',
+    });
+  }
+};
+
+export const VerifyOTPEmail = (email, otp) => async dispatch => {
+  try {
+    dispatch({type: VERIFY_EMAIL_OTP_REQUEST});
+
+    const {data} = await axios.post(`${serverApi}/verify-email-otp`, {
+      email,
+      otp,
+    });
+
+    dispatch({
+      type: VERIFY_EMAIL_OTP_SUCCESS,
+      payload: data.user,
+    });
+  } catch (error) {
+    dispatch({
+      type: VERIFY_EMAIL_OTP_FAIL,
+      payload: error.response?.data?.message || 'Failed to verify OTP',
+    });
+  }
+};
 
 export const logoutUser = () => async dispatch => {
   dispatch({type: LOGOUT_USER_SUCCESS});

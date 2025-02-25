@@ -1,12 +1,5 @@
-import React from 'react';
-import {
-  Image,
-  Pressable,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React, {useState} from 'react';
+import {Image, Pressable, Text, TextInput, View} from 'react-native';
 import {SafeAreaView, ScrollView} from 'react-native';
 import {globalStyle} from '../../assets/styles/globalStyle';
 import {ProfileStyle} from '../Profile/Style';
@@ -18,6 +11,9 @@ import {logoutUser} from '../../redux/actions/UserAction';
 
 const MyAccount = ({navigation}) => {
   const {user} = useSelector(state => state.user) || {};
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [email, setEmail] = useState(user?.email || '');
 
   const dispatch = useDispatch();
 
@@ -96,9 +92,17 @@ const MyAccount = ({navigation}) => {
               </Text>
               <View style={globalStyle.breakable}></View>
               <View style={globalStyle.emailInputUpdate}>
-                <TextInput placeholder="Entered email" />
-                <Pressable style={accountStyle.editableBtn}>
-                  <Text style={accountStyle.editableText}>Edit</Text>
+                <TextInput
+                  value={email}
+                  onChangeText={setEmail}
+                  editable={isEditing}
+                />
+                <Pressable
+                  style={accountStyle.editableBtn}
+                  onPress={() => setIsEditing(!isEditing)}>
+                  <Text style={accountStyle.editableText}>
+                    {isEditing ? 'Save' : 'Edit'}
+                  </Text>
                 </Pressable>
               </View>
             </View>

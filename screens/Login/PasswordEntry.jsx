@@ -22,6 +22,8 @@ const PasswordEntry = ({route, navigation}) => {
   const [password, setPassword] = useState('');
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  const [otploading, setOtploading] = useState(false);
+  const [signinLoading, setSigninLoading] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -30,10 +32,13 @@ const PasswordEntry = ({route, navigation}) => {
   }, [password]);
 
   const handleSignIn = async () => {
+    setSigninLoading(true);
     await dispatch(UserLogin(email, password));
+    setSigninLoading(false);
   };
 
   const handleSendEmailOtp = async () => {
+    setOtploading(true);
     try {
       const response = await dispatch(SendOTPEmail(email));
 
@@ -45,6 +50,7 @@ const PasswordEntry = ({route, navigation}) => {
     } catch (error) {
       Alert.alert('Error', 'Something went wrong. Please try again.');
     }
+    setOtploading(false);
   };
 
   useEffect(() => {
@@ -102,7 +108,7 @@ const PasswordEntry = ({route, navigation}) => {
               ]}
               onPress={handleSignIn}
               disabled={isButtonDisabled}>
-              {loading ? (
+              {signinLoading ? (
                 <View
                   style={[
                     globalStyle.drow,
@@ -113,7 +119,9 @@ const PasswordEntry = ({route, navigation}) => {
                   <Text style={LoginStyle.loginBtnText}>Sign in</Text>
                 </View>
               ) : (
-                <Text style={LoginStyle.loginBtnText}>Sign in</Text>
+                <View>
+                  <Text style={LoginStyle.loginBtnText}>Sign in</Text>
+                </View>
               )}
             </Pressable>
           </View>
@@ -126,8 +134,20 @@ const PasswordEntry = ({route, navigation}) => {
         <View style={globalStyle.px10}>
           <Pressable
             style={LoginStyle.emailOtpBtn}
-            onPress={handleSendEmailOtp}>
-            <Text style={LoginStyle.emailOtpBtnText}>Sign in with OTP</Text>
+            onPress={handleSendEmailOtp}
+            disabled={otploading}>
+            {otploading ? (
+              <>
+              <View style={[globalStyle.drow,globalStyle.alignCenter,globalStyle.cg3]}>
+                <ActivityIndicator size={20} color={'#fff'} />{' '}
+                <Text style={LoginStyle.emailOtpBtnText}>Sign in with OTP</Text>
+              </View>
+              </>
+            ) : (
+              <View>
+                <Text style={LoginStyle.emailOtpBtnText}>Sign in with OTP</Text>
+              </View>
+            )}
           </Pressable>
         </View>
       </View>
