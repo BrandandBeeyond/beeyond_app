@@ -47,6 +47,8 @@ const EmailEntry = ({navigation}) => {
     try {
       const userExist = await dispatch(checkUserExists(email));
 
+      console.log("user availability",userExist);
+      
       if (userExist) {
         navigation.navigate(Routes.PasswordEntry,{email});
       } else {

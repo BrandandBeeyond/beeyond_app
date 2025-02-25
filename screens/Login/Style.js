@@ -65,6 +65,23 @@ export const LoginStyle = StyleSheet.create({
     fontFamily: getFontFamily('Roboto', 700),
     letterSpacing: horizontalScale(0.5),
   },
+  emailOtpBtn:{
+    width: '100%',
+    padding: horizontalScale(15),
+    backgroundColor:'#000',
+    borderColor: '#000',
+    marginVertical: verticalScale(20),
+    borderRadius: horizontalScale(100),
+    alignItems: 'center',
+  },
+  emailOtpBtnText:{
+    color:'#fff',
+    fontSize: scaleFontSize(14),
+    lineHeight: verticalScale(18),
+    textTransform: 'capitalize',
+    fontFamily: getFontFamily('Roboto', 700),
+    letterSpacing: horizontalScale(0.5),
+  },
   showCloseIcon: {
     position: 'absolute',
     top: 20,

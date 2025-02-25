@@ -27,6 +27,8 @@ import LoginEmail from '../screens/Login/LoginEmail';
 import EmailEntry from '../screens/Login/EmailEntry';
 import PasswordEntry from '../screens/Login/PasswordEntry';
 import MyAccount from '../screens/Account/MyAccount';
+import EmailOtpScreen from '../screens/Otpscreen/EmailOtpScreen';
+import Checkoutform from '../screens/Checkout/Checkoutform';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -198,7 +200,10 @@ export const MainNavigation = () => {
       <Stack.Screen
         name={Routes.MyAccount}
         component={MyAccount}
-        options={{headerTitleStyle: {fontSize: scaleFontSize(17)},headerTitle:'My Account'}}
+        options={{
+          headerTitleStyle: {fontSize: scaleFontSize(17)},
+          headerTitle: 'My Account',
+        }}
       />
 
       {/* <Stack.Screen
@@ -214,7 +219,6 @@ export const MainNavigation = () => {
           },
         }}
       /> */}
-
 
       {/* Email entry screen */}
 
@@ -232,8 +236,7 @@ export const MainNavigation = () => {
         }}
       />
 
-
-  {/* password entry screen */}
+      {/* password entry screen */}
 
       <Stack.Screen
         name={Routes.PasswordEntry}
@@ -286,6 +289,29 @@ export const MainNavigation = () => {
             shadowOpacity: 0,
           },
         }}
+      />
+      <Stack.Screen
+        name={Routes.EmailOtpScreen}
+        component={EmailOtpScreen}
+        options={{
+          headerTitle: () => null,
+          headerTitleStyle: {fontSize: scaleFontSize(17)},
+          headerStyle: {
+            backgroundColor: '#f9b000',
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+        }}
+      />
+
+      <Stack.Screen
+        name="Checkoutform"
+        component={Checkoutform}
+        options={({navigation}) => ({
+          headerLeft: () => <CustomBackButton navigation={navigation} />,
+          headerTitleStyle: {fontSize: scaleFontSize(17)},
+          headerTitle:'Add delivery Address'
+        })}
       />
     </Stack.Navigator>
   );

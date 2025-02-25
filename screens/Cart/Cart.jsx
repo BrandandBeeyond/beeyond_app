@@ -268,7 +268,7 @@ const Cart = ({navigation}) => {
               <Header title={`₹ ${checkoutAmount.toFixed(2)}`} type={3} />
             </View>
             <View>
-              <Pressable style={CartStyle.CheckoutBtn}>
+              <Pressable style={CartStyle.CheckoutBtn} onPress={()=>navigation.navigate(Routes.Checkoutform)}>
                 <Text style={CartStyle.checkoutBtnText}>Checkout</Text>
               </Pressable>
             </View>

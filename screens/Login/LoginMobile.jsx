@@ -1,5 +1,12 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Alert, Pressable, SafeAreaView, Text, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Alert,
+  Pressable,
+  SafeAreaView,
+  Text,
+  View,
+} from 'react-native';
 import {LoginStyle} from './Style';
 import {globalStyle} from '../../assets/styles/globalStyle';
 import AuthHeader from './AuthHeader';
@@ -31,10 +38,11 @@ const LoginMobile = ({navigation}) => {
 
   const sendOtp = async () => {
     if (!isValidMobileNumber) return;
+    console.log('Final Mobile Number (before sending OTP):', mobileNumber);
     setLoading(true);
     try {
       const response = await axios.post(`${serverApi}/send-otp`, {
-        mobile: mobileNumber,
+        mobile: `91${mobileNumber}`,
       });
 
       if (response.data.success) {
@@ -78,13 +86,27 @@ const LoginMobile = ({navigation}) => {
               LoginStyle.loginBtn,
               {backgroundColor: isValidMobileNumber ? '#010101' : '#b4b3b3'},
             ]}
-           onPress={sendOtp}
+            onPress={sendOtp}
             disabled={!isValidMobileNumber || loading}>
-            <View>
-              <Text style={LoginStyle.loginBtnText}>
-                {loading ? 'Sending...' : 'Send OTP'}
-              </Text>
-            </View>
+            {loading ? (
+              <>
+                <View
+                  style={[
+                    globalStyle.drow,
+                    globalStyle.alignCenter,
+                    globalStyle.cg5,
+                  ]}>
+                  <ActivityIndicator size={20} color={'#fff'} />
+                  <View>
+                    <Text style={LoginStyle.loginBtnText}>Sending</Text>
+                  </View>
+                </View>
+              </>
+            ) : (
+              <View>
+                <Text style={LoginStyle.loginBtnText}>Send</Text>
+              </View>
+            )}
           </Pressable>
         </View>
 

@@ -12,7 +12,7 @@ import {LoginStyle} from './Style';
 import {globalStyle} from '../../assets/styles/globalStyle';
 import AuthHeader from './AuthHeader';
 import {useDispatch, useSelector} from 'react-redux';
-import {UserLogin} from '../../redux/actions/UserAction';
+import {SendOTPEmail, UserLogin} from '../../redux/actions/UserAction';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faEye, faEyeSlash} from '@fortawesome/free-regular-svg-icons';
 
@@ -33,15 +33,32 @@ const PasswordEntry = ({route, navigation}) => {
     await dispatch(UserLogin(email, password));
   };
 
-  useEffect(()=>{
-     if(isAuthenticated){
-        navigation.replace('BottomTabs')
-     }
-  },[isAuthenticated,navigation]);
+  const handleSendEmailOtp = async () => {
+    try {
+      const response = await dispatch(SendOTPEmail(email));
+
+      if (response.success) {
+        navigation.navigate('EmailOtpScreen', {email});
+      } else {
+        Alert.alert('Error', 'Failed to send OTP. Please try again.');
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Something went wrong. Please try again.');
+    }
+  };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigation.replace('BottomTabs');
+    }
+  }, [isAuthenticated, navigation]);
 
   return (
     <SafeAreaView style={[LoginStyle.loginBg, globalStyle.flex]}>
-      <AuthHeader title={'Enter Password'} description={`Linked with ${email}`}/>
+      <AuthHeader
+        title={'Enter Password'}
+        description={`Linked with ${email}`}
+      />
       <View
         style={[
           globalStyle.bgWhite,
@@ -108,9 +125,9 @@ const PasswordEntry = ({route, navigation}) => {
         </View>
         <View style={globalStyle.px10}>
           <Pressable
-            style={LoginStyle.mobilebtn}
-            onPress={() => navigation.navigate('MobileLogin')}>
-            <Text style={LoginStyle.mobilebtnText}>Sign in with OTP</Text>
+            style={LoginStyle.emailOtpBtn}
+            onPress={handleSendEmailOtp}>
+            <Text style={LoginStyle.emailOtpBtnText}>Sign in with OTP</Text>
           </Pressable>
         </View>
       </View>
