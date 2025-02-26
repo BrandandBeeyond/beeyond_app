@@ -25,7 +25,7 @@ const Topbar = ({navigation}) => {
               <Text style={globalStyle.small}>Hello,</Text>
               {isAuthenticated ? (
                 <>
-                <Text style={globalStyle.HelloText}>{user.name}</Text>
+                  <Text style={globalStyle.HelloText}>{user.name}</Text>
                 </>
               ) : (
                 <Text style={globalStyle.HelloText}>Join us!</Text>
@@ -35,7 +35,9 @@ const Topbar = ({navigation}) => {
         </Pressable>
 
         <View style={TopbarStyle.rightIcons}>
-          <HeartIcon name="heart" size={20} />
+          <Pressable onPress={() => navigation.navigate(Routes.Wishlist)}>
+            <HeartIcon name="heart" size={20} />
+          </Pressable>
           <BellIcon name="bell" size={20} />
           <Pressable
             onPress={() => navigation.navigate(Routes.Cart)}

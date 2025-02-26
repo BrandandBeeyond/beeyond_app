@@ -5,6 +5,7 @@ export const Routes = {
   Profile: 'Profile',
   MyAccount: 'MyAccount',
   Cart: 'Cart',
+  Wishlist:'Wishlist',
   Products: 'Products',
   Orders: 'Orders',
   // LoginEmail: 'LoginEmail',

@@ -29,6 +29,7 @@ import PasswordEntry from '../screens/Login/PasswordEntry';
 import MyAccount from '../screens/Account/MyAccount';
 import EmailOtpScreen from '../screens/Otpscreen/EmailOtpScreen';
 import Checkoutform from '../screens/Checkout/Checkoutform';
+import Wishlist from '../screens/Wishlist/Wishlist';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -158,6 +159,15 @@ export const MainNavigation = () => {
       <Stack.Screen
         name="Products"
         component={Products}
+        options={({navigation}) => ({
+          headerTitleStyle: {fontSize: scaleFontSize(17)},
+          headerLeft: () => <CustomBackButton navigation={navigation} />,
+          headerRight: () => <CustomHeaderIcons />,
+        })}
+      />
+      <Stack.Screen
+        name="Wishlist"
+        component={Wishlist}
         options={({navigation}) => ({
           headerTitleStyle: {fontSize: scaleFontSize(17)},
           headerLeft: () => <CustomBackButton navigation={navigation} />,

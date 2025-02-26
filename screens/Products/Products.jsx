@@ -20,6 +20,7 @@ import {INCREMENT_QUANTITY} from '../../redux/constants/CartConstants';
 import Notification from '../../components/Notification/Notification';
 import {AddNotification} from '../../redux/actions/NotificationAction';
 import { useNavigation } from '@react-navigation/native';
+import HeartIcon from 'react-native-vector-icons/Feather';
 
 const Products = () => {
   const dispatch = useDispatch();
@@ -73,7 +74,12 @@ const Products = () => {
           <View style={productStyle.productCard} key={i}>
             <View style={productStyle.productCardBody}>
               <Pressable onPress={()=>navigation.navigate('ProductDetail',{product:item})}>
+                <View style={globalStyle.relative}>
                 <Image source={item.thumbnail} style={productStyle.mockup} />
+                 <View style={productStyle.wishlistContainer}>
+                      <HeartIcon name="heart" color={'#000'} size={20}/>
+                 </View>
+                </View>
               </Pressable>
               <View style={globalStyle.mt3}>
                 <View
