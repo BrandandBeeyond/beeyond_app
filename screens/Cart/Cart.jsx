@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Image,
   KeyboardAvoidingView,
+  Modal,
   Pressable,
   SafeAreaView,
   ScrollView,
@@ -27,12 +28,16 @@ import {
 import Notification from '../../components/Notification/Notification';
 import {AddNotification} from '../../redux/actions/NotificationAction';
 import Header from '../../components/Header/Header';
+import CloseIcon from 'react-native-vector-icons/AntDesign';
+import {productStyle} from '../Products/Style';
 
 const Cart = ({navigation}) => {
   const dispatch = useDispatch();
   const {cart} = useSelector(state => state.cart);
   const {notifications} = useSelector(state => state.notifications);
   const {isAuthenticated} = useSelector(state => state.user);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const CalculateCartTotal = () => {
     return cart.reduce((total, item) => total + item.price * item.quantity, 0);
@@ -51,11 +56,20 @@ const Cart = ({navigation}) => {
   const shippingCharges = calculateShipping();
   const platformFee = 9;
 
-  const checkoutAmount = totalAmount + gstAmount + shippingCharges + platformFee
+  const checkoutAmount =
+    totalAmount + gstAmount + shippingCharges + platformFee;
 
-  const handleRemoveFromCart = productId => {
-    dispatch(RemovefromCart(productId));
-    dispatch(AddNotification('Cart quantity updated successfully!'));
+  const handleRemoveFromCart = product => {
+    setSelectedProduct(product);
+    setModalVisible(true);
+  };
+
+  const confirmRemove = () => {
+    if (selectedProduct) {
+      dispatch(RemovefromCart(selectedProduct.id));
+      dispatch(AddNotification('Cart item removed from cart'));
+      setModalVisible(false);
+    }
   };
 
   const handleIncrementQuantity = productId => {
@@ -149,7 +163,7 @@ const Cart = ({navigation}) => {
                       {item.quantity === 1 ? (
                         <Pressable
                           style={CartStyle.cartTrash}
-                          onPress={() => handleRemoveFromCart(item.id)}>
+                          onPress={() => handleRemoveFromCart(item)}>
                           <TrashIcon name="trash" color={'#555'} size={15} />
                         </Pressable>
                       ) : (
@@ -187,7 +201,8 @@ const Cart = ({navigation}) => {
               </View>
             ))}
 
-            <View style={[globalStyle.mt10, globalStyle.mx10,globalStyle.mb80]}>
+            <View
+              style={[globalStyle.mt10, globalStyle.mx10, globalStyle.mb80]}>
               <View
                 style={[globalStyle.cardOuter, globalStyle.borderTopRadius]}>
                 <View style={[globalStyle.card, globalStyle.borderTopRadius]}>
@@ -202,7 +217,9 @@ const Cart = ({navigation}) => {
                         </Text>
                       </View>
                       <View>
-                        <Text style={CartStyle.ttlAmtText}>₹ {totalAmount}</Text>
+                        <Text style={CartStyle.ttlAmtText}>
+                          ₹ {totalAmount}
+                        </Text>
                       </View>
                     </View>
                     <View style={CartStyle.ttlAmt}>
@@ -210,7 +227,9 @@ const Cart = ({navigation}) => {
                         <Text style={CartStyle.gstText}>Total GST</Text>
                       </View>
                       <View>
-                        <Text style={CartStyle.gstText}>₹ {gstAmount.toFixed(2)}</Text>
+                        <Text style={CartStyle.gstText}>
+                          ₹ {gstAmount.toFixed(2)}
+                        </Text>
                       </View>
                     </View>
                     <View style={CartStyle.ttlAmt}>
@@ -221,7 +240,9 @@ const Cart = ({navigation}) => {
                         </Text>
                       </View>
                       <View>
-                        <Text style={CartStyle.gstText}>₹ {shippingCharges}</Text>
+                        <Text style={CartStyle.gstText}>
+                          ₹ {shippingCharges}
+                        </Text>
                       </View>
                     </View>
                     <View style={CartStyle.ttlAmt}>
@@ -268,8 +289,12 @@ const Cart = ({navigation}) => {
               <Header title={`₹ ${checkoutAmount.toFixed(2)}`} type={3} />
             </View>
             <View>
-              <Pressable style={CartStyle.CheckoutBtn} onPress={()=>navigation.navigate(Routes.Checkoutform)}>
-                <Text style={CartStyle.checkoutBtnText}>Checkout</Text>
+              <Pressable
+                style={CartStyle.CheckoutBtn}
+                onPress={() => navigation.navigate(Routes.Checkoutform)}>
+                <Text style={CartStyle.checkoutBtnText}>
+                  Proceed to Checkout
+                </Text>
               </Pressable>
             </View>
           </View>
@@ -302,7 +327,8 @@ const Cart = ({navigation}) => {
 
               {!isAuthenticated && (
                 <View>
-                  <Pressable onPress={() => navigation.navigate(Routes.EmailEntry)}>
+                  <Pressable
+                    onPress={() => navigation.navigate(Routes.EmailEntry)}>
                     <Text
                       style={[globalStyle.warnText, globalStyle.textCenter]}>
                       SIGN IN NOW
@@ -320,6 +346,75 @@ const Cart = ({navigation}) => {
       {notifications.map(notification => (
         <Notification key={notification.id} message={notification.message} />
       ))}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}>
+        <View style={CartStyle.modalOverlay}>
+          <View style={CartStyle.modalContent}>
+            <View style={[globalStyle.drow, globalStyle.justifyBetween]}>
+              <View>
+                <Text style={[globalStyle.subtext, globalStyle.fwbold]}>
+                  Are you sure to remove this item?
+                </Text>
+              </View>
+              <Pressable onPress={() => setModalVisible(false)}>
+                <CloseIcon name="closecircle" size={20} />
+              </Pressable>
+            </View>
+            {selectedProduct && (
+              <View style={[globalStyle.mt10]}>
+                <View style={[CartStyle.removeFromCart, globalStyle.my10]}>
+                  <Image
+                    source={selectedProduct.thumbnail}
+                    style={CartStyle.modalImage}
+                  />
+                  <View>
+                    <Text style={globalStyle.normalText}>
+                      {selectedProduct.title}
+                    </Text>
+                    <View style={globalStyle.mt5}>
+                      <Text style={[CartStyle.cuttedPrice]}>
+                        ₹{selectedProduct.cuttedPrice}
+                      </Text>
+                      <Text
+                        style={[
+                          globalStyle.normalText,
+                          globalStyle.mt3,
+                          globalStyle.fwbold,
+                        ]}>
+                        ₹{selectedProduct.price}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+                <View
+                  style={[globalStyle.drow, globalStyle.cg5, globalStyle.mt10]}>
+                  <Pressable
+                    style={CartStyle.removeCartBtn}
+                    onPress={confirmRemove}>
+                    <View
+                      style={[
+                        globalStyle.drow,
+                        globalStyle.alignCenter,
+                        globalStyle.cg5,
+                      ]}>
+                      <TrashIcon name="trash" color={'#f9b000'} size={17}/>
+                      <Text style={CartStyle.removeFromCartText}>Remove</Text>
+                    </View>
+                  </Pressable>
+                  <Pressable style={CartStyle.wishlistBtn}>
+                    <Text style={CartStyle.wishlistBtnText}>
+                      Move to wishlist
+                    </Text>
+                  </Pressable>
+                </View>
+              </View>
+            )}
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };

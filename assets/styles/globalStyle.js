@@ -260,7 +260,7 @@ export const globalStyle = StyleSheet.create({
   },
   emailInputUpdate: {
     borderWidth: 0.5,
-    borderStyle:'solid',
+    borderStyle: 'solid',
     borderColor: '#111',
     display: 'flex',
     flexDirection: 'row',
@@ -272,4 +272,19 @@ export const globalStyle = StyleSheet.create({
   p8: {
     padding: verticalScale(12),
   },
+  fwbold: {
+    fontWeight: '700',
+  },
+  fwsemibold: {
+    fontWeight: '600',
+  },
+  normalText: {
+    color: '#232222',
+    fontSize: scaleFontSize(13),
+    textTransform: 'capitalize',
+    fontFamily: getFontFamily('Roboto'),
+  },
+  my10:{
+    marginVertical:verticalScale(10)
+  }
 });
