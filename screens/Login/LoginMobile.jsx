@@ -14,6 +14,8 @@ import {Routes} from '../../navigation/Routes';
 import {TextInput} from 'react-native-gesture-handler';
 import {useDispatch, useSelector} from 'react-redux';
 import {sendMobileOtp} from '../../redux/actions/UserAction';
+import axios from 'axios';
+import {serverApi} from '../../config/serverApi';
 
 const LoginMobile = ({navigation}) => {
   const dispatch = useDispatch();
@@ -47,18 +49,33 @@ const LoginMobile = ({navigation}) => {
 
     try {
       setLoading(true);
-      const response = await dispatch(sendMobileOtp(mobileNumber));
 
-      console.log('OTP Dispatch Response:', response); // Debugging response
+      // ✅ Ensure correct payload format
+      const response = await axios.post(`${serverApi}/send-otp`, {
+        mobile: mobileNumber,
+      });
 
-      if (response?.success) {
-        Alert.alert('Success', 'Check your mobile for the OTP.');
+      console.log('OTP API Response:', response.data); // Debugging response
+
+      if (response.data?.success) {
+        Alert.alert(
+          'Success',
+          response.data.message || 'OTP sent successfully.',
+        );
       } else {
-        Alert.alert('Error', response?.message || 'Failed to send OTP.');
+        Alert.alert('Error', response.data?.message || 'Failed to send OTP.');
       }
     } catch (error) {
       console.error('Error sending mobile OTP:', error);
-      Alert.alert('Error', 'Failed to send OTP. Please try again.');
+
+      // ✅ Log detailed error response
+      console.log('Error Response:', error.response?.data || error.message);
+
+      Alert.alert(
+        'Error',
+        error.response?.data?.message ||
+          'Failed to send OTP. Please try again.',
+      );
     } finally {
       setLoading(false);
     }

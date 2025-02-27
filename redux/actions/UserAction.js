@@ -163,20 +163,32 @@ export const sendMobileOtp = mobileNumber => async dispatch => {
   try {
     dispatch({type: SEND_MOBILE_OTP_REQUEST});
 
-    const {data} = await axios.post(`${serverApi}/send-otp`, {mobile:mobileNumber});
+    const response = await axios.post(`${serverApi}/send-otp`, {
+      mobile: mobileNumber,
+    });
+
+    console.log('Full API Response:', response.data); // Debugging API response
 
     dispatch({
       type: SEND_MOBILE_OTP_SUCCESS,
-      payload: data.message,
+      payload: response.data.message,
     });
 
-    return {success: true, message: data.message};
+    return {success: true, message: response.data.message};
   } catch (error) {
+    console.error(
+      'Error in sendMobileOtp:',
+      error.response?.data || error.message,
+    );
+
+    const errorMessage = error.response?.data?.message || 'Failed to send OTP';
+
     dispatch({
       type: SEND_MOBILE_OTP_FAIL,
-      payload: error.response?.data?.message || 'Failed to send OTP',
+      payload: errorMessage,
     });
-    return { success: false, message: error.response?.data?.message || 'Failed to send OTP' };
+
+    return {success: false, message: errorMessage};
   }
 };
 
