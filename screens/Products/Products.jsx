@@ -77,7 +77,7 @@ const Products = () => {
                 <View style={globalStyle.relative}>
                 <Image source={item.thumbnail} style={productStyle.mockup} />
                  <View style={productStyle.wishlistContainer}>
-                      <HeartIcon name="heart" color={'#000'} size={20}/>
+                      <HeartIcon name="heart" color={'#000'} size={17}/>
                  </View>
                 </View>
               </Pressable>

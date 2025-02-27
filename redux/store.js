@@ -6,6 +6,7 @@ import {NotificationReducer} from './reducers/NotificationReducer';
 import {UserReducer} from './reducers/UserReducer';
 import {persistReducer, persistStore} from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { WishlistReducer } from './reducers/WishlistReducer';
 
 const persistConfig = {
   key: 'root',
@@ -22,6 +23,7 @@ const store = configureStore({
     cart: persistedCartReducer,
     notifications: NotificationReducer,
     user: persistedUserReducer,
+    wishlist:WishlistReducer
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

@@ -21,8 +21,8 @@ export const productStyle = StyleSheet.create({
   productCardBody: {
     flexDirection: 'column',
     rowGap: verticalScale(10),
-    flex:1,
-    justifyContent:'space-between'
+    flex: 1,
+    justifyContent: 'space-between',
   },
   mockup: {
     height: verticalScale(140),
@@ -35,7 +35,7 @@ export const productStyle = StyleSheet.create({
     height: 'auto',
     width: 'auto',
     paddingVertical: verticalScale(3),
-    paddingHorizontal:horizontalScale(5),
+    paddingHorizontal: horizontalScale(5),
     borderRadius: horizontalScale(3),
     display: 'flex',
     flexDirection: 'row',
@@ -67,7 +67,7 @@ export const productStyle = StyleSheet.create({
     backgroundColor: '#f9b000',
     display: 'flex',
     justifyContent: 'center',
-    borderRadius:horizontalScale(6),
+    borderRadius: horizontalScale(6),
     alignItems: 'center',
   },
   modalOverlay: {
@@ -105,5 +105,16 @@ export const productStyle = StyleSheet.create({
     alignItems: 'center',
     marginTop: 10,
   },
-  
+  wishlistContainer: {
+    height: verticalScale(25),
+    width: horizontalScale(25),
+    borderRadius:horizontalScale(100),
+    backgroundColor: '#fff',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position:'absolute',
+    top:verticalScale(7),
+    right:horizontalScale(7)
+  },
 });
