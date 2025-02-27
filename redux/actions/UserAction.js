@@ -15,6 +15,9 @@ import {
   SEND_EMAIL_OTP_FAIL,
   SEND_EMAIL_OTP_REQUEST,
   SEND_EMAIL_OTP_SUCCESS,
+  SEND_MOBILE_OTP_FAIL,
+  SEND_MOBILE_OTP_REQUEST,
+  SEND_MOBILE_OTP_SUCCESS,
   VERIFY_EMAIL_OTP_FAIL,
   VERIFY_EMAIL_OTP_REQUEST,
   VERIFY_EMAIL_OTP_SUCCESS,
@@ -153,6 +156,27 @@ export const VerifyOTPEmail = (email, otp) => async dispatch => {
       type: VERIFY_EMAIL_OTP_FAIL,
       payload: error.response?.data?.message || 'Failed to verify OTP',
     });
+  }
+};
+
+export const sendMobileOtp = mobileNumber => async dispatch => {
+  try {
+    dispatch({type: SEND_MOBILE_OTP_REQUEST});
+
+    const {data} = await axios.post(`${serverApi}/send-otp`, {mobile:mobileNumber});
+
+    dispatch({
+      type: SEND_MOBILE_OTP_SUCCESS,
+      payload: data.message,
+    });
+
+    return {success: true, message: data.message};
+  } catch (error) {
+    dispatch({
+      type: SEND_MOBILE_OTP_FAIL,
+      payload: error.response?.data?.message || 'Failed to send OTP',
+    });
+    return { success: false, message: error.response?.data?.message || 'Failed to send OTP' };
   }
 };
 

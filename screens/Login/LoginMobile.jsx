@@ -12,11 +12,11 @@ import {globalStyle} from '../../assets/styles/globalStyle';
 import AuthHeader from './AuthHeader';
 import {Routes} from '../../navigation/Routes';
 import {TextInput} from 'react-native-gesture-handler';
-import {useSelector} from 'react-redux';
-import axios from 'axios';
-import {serverApi} from '../../config/serverApi';
+import {useDispatch, useSelector} from 'react-redux';
+import {sendMobileOtp} from '../../redux/actions/UserAction';
 
 const LoginMobile = ({navigation}) => {
+  const dispatch = useDispatch();
   const [mobileNumber, setMobileNumber] = useState('');
   const inputRef = useRef(null);
   const [loading, setLoading] = useState(false);
@@ -36,26 +36,34 @@ const LoginMobile = ({navigation}) => {
 
   const isValidMobileNumber = mobileNumber.length === 10;
 
-  const sendOtp = async () => {
-    if (!isValidMobileNumber) return;
-    console.log('Final Mobile Number (before sending OTP):', mobileNumber);
-    setLoading(true);
-    try {
-      const response = await axios.post(`${serverApi}/send-otp`, {
-        mobile: `91${mobileNumber}`,
-      });
+  const handleSendOtp = async () => {
+    if (!isValidMobileNumber) {
+      Alert.alert(
+        'Invalid Number',
+        'Please enter a valid 10-digit mobile number.',
+      );
+      return;
+    }
 
-      if (response.data.success) {
-        navigation.navigate(Routes.OtpScreen, {mobile: mobileNumber});
+    try {
+      setLoading(true);
+      const response = await dispatch(sendMobileOtp(mobileNumber));
+
+      console.log('OTP Dispatch Response:', response); // Debugging response
+
+      if (response?.success) {
+        Alert.alert('Success', 'Check your mobile for the OTP.');
       } else {
-        Alert.alert('Error', response.data.message || 'Failed to send OTP');
+        Alert.alert('Error', response?.message || 'Failed to send OTP.');
       }
     } catch (error) {
-      Alert.alert('Error', 'Something went wrong, please try again.');
+      console.error('Error sending mobile OTP:', error);
+      Alert.alert('Error', 'Failed to send OTP. Please try again.');
     } finally {
       setLoading(false);
     }
   };
+
   return (
     <SafeAreaView style={[LoginStyle.loginBg, globalStyle.flex]}>
       <AuthHeader title={'Continue with mobile'} />
@@ -86,7 +94,7 @@ const LoginMobile = ({navigation}) => {
               LoginStyle.loginBtn,
               {backgroundColor: isValidMobileNumber ? '#010101' : '#b4b3b3'},
             ]}
-            onPress={sendOtp}
+            onPress={handleSendOtp}
             disabled={!isValidMobileNumber || loading}>
             {loading ? (
               <>

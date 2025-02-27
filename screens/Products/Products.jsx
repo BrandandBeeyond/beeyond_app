@@ -19,8 +19,13 @@ import {AddtoCart} from '../../redux/actions/CartAction';
 import {INCREMENT_QUANTITY} from '../../redux/constants/CartConstants';
 import Notification from '../../components/Notification/Notification';
 import {AddNotification} from '../../redux/actions/NotificationAction';
-import { useNavigation } from '@react-navigation/native';
-import HeartIcon from 'react-native-vector-icons/Feather';
+import {useNavigation} from '@react-navigation/native';
+import Hearticon from 'react-native-vector-icons/AntDesign';
+import {
+  AddtoWishlist,
+  RemoveFromWishlist,
+} from '../../redux/actions/WishlistAction';
+
 
 const Products = () => {
   const dispatch = useDispatch();
@@ -30,7 +35,13 @@ const Products = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const {notifications} = useSelector(state => state.notifications);
+  const {wishlist} = useSelector(state => state.wishlist);
   const navigation = useNavigation();
+
+  const isIteminWishlist = product => {
+    return wishlist.some(wishItem => wishItem.id === product.id);
+  };
+  console.log('checking wishlist', isIteminWishlist);
 
   useEffect(() => {
     dispatch(fetchProducts());
@@ -65,6 +76,20 @@ const Products = () => {
     }
   };
 
+  const handleAddtoWishlist = product => {
+    try {
+      if (isIteminWishlist(product)) {
+        dispatch(RemoveFromWishlist(product.id));
+        dispatch(AddNotification('Product removed from wishlist'));
+      } else {
+        dispatch(AddtoWishlist(product));
+        dispatch(AddNotification('product added to wishlist'));
+      }
+    } catch (error) {
+      console.error('unable to add product in wishlist');
+    }
+  };
+
   return (
     <SafeAreaView style={[globalStyle.bgTheme, globalStyle.flex]}>
       <ScrollView
@@ -73,12 +98,21 @@ const Products = () => {
         {products.map((item, i) => (
           <View style={productStyle.productCard} key={i}>
             <View style={productStyle.productCardBody}>
-              <Pressable onPress={()=>navigation.navigate('ProductDetail',{product:item})}>
+              <Pressable
+                onPress={() =>
+                  navigation.navigate('ProductDetail', {product: item})
+                }>
                 <View style={globalStyle.relative}>
-                <Image source={item.thumbnail} style={productStyle.mockup} />
-                 <View style={productStyle.wishlistContainer}>
-                      <HeartIcon name="heart" color={'#000'} size={17}/>
-                 </View>
+                  <Image source={item.thumbnail} style={productStyle.mockup} />
+                  <Pressable
+                    style={productStyle.wishlistContainer}
+                    onPress={() => handleAddtoWishlist(item)}>
+                    <Hearticon
+                      name={isIteminWishlist(item) ? 'heart' : 'hearto'}
+                      color={isIteminWishlist(item) ? '#f35c6e' : '#000'}
+                      size={17}
+                    />
+                  </Pressable>
                 </View>
               </Pressable>
               <View style={globalStyle.mt3}>
@@ -98,7 +132,10 @@ const Products = () => {
                     </Text>
                   </View>
                 </View>
-                <Pressable onPress={()=>navigation.navigate('ProductDetail',{product:item})}>
+                <Pressable
+                  onPress={() =>
+                    navigation.navigate('ProductDetail', {product: item})
+                  }>
                   <View style={globalStyle.mt3}>
                     <Text style={productStyle.title}>{item.title}</Text>
                     <View
@@ -109,10 +146,10 @@ const Products = () => {
                         globalStyle.mt3,
                       ]}>
                       <Text style={productStyle.cuttedPrice}>
-                        Rs.{item.cuttedPrice}
+                        ₹ {item.cuttedPrice}
                       </Text>
                     </View>
-                    <Text style={productStyle.price}>Rs.{item.price}</Text>
+                    <Text style={productStyle.price}>₹ {item.price}</Text>
                   </View>
                 </Pressable>
 
@@ -158,7 +195,7 @@ const Products = () => {
                   {selectedProduct.title}
                 </Text>
                 <Text style={productStyle.modalPrice}>
-                ₹ {selectedProduct.price}
+                  ₹ {selectedProduct.price}
                 </Text>
                 <Pressable
                   style={productStyle.continueBtn}

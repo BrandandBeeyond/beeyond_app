@@ -286,5 +286,6 @@ export const globalStyle = StyleSheet.create({
   },
   my10:{
     marginVertical:verticalScale(10)
-  }
+  },
+  
 });

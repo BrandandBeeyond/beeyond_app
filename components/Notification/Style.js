@@ -5,7 +5,7 @@ import {scale, verticalScale} from 'react-native-size-matters';
 export const NotificationStyle = StyleSheet.create({
   notification: {
     backgroundColor: '#363636',
-    padding: horizontalScale(12),
+    padding: horizontalScale(9),
     position: 'absolute',
     top: verticalScale(4),
     left: horizontalScale(6),

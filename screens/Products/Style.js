@@ -107,14 +107,14 @@ export const productStyle = StyleSheet.create({
   },
   wishlistContainer: {
     height: verticalScale(25),
-    width: horizontalScale(25),
-    borderRadius:horizontalScale(100),
+    width: horizontalScale(28),
+    borderRadius: horizontalScale(100),
     backgroundColor: '#fff',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    position:'absolute',
-    top:verticalScale(7),
-    right:horizontalScale(7)
+    position: 'absolute',
+    top: verticalScale(7),
+    right: horizontalScale(7),
   },
 });

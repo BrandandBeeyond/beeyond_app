@@ -160,7 +160,7 @@ export const MainNavigation = () => {
         name="Products"
         component={Products}
         options={({navigation}) => ({
-          headerTitleStyle: {fontSize: scaleFontSize(17)},
+          headerTitleStyle: {fontSize: scaleFontSize(15)},
           headerLeft: () => <CustomBackButton navigation={navigation} />,
           headerRight: () => <CustomHeaderIcons />,
         })}
@@ -169,7 +169,7 @@ export const MainNavigation = () => {
         name="Wishlist"
         component={Wishlist}
         options={({navigation}) => ({
-          headerTitleStyle: {fontSize: scaleFontSize(17)},
+          headerTitleStyle: {fontSize: scaleFontSize(15)},
           headerLeft: () => <CustomBackButton navigation={navigation} />,
           headerRight: () => <CustomHeaderIcons />,
         })}
@@ -279,7 +279,7 @@ export const MainNavigation = () => {
         component={LoginMobile}
         options={{
           headerTitle: () => null,
-          headerTitleStyle: {fontSize: scaleFontSize(17)},
+          headerTitleStyle: {fontSize: scaleFontSize(15)},
           headerStyle: {
             backgroundColor: '#f9b000',
             elevation: 0,

@@ -5,8 +5,11 @@ import {globalStyle} from '../../assets/styles/globalStyle';
 import AuthHeader from '../Login/AuthHeader';
 import {OtpInput} from 'react-native-otp-entry';
 import {OtpStyle} from './Style';
+import {useDispatch} from 'react-redux';
+import {sendMobileOtp} from '../../redux/actions/UserAction';
 
 const Otpscreen = ({route}) => {
+ 
   const {mobile} = route.params || '';
   const [timer, setTimer] = useState(60);
   const [isTimerActive, setIsTimerActive] = useState(true);
@@ -40,6 +43,8 @@ const Otpscreen = ({route}) => {
       '0',
     )}`;
   };
+
+ 
 
   return (
     <SafeAreaView style={[LoginStyle.loginBg, globalStyle.flex]}>
