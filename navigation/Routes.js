@@ -17,4 +17,5 @@ export const Routes = {
   ProductDetail: 'ProductDetail',
   Checkoutform: 'Checkoutform',
   Signup: 'Signup',
+  ForgotPassword: 'ForgotPassword',
 };

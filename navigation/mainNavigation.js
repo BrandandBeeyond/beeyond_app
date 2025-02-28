@@ -30,6 +30,7 @@ import MyAccount from '../screens/Account/MyAccount';
 import EmailOtpScreen from '../screens/Otpscreen/EmailOtpScreen';
 import Checkoutform from '../screens/Checkout/Checkoutform';
 import Wishlist from '../screens/Wishlist/Wishlist';
+import ForgotPassword from '../screens/Login/ForgotPassword';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -303,6 +304,19 @@ export const MainNavigation = () => {
       <Stack.Screen
         name={Routes.EmailOtpScreen}
         component={EmailOtpScreen}
+        options={{
+          headerTitle: () => null,
+          headerTitleStyle: {fontSize: scaleFontSize(17)},
+          headerStyle: {
+            backgroundColor: '#f9b000',
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+        }}
+      />
+      <Stack.Screen
+        name={Routes.ForgotPassword}
+        component={ForgotPassword}
         options={{
           headerTitle: () => null,
           headerTitleStyle: {fontSize: scaleFontSize(17)},

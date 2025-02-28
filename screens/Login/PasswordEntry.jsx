@@ -15,6 +15,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {SendOTPEmail, UserLogin} from '../../redux/actions/UserAction';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faEye, faEyeSlash} from '@fortawesome/free-regular-svg-icons';
+import { Routes } from '../../navigation/Routes';
 
 const PasswordEntry = ({route, navigation}) => {
   const {email} = route.params;
@@ -94,7 +95,7 @@ const PasswordEntry = ({route, navigation}) => {
             </View>
           </View>
           <View style={[globalStyle.mt10, globalStyle.px20]}>
-            <Pressable>
+            <Pressable onPress={()=>navigation.navigate(Routes.ForgotPassword,{email})}>
               <Text style={[globalStyle.textEnd, globalStyle.subtext]}>
                 Forgot password ?
               </Text>
