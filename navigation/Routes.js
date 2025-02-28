@@ -1,5 +1,4 @@
 
-
 export const Routes = {
   Home: 'Home',
   Profile: 'Profile',
@@ -18,4 +17,5 @@ export const Routes = {
   Checkoutform: 'Checkoutform',
   Signup: 'Signup',
   ForgotPassword: 'ForgotPassword',
+  ResetPassword: 'ResetPassword',
 };

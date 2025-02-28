@@ -14,7 +14,7 @@ import {TextInput} from 'react-native-gesture-handler';
 import {useDispatch} from 'react-redux';
 import {checkUserExists} from '../../redux/actions/UserAction';
 
-const ForgotPassword = ({route,navigation}) => {
+const ForgotPassword = ({route, navigation}) => {
   const emailRef = useRef(null);
   const [email, setEmail] = useState(route.params?.email || '');
 
@@ -40,11 +40,12 @@ const ForgotPassword = ({route,navigation}) => {
     setIsButtonDisabled(!isValidEmail(text));
   };
 
-  
-
   return (
     <SafeAreaView style={[LoginStyle.loginBg, globalStyle.flex]}>
-      <AuthHeader title={'Forgot password'} description={'Enter registered email to recieve the verification code'} />
+      <AuthHeader
+        title={'Forgot password'}
+        description={'Enter registered email to recieve the verification code'}
+      />
       <View
         style={[
           globalStyle.bgWhite,
@@ -66,20 +67,33 @@ const ForgotPassword = ({route,navigation}) => {
           </View>
 
           <View style={globalStyle.px10}>
-           
+            <Pressable
+              style={[
+                LoginStyle.loginBtn,
+                {backgroundColor: isButtonDisabled ? '#b4b3b3' : '#010101'},
+              ]}
+              disabled={isButtonDisabled}>
+              {loading ? (
+                <View
+                  style={[
+                    globalStyle.drow,
+                    globalStyle.alignCenter,
+                    globalStyle.cg5,
+                  ]}>
+                  <ActivityIndicator size={20} color={'#fff'} />
+                  <Text style={LoginStyle.loginBtnText}>Continue</Text>
+                </View>
+              ) : (
+                <View>
+                  <Text style={LoginStyle.loginBtnText}>Continue</Text>
+                </View>
+              )}
+            </Pressable>
+
+            <Pressable onPress={() => navigation.navigate(Routes.Mobilelogin)}>
+              <Text style={[globalStyle.subtext,globalStyle.textCenter,globalStyle.fw700]}>Sign in</Text>
+            </Pressable>
           </View>
-        </View>
-        <View style={globalStyle.container}>
-          <View style={LoginStyle.line}></View>
-          <Text style={globalStyle.orText}>OR</Text>
-          <View style={LoginStyle.line}></View>
-        </View>
-        <View style={globalStyle.px10}>
-          <Pressable
-            style={LoginStyle.mobilebtn}
-            onPress={() => navigation.navigate(Routes.Mobilelogin)}>
-            <Text style={LoginStyle.mobilebtnText}>Continue with mobile</Text>
-          </Pressable>
         </View>
       </View>
     </SafeAreaView>

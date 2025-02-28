@@ -284,8 +284,7 @@ export const globalStyle = StyleSheet.create({
     textTransform: 'capitalize',
     fontFamily: getFontFamily('Roboto'),
   },
-  my10:{
-    marginVertical:verticalScale(10)
+  my10: {
+    marginVertical: verticalScale(10),
   },
-  
 });

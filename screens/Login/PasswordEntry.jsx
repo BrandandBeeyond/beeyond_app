@@ -15,7 +15,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {SendOTPEmail, UserLogin} from '../../redux/actions/UserAction';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faEye, faEyeSlash} from '@fortawesome/free-regular-svg-icons';
-import { Routes } from '../../navigation/Routes';
+import {Routes} from '../../navigation/Routes';
 
 const PasswordEntry = ({route, navigation}) => {
   const {email} = route.params;
@@ -95,8 +95,16 @@ const PasswordEntry = ({route, navigation}) => {
             </View>
           </View>
           <View style={[globalStyle.mt10, globalStyle.px20]}>
-            <Pressable onPress={()=>navigation.navigate(Routes.ForgotPassword,{email})}>
-              <Text style={[globalStyle.textEnd, globalStyle.subtext]}>
+            <Pressable
+              style={{alignSelf:'flex-end'}}
+              onPress={() =>
+                navigation.navigate(Routes.ForgotPassword, {email})
+              }>
+              <Text
+                style={[
+                  globalStyle.textEnd,
+                  globalStyle.subtext,
+                ]}>
                 Forgot password ?
               </Text>
             </Pressable>
@@ -139,10 +147,17 @@ const PasswordEntry = ({route, navigation}) => {
             disabled={otploading}>
             {otploading ? (
               <>
-              <View style={[globalStyle.drow,globalStyle.alignCenter,globalStyle.cg3]}>
-                <ActivityIndicator size={20} color={'#fff'} />{' '}
-                <Text style={LoginStyle.emailOtpBtnText}>Sign in with OTP</Text>
-              </View>
+                <View
+                  style={[
+                    globalStyle.drow,
+                    globalStyle.alignCenter,
+                    globalStyle.cg3,
+                  ]}>
+                  <ActivityIndicator size={20} color={'#fff'} />{' '}
+                  <Text style={LoginStyle.emailOtpBtnText}>
+                    Sign in with OTP
+                  </Text>
+                </View>
               </>
             ) : (
               <View>
