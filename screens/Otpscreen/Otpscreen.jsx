@@ -1,18 +1,25 @@
 import React, {useEffect, useState} from 'react';
-import {Pressable, SafeAreaView, Text, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Pressable,
+  SafeAreaView,
+  Text,
+  View,
+} from 'react-native';
 import {LoginStyle} from '../Login/Style';
 import {globalStyle} from '../../assets/styles/globalStyle';
 import AuthHeader from '../Login/AuthHeader';
 import {OtpInput} from 'react-native-otp-entry';
 import {OtpStyle} from './Style';
-import {useDispatch} from 'react-redux';
-import {sendMobileOtp} from '../../redux/actions/UserAction';
+import {useDispatch, useSelector} from 'react-redux';
 
 const Otpscreen = ({route}) => {
- 
-  const {mobile} = route.params || '';
+  const dispatch = useDispatch();
+  const {mobileNumber} = route.params || '';
   const [timer, setTimer] = useState(60);
   const [isTimerActive, setIsTimerActive] = useState(true);
+  const [otp, setOtp] = useState('');
+  const {loading, isAuthenticated} = useSelector(state => state.user);
 
   useEffect(() => {
     if (timer > 0) {
@@ -44,11 +51,20 @@ const Otpscreen = ({route}) => {
     )}`;
   };
 
- 
+  const handleVerifyOtp = () => {
+    try {
+      if (otp.length === 6) {
+        dispatch();
+      }
+    } catch (error) {}
+  };
 
   return (
     <SafeAreaView style={[LoginStyle.loginBg, globalStyle.flex]}>
-      <AuthHeader title={`Enter 6 Digit OTP sent on ${mobile}`} />
+      <AuthHeader
+        title={'Enter 6 Digit OTP'}
+        description={`OTP has been sent to ${mobileNumber} for verification`}
+      />
       <View
         style={[
           globalStyle.bgWhite,
@@ -90,6 +106,29 @@ const Otpscreen = ({route}) => {
               Resend OTP in {formattedTimer(timer)}
             </Text>
           ) : null}
+        </View>
+        <View style={globalStyle.px10}>
+          <Pressable
+            style={[
+              LoginStyle.loginBtn,
+              {backgroundColor: otp.length === 6 ? '#010101' : '#b4b3b3'},
+            ]}
+            onPress={handleVerifyOtp}
+            disabled={otp.length !== 6 || loading}>
+            {loading ? (
+              <View
+                style={[
+                  globalStyle.drow,
+                  globalStyle.alignCenter,
+                  globalStyle.cg5,
+                ]}>
+                <ActivityIndicator size={20} color={'#fff'} />
+                <Text style={LoginStyle.loginBtnText}>Verifying...</Text>
+              </View>
+            ) : (
+              <Text style={LoginStyle.loginBtnText}>Verify</Text>
+            )}
+          </Pressable>
         </View>
       </View>
     </SafeAreaView>

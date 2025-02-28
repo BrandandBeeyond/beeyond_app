@@ -12,13 +12,10 @@ import {globalStyle} from '../../assets/styles/globalStyle';
 import AuthHeader from './AuthHeader';
 import {Routes} from '../../navigation/Routes';
 import {TextInput} from 'react-native-gesture-handler';
-import {useDispatch, useSelector} from 'react-redux';
-import {sendMobileOtp} from '../../redux/actions/UserAction';
 import axios from 'axios';
 import {serverApi} from '../../config/serverApi';
 
 const LoginMobile = ({navigation}) => {
-  const dispatch = useDispatch();
   const [mobileNumber, setMobileNumber] = useState('');
   const inputRef = useRef(null);
   const [loading, setLoading] = useState(false);
@@ -50,25 +47,26 @@ const LoginMobile = ({navigation}) => {
     try {
       setLoading(true);
 
-      // ✅ Ensure correct payload format
+      let formattedNumber = mobileNumber.trim();
+
+      if (!formattedNumber.startsWith('+')) {
+        formattedNumber = `+91${formattedNumber}`;
+      }
+
       const response = await axios.post(`${serverApi}/send-otp`, {
-        mobile: mobileNumber,
+        phoneNumber: formattedNumber,
       });
 
-      console.log('OTP API Response:', response.data); // Debugging response
+      console.log('Sending otp to:', formattedNumber);
 
       if (response.data?.success) {
-        Alert.alert(
-          'Success',
-          response.data.message || 'OTP sent successfully.',
-        );
+        navigation.navigate(Routes.OtpScreen, {mobileNumber: formattedNumber});
       } else {
         Alert.alert('Error', response.data?.message || 'Failed to send OTP.');
       }
     } catch (error) {
       console.error('Error sending mobile OTP:', error);
 
-      // ✅ Log detailed error response
       console.log('Error Response:', error.response?.data || error.message);
 
       Alert.alert(
