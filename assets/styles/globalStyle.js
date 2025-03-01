@@ -287,4 +287,30 @@ export const globalStyle = StyleSheet.create({
   my10: {
     marginVertical: verticalScale(10),
   },
+  contentHead: {
+    fontSize: scaleFontSize(12),
+    lineHeight: verticalScale(16.5),
+    fontWeight: '500',
+    color: '#000',
+    textTransform: 'capitalize',
+  },
+  contnentPara: {
+    fontSize: scaleFontSize(10),
+    lineHeight: verticalScale(13),
+    fontWeight: '400',
+    color: '#111',
+  },
+  avatarContact: {
+    height: verticalScale(80),
+    width: horizontalScale(100),
+  },
+  px2: {
+    paddingHorizontal: horizontalScale(2),
+  },
+  my15: {
+    marginVertical: verticalScale(15),
+  },
+  mt15:{
+    marginTop:verticalScale(15)
+  }
 });

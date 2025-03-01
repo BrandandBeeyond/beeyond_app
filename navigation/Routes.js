@@ -1,10 +1,9 @@
-
 export const Routes = {
   Home: 'Home',
   Profile: 'Profile',
   MyAccount: 'MyAccount',
   Cart: 'Cart',
-  Wishlist:'Wishlist',
+  Wishlist: 'Wishlist',
   Products: 'Products',
   Orders: 'Orders',
   // LoginEmail: 'LoginEmail',
@@ -18,4 +17,7 @@ export const Routes = {
   Signup: 'Signup',
   ForgotPassword: 'ForgotPassword',
   ResetPassword: 'ResetPassword',
+
+  // static pages
+  Contact: 'Contact',
 };

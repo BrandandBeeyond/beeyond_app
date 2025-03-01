@@ -32,6 +32,7 @@ import Checkoutform from '../screens/Checkout/Checkoutform';
 import Wishlist from '../screens/Wishlist/Wishlist';
 import ForgotPassword from '../screens/Login/ForgotPassword';
 import ResetPassword from '../screens/Login/ResetPassword';
+import Contact from '../screens/Contact/Contact';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -348,7 +349,17 @@ export const MainNavigation = () => {
         options={({navigation}) => ({
           headerLeft: () => <CustomBackButton navigation={navigation} />,
           headerTitleStyle: {fontSize: scaleFontSize(17)},
-          headerTitle:'Add delivery Address'
+          headerTitle: 'Add delivery Address',
+        })}
+      />
+
+      <Stack.Screen
+        name="Contact"
+        component={Contact}
+        options={({navigation}) => ({
+          headerLeft: () => <CustomBackButton navigation={navigation} />,
+          headerTitleStyle: {fontSize: scaleFontSize(17)},
+          headerTitle:'Contact us'
         })}
       />
     </Stack.Navigator>

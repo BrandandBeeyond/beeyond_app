@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {
   ActivityIndicator,
+  Alert,
   Pressable,
   SafeAreaView,
   Text,
@@ -12,7 +13,7 @@ import AuthHeader from './AuthHeader';
 import {Routes} from '../../navigation/Routes';
 import {TextInput} from 'react-native-gesture-handler';
 import {useDispatch} from 'react-redux';
-import {checkUserExists} from '../../redux/actions/UserAction';
+import {checkUserExists, SendOTPEmail} from '../../redux/actions/UserAction';
 
 const ForgotPassword = ({route, navigation}) => {
   const emailRef = useRef(null);
@@ -40,6 +41,22 @@ const ForgotPassword = ({route, navigation}) => {
     setIsButtonDisabled(!isValidEmail(text));
   };
 
+  const handleForgotPassword = async () => {
+    setLoading(true);
+    try {
+      const response = await dispatch(SendOTPEmail(email));
+
+      if (response.success) {
+        navigation.navigate(Routes.ResetPassword, {email});
+      } else {
+        Alert.alert('Error', 'Failed to send OTP. Please try again.');
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <SafeAreaView style={[LoginStyle.loginBg, globalStyle.flex]}>
       <AuthHeader
@@ -72,7 +89,8 @@ const ForgotPassword = ({route, navigation}) => {
                 LoginStyle.loginBtn,
                 {backgroundColor: isButtonDisabled ? '#b4b3b3' : '#010101'},
               ]}
-              disabled={isButtonDisabled}>
+              disabled={isButtonDisabled}
+              onPress={handleForgotPassword}>
               {loading ? (
                 <View
                   style={[
@@ -91,7 +109,14 @@ const ForgotPassword = ({route, navigation}) => {
             </Pressable>
 
             <Pressable onPress={() => navigation.navigate(Routes.Mobilelogin)}>
-              <Text style={[globalStyle.subtext,globalStyle.textCenter,globalStyle.fw700]}>Sign in</Text>
+              <Text
+                style={[
+                  globalStyle.subtext,
+                  globalStyle.textCenter,
+                  globalStyle.fw700,
+                ]}>
+                Sign in
+              </Text>
             </Pressable>
           </View>
         </View>

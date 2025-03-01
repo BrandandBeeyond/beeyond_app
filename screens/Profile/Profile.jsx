@@ -17,12 +17,17 @@ import {
   faCircleQuestion,
   faShield,
 } from '@fortawesome/free-solid-svg-icons';
-import {faHeadphones} from '@fortawesome/free-solid-svg-icons/faHeadphones';
-import {faShareNodes} from '@fortawesome/free-solid-svg-icons/faShareNodes';
+// import {faHeadphones} from '@fortawesome/free-solid-svg-icons/faHeadphones';
+// import {faShareNodes} from '@fortawesome/free-solid-svg-icons/faShareNodes';
 import {Routes} from '../../navigation/Routes';
 import {useSelector} from 'react-redux';
 import ArrowIcon from 'react-native-vector-icons/Entypo';
 import CheckIcon from 'react-native-vector-icons/Ionicons';
+import QuestionIcon from 'react-native-vector-icons/AntDesign';
+import HeadPhoneIcon from 'react-native-vector-icons/FontAwesome6';
+import ShareIcon from 'react-native-vector-icons/Entypo';
+import InfoIcon from 'react-native-vector-icons/AntDesign';
+import PrivacyIcon from 'react-native-vector-icons/MaterialIcons';
 
 const Profile = ({navigation}) => {
   const {user, isAuthenticated} = useSelector(state => state.user);
@@ -39,7 +44,9 @@ const Profile = ({navigation}) => {
             globalStyle.py10,
           ]}>
           {isAuthenticated ? (
-            <Pressable style={ProfileStyle.userAccount} onPress={()=>navigation.navigate(Routes.MyAccount)}>
+            <Pressable
+              style={ProfileStyle.userAccount}
+              onPress={() => navigation.navigate(Routes.MyAccount)}>
               <View style={[globalStyle.drow, globalStyle.cg5, globalStyle.p5]}>
                 <View style={globalStyle.avatar}>
                   <View style={globalStyle.avatarInner}>
@@ -79,7 +86,7 @@ const Profile = ({navigation}) => {
                         <CheckIcon
                           name="checkmark-circle-sharp"
                           color={'#F1F1F1'}
-                          size={16}
+                          size={18}
                         />
                       </View>
                       <View>
@@ -100,7 +107,7 @@ const Profile = ({navigation}) => {
                         <CheckIcon
                           name="checkmark-circle-sharp"
                           color={'#F1F1F1'}
-                          size={16}
+                          size={18}
                         />
                       </View>
                       <View>
@@ -125,7 +132,7 @@ const Profile = ({navigation}) => {
                 <Text style={globalStyle.subtext}>Get amazing offers</Text>
                 <View style={ProfileStyle.chevron}>
                   <FontAwesomeIcon
-                    color={'#444242'}
+                    color={'#2B2A2A'}
                     icon={faChevronCircleRight}
                     size={22}
                   />
@@ -157,23 +164,15 @@ const Profile = ({navigation}) => {
               globalStyle.bgWhite,
               globalStyle.normalBorder,
             ]}>
-            <View style={[ProfileStyle.faq, ProfileStyle.brbtm]}>
-              <FontAwesomeIcon
-                color={'#444242'}
-                icon={faCircleQuestion}
-                size={16}
-              />
+            <Pressable style={[ProfileStyle.faq, ProfileStyle.brbtm]}>
+              <QuestionIcon name="questioncircle" color={'#2B2A2A'} size={18} />
               <Text style={ProfileStyle.faqText}>FAQ's</Text>
-            </View>
+            </Pressable>
 
-            <View style={ProfileStyle.faq}>
-              <FontAwesomeIcon
-                color={'#444242'}
-                icon={faHeadphones}
-                size={16}
-              />
-              <Text style={ProfileStyle.faqText}>Customer support</Text>
-            </View>
+            <Pressable style={ProfileStyle.faq} onPress={()=>navigation.navigate(Routes.Contact)}>
+              <HeadPhoneIcon name="headphones" color={'#2B2A2A'} size={18} />
+              <Text style={ProfileStyle.faqText}>Contact us</Text>
+            </Pressable>
           </View>
           <View
             style={[
@@ -182,28 +181,28 @@ const Profile = ({navigation}) => {
               globalStyle.bgWhite,
               globalStyle.normalBorder,
             ]}>
-            <View style={[ProfileStyle.faq, ProfileStyle.brbtm]}>
-              <FontAwesomeIcon
-                color={'#444242'}
-                icon={faShareNodes}
-                size={16}
+            <Pressable style={[ProfileStyle.faq, ProfileStyle.brbtm]}>
+              <ShareIcon
+                color={'#2B2A2A'}
+                name="share"
+                size={22}
               />
               <Text style={ProfileStyle.faqText}>Share app</Text>
-            </View>
+            </Pressable>
 
-            <View style={[ProfileStyle.faq, ProfileStyle.brbtm]}>
-              <FontAwesomeIcon
-                color={'#444242'}
-                icon={faCircleInfo}
-                size={16}
+            <Pressable style={[ProfileStyle.faq, ProfileStyle.brbtm]}>
+              <InfoIcon
+                color={'#2B2A2A'}
+                name="infocirlce"
+                size={18}
               />
               <Text style={ProfileStyle.faqText}>About us</Text>
-            </View>
+            </Pressable>
 
-            <View style={ProfileStyle.faq}>
-              <FontAwesomeIcon color={'#444242'} icon={faShield} size={16} />
+            <Pressable style={ProfileStyle.faq}>
+              <PrivacyIcon color={'#2B2A2A'} name="privacy-tip" size={22} />
               <Text style={ProfileStyle.faqText}>privacy policy</Text>
-            </View>
+            </Pressable>
           </View>
         </View>
       </ScrollView>
