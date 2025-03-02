@@ -47,12 +47,12 @@ const EmailEntry = ({navigation}) => {
     try {
       const userExist = await dispatch(checkUserExists(email));
 
-      console.log("user availability",userExist);
-      
+      console.log('user availability', userExist);
+
       if (userExist) {
-        navigation.navigate(Routes.PasswordEntry,{email});
+        navigation.navigate(Routes.PasswordEntry, {email});
       } else {
-        navigation.navigate(Routes.Signup,{email});
+        navigation.navigate(Routes.Signup, {email});
       }
     } catch (error) {
       console.error('Error checking user:', error);

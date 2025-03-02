@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   Pressable,
@@ -65,12 +65,12 @@ const ResetPassword = ({route, navigation}) => {
     )}`;
   };
 
-  const handleVerifyOtp = async () => {
+  const handleVerifyOtp = useCallback(async () => {
     if (otp.length === 6) {
       try {
         const response = await dispatch(VerifyOTPEmail(otp, email));
 
-        console.log('OTP Verification Response:', response); // Debugging response
+        console.log('OTP Verification Response:', response);
 
         if (response?.success) {
           setOtpValid(true);
@@ -88,7 +88,13 @@ const ResetPassword = ({route, navigation}) => {
         setIsButtonDisabled(true);
       }
     }
-  };
+  }, [otp, email, dispatch]);
+
+  useEffect(() => {
+    if (otp.length === 6) {
+      handleVerifyOtp();
+    }
+  }, [otp, handleVerifyOtp]);
 
   return (
     <SafeAreaView style={[LoginStyle.loginBg, globalStyle.flex]}>

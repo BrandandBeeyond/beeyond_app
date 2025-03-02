@@ -1,57 +1,50 @@
 import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
-  Alert,
   Pressable,
   SafeAreaView,
   Text,
   View,
-  TextInput,
 } from 'react-native';
 import {LoginStyle} from './Style';
 import {globalStyle} from '../../assets/styles/globalStyle';
 import AuthHeader from './AuthHeader';
-import {useDispatch, useSelector} from 'react-redux';
-import {SendOTPEmail, UserLogin} from '../../redux/actions/UserAction';
+
+import {Routes} from '../../navigation/Routes';
+import {TextInput} from 'react-native-gesture-handler';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faEye, faEyeSlash} from '@fortawesome/free-regular-svg-icons';
-import {Routes} from '../../navigation/Routes';
+import {useDispatch, useSelector} from 'react-redux';
+import {UserRegister} from '../../redux/actions/UserAction';
 
-const PasswordEntry = ({route, navigation}) => {
-  const {email} = route.params;
-  const {isAuthenticated, loading} = useSelector(state => state.user);
+const SignupEmail = ({navigation, route}) => {
+  const dispatch = useDispatch();
+  const {mobile} = route.params || {};
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
-  const [otploading, setOtploading] = useState(false);
-  const [signinLoading, setSigninLoading] = useState(false);
-
-  const dispatch = useDispatch();
+  const {loading, isAuthenticated} = useSelector(state => state.user);
 
   useEffect(() => {
-    setIsButtonDisabled(password.trim().length < 6);
-  }, [password]);
-
-  const handleSignIn = async () => {
-    setSigninLoading(true);
-    await dispatch(UserLogin(email, password));
-    setSigninLoading(false);
-  };
-
-  const handleSendEmailOtp = async () => {
-    setOtploading(true);
-    try {
-      const response = await dispatch(SendOTPEmail(email));
-
-      if (response.success) {
-        navigation.navigate('EmailOtpScreen', {email});
-      } else {
-        Alert.alert('Error', 'Failed to send OTP. Please try again.');
-      }
-    } catch (error) {
-      Alert.alert('Error', 'Something went wrong. Please try again.');
+    if (
+      name.trim() &&
+      /^[6-9]\d{9}$/.test(mobile.trim()) &&
+      password.trim().length >= 6
+    ) {
+      setIsButtonDisabled(false);
+    } else {
+      setIsButtonDisabled(true);
     }
-    setOtploading(false);
+  }, [name, mobile, password]);
+
+  const handleRegister = async () => {
+    try {
+      await dispatch(UserRegister(name, mobile, email, password));
+    } catch (error) {
+      console.error('Registration failed:', error);
+    }
   };
 
   useEffect(() => {
@@ -63,8 +56,8 @@ const PasswordEntry = ({route, navigation}) => {
   return (
     <SafeAreaView style={[LoginStyle.loginBg, globalStyle.flex]}>
       <AuthHeader
-        title={'Enter Password'}
-        description={`Linked with ${email}`}
+        title={'Looks like you are new here!'}
+        description={'Provide below information to proceed'}
       />
       <View
         style={[
@@ -75,12 +68,29 @@ const PasswordEntry = ({route, navigation}) => {
         ]}>
         <View style={globalStyle.mt20}>
           <View style={LoginStyle.emailinput}>
+            <TextInput
+              placeholder="User Name"
+              style={LoginStyle.emailpass}
+              value={name}
+              onChangeText={text => setName(text)}
+            />
+          </View>
+          <View style={LoginStyle.emailinput}>
+            <TextInput
+              placeholder="Email"
+              style={LoginStyle.emailpass}
+              value={email}
+              onChangeText={text => setEmail(text)}
+            />
+          </View>
+
+          <View style={LoginStyle.emailinput}>
             <View style={globalStyle.relative}>
               <TextInput
                 placeholder="Password"
                 style={LoginStyle.emailpass}
                 value={password}
-                onChangeText={setPassword}
+                onChangeText={text => setPassword(text)}
                 secureTextEntry={!passwordVisible}
               />
               <Pressable
@@ -94,30 +104,14 @@ const PasswordEntry = ({route, navigation}) => {
               </Pressable>
             </View>
           </View>
-          <View style={[globalStyle.mt10, globalStyle.px20]}>
-            <Pressable
-              style={{alignSelf:'flex-end'}}
-              onPress={() =>
-                navigation.navigate(Routes.ForgotPassword, {email})
-              }>
-              <Text
-                style={[
-                  globalStyle.textEnd,
-                  globalStyle.subtext,
-                ]}>
-                Forgot password ?
-              </Text>
-            </Pressable>
-          </View>
           <View style={globalStyle.px10}>
             <Pressable
               style={[
                 LoginStyle.loginBtn,
                 {backgroundColor: isButtonDisabled ? '#b4b3b3' : '#010101'},
               ]}
-              onPress={handleSignIn}
-              disabled={isButtonDisabled}>
-              {signinLoading ? (
+              onPress={handleRegister}>
+              {loading ? (
                 <View
                   style={[
                     globalStyle.drow,
@@ -125,11 +119,11 @@ const PasswordEntry = ({route, navigation}) => {
                     globalStyle.cg5,
                   ]}>
                   <ActivityIndicator size={20} color={'#fff'} />
-                  <Text style={LoginStyle.loginBtnText}>Sign in</Text>
+                  <Text style={LoginStyle.loginBtnText}>Sign up</Text>
                 </View>
               ) : (
                 <View>
-                  <Text style={LoginStyle.loginBtnText}>Sign in</Text>
+                  <Text style={LoginStyle.loginBtnText}>Sign up</Text>
                 </View>
               )}
             </Pressable>
@@ -142,28 +136,9 @@ const PasswordEntry = ({route, navigation}) => {
         </View>
         <View style={globalStyle.px10}>
           <Pressable
-            style={LoginStyle.emailOtpBtn}
-            onPress={handleSendEmailOtp}
-            disabled={otploading}>
-            {otploading ? (
-              <>
-                <View
-                  style={[
-                    globalStyle.drow,
-                    globalStyle.alignCenter,
-                    globalStyle.cg3,
-                  ]}>
-                  <ActivityIndicator size={20} color={'#fff'} />
-                  <Text style={LoginStyle.emailOtpBtnText}>
-                    Sign in with OTP
-                  </Text>
-                </View>
-              </>
-            ) : (
-              <View>
-                <Text style={LoginStyle.emailOtpBtnText}>Sign in with OTP</Text>
-              </View>
-            )}
+            style={LoginStyle.mobilebtn}
+            onPress={() => navigation.navigate(Routes.Mobilelogin)}>
+            <Text style={LoginStyle.mobilebtnText}>continue with mobile</Text>
           </Pressable>
         </View>
       </View>
@@ -171,4 +146,4 @@ const PasswordEntry = ({route, navigation}) => {
   );
 };
 
-export default PasswordEntry;
+export default SignupEmail;

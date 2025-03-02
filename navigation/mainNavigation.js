@@ -33,6 +33,7 @@ import Wishlist from '../screens/Wishlist/Wishlist';
 import ForgotPassword from '../screens/Login/ForgotPassword';
 import ResetPassword from '../screens/Login/ResetPassword';
 import Contact from '../screens/Contact/Contact';
+import SignupEmail from '../screens/Login/SignupEmail';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -275,6 +276,14 @@ export const MainNavigation = () => {
             elevation: 0,
             shadowOpacity: 0,
           },
+        }}
+      />
+      <Stack.Screen
+        name={Routes.SignupEmail}
+        component={SignupEmail}
+        options={{
+          headerTitleStyle: {fontSize: scaleFontSize(17)},
+         headerTitle:"Almost done !"
         }}
       />
       <Stack.Screen

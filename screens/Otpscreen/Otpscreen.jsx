@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
+  Alert,
   Pressable,
   SafeAreaView,
   Text,
@@ -11,15 +12,18 @@ import {globalStyle} from '../../assets/styles/globalStyle';
 import AuthHeader from '../Login/AuthHeader';
 import {OtpInput} from 'react-native-otp-entry';
 import {OtpStyle} from './Style';
-import {useDispatch, useSelector} from 'react-redux';
+import axios from 'axios';
+import {serverApi} from '../../config/serverApi';
+import { useNavigation } from '@react-navigation/native';
 
 const Otpscreen = ({route}) => {
-  const dispatch = useDispatch();
+ 
+  const navigation = useNavigation();
   const {mobileNumber} = route.params || '';
   const [timer, setTimer] = useState(60);
   const [isTimerActive, setIsTimerActive] = useState(true);
   const [otp, setOtp] = useState('');
-  const {loading, isAuthenticated} = useSelector(state => state.user);
+ const [loadingVerify, setLoadingVerify] = useState(false);
 
   useEffect(() => {
     if (timer > 0) {
@@ -51,12 +55,31 @@ const Otpscreen = ({route}) => {
     )}`;
   };
 
-  const handleVerifyOtp = () => {
+  const handleVerifyOtp = async () => {
+    setLoadingVerify(true);
     try {
       if (otp.length === 6) {
-        dispatch();
+        const response = await axios.post(`${serverApi}/verify-otp`, {
+          phoneNumber: mobileNumber,
+          otp: otp,
+        });
+
+        if (response.data.success) {
+          console.log('otp verified successfullly');
+          navigation.navigate('SignupWithEmail',{mobileNumber});
+        } else {
+          Alert.alert('Invalid OTP. Please try again.');
+        }
+      } else {
+        Alert.alert('Please enter a valid OTP.');
       }
-    } catch (error) {}
+    } catch (error) {
+      console.error('Error in verifying OTP:', error);
+      Alert.alert('Error in verifying OTP. Please try again later.');
+    }finally{
+      setLoadingVerify(false);
+    }
+
   };
 
   return (
@@ -77,6 +100,7 @@ const Otpscreen = ({route}) => {
             numberOfDigits={6}
             focusColor={'#f9b000'}
             type="numeric"
+            onFilled={value=>setOtp(value)}
             theme={{
               pinCodeContainerStyle: OtpStyle.pinCodeContainer,
               pinCodeTextStyle: OtpStyle.pincodeText,
@@ -114,8 +138,8 @@ const Otpscreen = ({route}) => {
               {backgroundColor: otp.length === 6 ? '#010101' : '#b4b3b3'},
             ]}
             onPress={handleVerifyOtp}
-            disabled={otp.length !== 6 || loading}>
-            {loading ? (
+            disabled={otp.length !== 6 || loadingVerify}>
+            {loadingVerify ? (
               <View
                 style={[
                   globalStyle.drow,
