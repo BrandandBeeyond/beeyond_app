@@ -1,5 +1,13 @@
 import React, {useState} from 'react';
-import {Image, Pressable, Text, TextInput, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Image,
+  Modal,
+  Pressable,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 import {SafeAreaView, ScrollView} from 'react-native';
 import {globalStyle} from '../../assets/styles/globalStyle';
 import {ProfileStyle} from '../Profile/Style';
@@ -8,15 +16,23 @@ import {accountStyle} from './Style';
 import LockIcon from 'react-native-vector-icons/Feather';
 import LogoutIcon from 'react-native-vector-icons/AntDesign';
 import {logoutUser} from '../../redux/actions/UserAction';
+import {CartStyle} from '../Cart/Style';
+import CloseIcon from 'react-native-vector-icons/AntDesign';
+import {LoginStyle} from '../Login/Style';
 
 const MyAccount = ({navigation}) => {
   const {user} = useSelector(state => state.user) || {};
 
   const [isEditing, setIsEditing] = useState(false);
   const [email, setEmail] = useState(user?.email || '');
+  const [modalVisible, setModalVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
 
+  const handleEditUser = () => {
+    setModalVisible(true);
+  };
   const handleLogout = async () => {
     try {
       await dispatch(logoutUser());
@@ -61,7 +77,9 @@ const MyAccount = ({navigation}) => {
                   </View>
                 </View>
                 <View style={globalStyle.mt5}>
-                  <Pressable style={accountStyle.profileBtn}>
+                  <Pressable
+                    style={accountStyle.profileBtn}
+                    onPress={handleEditUser}>
                     <Text style={accountStyle.profileBtnText}>
                       Edit profile
                     </Text>
@@ -146,6 +164,38 @@ const MyAccount = ({navigation}) => {
           </View>
         </View>
       </ScrollView>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}>
+        <View style={CartStyle.modalOverlay}>
+          <View style={CartStyle.modalContent}>
+            <View style={[globalStyle.drow, globalStyle.justifyBetween]}>
+              <View>
+                <Text style={[globalStyle.subtext, globalStyle.fwbold]}>
+                  Update user name
+                </Text>
+              </View>
+              <Pressable onPress={() => setModalVisible(false)}>
+                <CloseIcon name="closecircle" size={20} />
+              </Pressable>
+            </View>
+            {/* <View style={[globalStyle.emailInputUpdate,globalStyle.mt20]}>
+              <TextInput value={user.name} onChangeText={setEmail} />
+            </View> */}
+
+            <View>
+              <Pressable
+                style={[
+                  LoginStyle.loginBtn,
+                ]}>
+               <Text style={LoginStyle.loginBtnText}>Edit</Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
