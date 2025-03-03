@@ -113,7 +113,7 @@ const Profile = ({navigation}) => {
                       <View>
                         <Text
                           style={[globalStyle.small, globalStyle.userdetail]}>
-                          +91-{user.mobile}
+                          {user.mobile}
                         </Text>
                       </View>
                     </View>

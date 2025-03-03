@@ -14,16 +14,15 @@ import {OtpInput} from 'react-native-otp-entry';
 import {OtpStyle} from './Style';
 import axios from 'axios';
 import {serverApi} from '../../config/serverApi';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
 const Otpscreen = ({route}) => {
- 
   const navigation = useNavigation();
   const {mobileNumber} = route.params || '';
   const [timer, setTimer] = useState(60);
   const [isTimerActive, setIsTimerActive] = useState(true);
   const [otp, setOtp] = useState('');
- const [loadingVerify, setLoadingVerify] = useState(false);
+  const [loadingVerify, setLoadingVerify] = useState(false);
 
   useEffect(() => {
     if (timer > 0) {
@@ -66,7 +65,7 @@ const Otpscreen = ({route}) => {
 
         if (response.data.success) {
           console.log('otp verified successfullly');
-          navigation.navigate('SignupWithEmail',{mobileNumber});
+          navigation.navigate('SignupEmail', {isMobileVerified: true,mobileNumber});
         } else {
           Alert.alert('Invalid OTP. Please try again.');
         }
@@ -76,10 +75,9 @@ const Otpscreen = ({route}) => {
     } catch (error) {
       console.error('Error in verifying OTP:', error);
       Alert.alert('Error in verifying OTP. Please try again later.');
-    }finally{
+    } finally {
       setLoadingVerify(false);
     }
-
   };
 
   return (
@@ -100,7 +98,7 @@ const Otpscreen = ({route}) => {
             numberOfDigits={6}
             focusColor={'#f9b000'}
             type="numeric"
-            onFilled={value=>setOtp(value)}
+            onFilled={value => setOtp(value)}
             theme={{
               pinCodeContainerStyle: OtpStyle.pinCodeContainer,
               pinCodeTextStyle: OtpStyle.pincodeText,

@@ -88,7 +88,7 @@ const MyAccount = ({navigation}) => {
                 Mobile Number
               </Text>
               <Text style={[globalStyle.xsSmall, globalStyle.mt3]}>
-                {user?.mobile ? `+91-${user.mobile}` : 'Not Available'}
+                {user?.mobile ? `${user.mobile}` : 'Not Available'}
               </Text>
               <View style={globalStyle.breakable}></View>
               <View style={globalStyle.emailInputUpdate}>

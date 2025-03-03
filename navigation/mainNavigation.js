@@ -283,7 +283,12 @@ export const MainNavigation = () => {
         component={SignupEmail}
         options={{
           headerTitleStyle: {fontSize: scaleFontSize(17)},
-         headerTitle:"Almost done !"
+          headerTitle: 'Almost done !',
+          headerStyle: {
+            backgroundColor: '#f9b000',
+            elevation: 0,
+            shadowOpacity: 0,
+          },
         }}
       />
       <Stack.Screen
@@ -368,7 +373,7 @@ export const MainNavigation = () => {
         options={({navigation}) => ({
           headerLeft: () => <CustomBackButton navigation={navigation} />,
           headerTitleStyle: {fontSize: scaleFontSize(17)},
-          headerTitle:'Contact us'
+          headerTitle: 'Contact us',
         })}
       />
     </Stack.Navigator>

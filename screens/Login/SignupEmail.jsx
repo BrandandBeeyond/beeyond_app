@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
+  Alert,
   Pressable,
   SafeAreaView,
   Text,
@@ -9,50 +10,57 @@ import {
 import {LoginStyle} from './Style';
 import {globalStyle} from '../../assets/styles/globalStyle';
 import AuthHeader from './AuthHeader';
-
-import {Routes} from '../../navigation/Routes';
 import {TextInput} from 'react-native-gesture-handler';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faEye, faEyeSlash} from '@fortawesome/free-regular-svg-icons';
 import {useDispatch, useSelector} from 'react-redux';
 import {UserRegister} from '../../redux/actions/UserAction';
+import axios from 'axios';
 
 const SignupEmail = ({navigation, route}) => {
   const dispatch = useDispatch();
-  const {mobile} = route.params || {};
+  const {isMobileVerified, mobileNumber} = route.params || {};
+
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
-  const {loading, isAuthenticated} = useSelector(state => state.user);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (
-      name.trim() &&
-      /^[6-9]\d{9}$/.test(mobile.trim()) &&
-      password.trim().length >= 6
-    ) {
+    if (name.trim() && password.trim().length >= 6) {
       setIsButtonDisabled(false);
     } else {
       setIsButtonDisabled(true);
     }
-  }, [name, mobile, password]);
+  }, [name, password]);
+
+  useEffect(() => {
+    if (!isMobileVerified) {
+      navigation.replace('OtpScreen');
+    }
+  }, [isMobileVerified, navigation]);
 
   const handleRegister = async () => {
     try {
-      await dispatch(UserRegister(name, mobile, email, password));
+      const response = await dispatch(
+        UserRegister(name, mobileNumber, email, password),
+      );
+
+      console.log('this is response', response);
+
+      if (response?.success) {
+        navigation.replace('BottomTabs', {isMobileVerified: true});
+      } else {
+        Alert.alert('Unable to register user');
+      }
     } catch (error) {
-      console.error('Registration failed:', error);
+      Alert.alert('Internal server error');
+      console.error('internal server error', error);
     }
   };
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigation.replace('BottomTabs');
-    }
-  }, [isAuthenticated, navigation]);
-
   return (
     <SafeAreaView style={[LoginStyle.loginBg, globalStyle.flex]}>
       <AuthHeader
@@ -104,7 +112,7 @@ const SignupEmail = ({navigation, route}) => {
               </Pressable>
             </View>
           </View>
-          <View style={globalStyle.px10}>
+          <View style={[globalStyle.px10, globalStyle.mt10]}>
             <Pressable
               style={[
                 LoginStyle.loginBtn,
@@ -119,27 +127,15 @@ const SignupEmail = ({navigation, route}) => {
                     globalStyle.cg5,
                   ]}>
                   <ActivityIndicator size={20} color={'#fff'} />
-                  <Text style={LoginStyle.loginBtnText}>Sign up</Text>
+                  <Text style={LoginStyle.loginBtnText}>Submit</Text>
                 </View>
               ) : (
                 <View>
-                  <Text style={LoginStyle.loginBtnText}>Sign up</Text>
+                  <Text style={LoginStyle.loginBtnText}>Submit</Text>
                 </View>
               )}
             </Pressable>
           </View>
-        </View>
-        <View style={globalStyle.container}>
-          <View style={LoginStyle.line}></View>
-          <Text style={globalStyle.orText}>OR</Text>
-          <View style={LoginStyle.line}></View>
-        </View>
-        <View style={globalStyle.px10}>
-          <Pressable
-            style={LoginStyle.mobilebtn}
-            onPress={() => navigation.navigate(Routes.Mobilelogin)}>
-            <Text style={LoginStyle.mobilebtnText}>continue with mobile</Text>
-          </Pressable>
         </View>
       </View>
     </SafeAreaView>

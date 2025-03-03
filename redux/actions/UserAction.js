@@ -106,6 +106,8 @@ export const UserRegister =
       );
 
       dispatch({type: REGISTER_USER_SUCCESS, payload: data.user});
+
+      return data;
     } catch (error) {
       console.error(
         'Registration Error:',
