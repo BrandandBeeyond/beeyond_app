@@ -52,7 +52,11 @@ const SignupEmail = ({navigation, route}) => {
       console.log('this is response', response);
 
       if (response?.success) {
-        navigation.replace('BottomTabs', {isMobileVerified: true});
+        // Ensure the response contains the verified status
+        const isVerified = response?.user?.isVerified ?? false;
+
+        // Navigate with the correct verified status
+        navigation.replace('BottomTabs', {isMobileVerified: isVerified});
       } else {
         Alert.alert('Unable to register user');
       }
@@ -61,6 +65,7 @@ const SignupEmail = ({navigation, route}) => {
       console.error('internal server error', error);
     }
   };
+
   return (
     <SafeAreaView style={[LoginStyle.loginBg, globalStyle.flex]}>
       <AuthHeader
