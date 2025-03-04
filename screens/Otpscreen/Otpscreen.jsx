@@ -65,7 +65,21 @@ const Otpscreen = ({route}) => {
 
         if (response.data.success) {
           console.log('otp verified successfullly');
-          navigation.navigate('SignupEmail', {isMobileVerified: true,mobileNumber});
+
+          const checkMobileResponse = await axios.get(
+            `${serverApi}/check-mobile/${mobileNumber}`,
+          );
+
+          if (checkMobileResponse.data.exists) {
+            if (checkMobileResponse.data.verified) {
+              navigation.navigate('Profile', {isMobileVerified: true});
+              return;
+            }
+          }
+          navigation.navigate('SignupEmail', {
+            isMobileVerified: true,
+            mobileNumber,
+          });
         } else {
           Alert.alert('Invalid OTP. Please try again.');
         }
