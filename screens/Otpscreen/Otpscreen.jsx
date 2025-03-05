@@ -15,6 +15,7 @@ import {OtpStyle} from './Style';
 import axios from 'axios';
 import {serverApi} from '../../config/serverApi';
 import {useNavigation} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Otpscreen = ({route}) => {
   const navigation = useNavigation();
@@ -64,22 +65,17 @@ const Otpscreen = ({route}) => {
         });
 
         if (response.data.success) {
-          console.log('otp verified successfullly');
+          console.log('otp verified successfully');
 
-          const checkMobileResponse = await axios.get(
-            `${serverApi}/check-mobile/${mobileNumber}`,
-          );
-
-          if (checkMobileResponse.data.exists) {
-            if (checkMobileResponse.data.verified) {
-              navigation.navigate('Profile', {isMobileVerified: true});
-              return;
-            }
+          if (response.data.token) {
+            await AsyncStorage.setItem('authToken', response.data.token);
+            navigation.navigate('Profile', {isMobileVerified: true});
+          } else {
+            navigation.navigate('SignupEmail', {
+              isMobileVerified: true,
+              mobileNumber,
+            });
           }
-          navigation.navigate('SignupEmail', {
-            isMobileVerified: true,
-            mobileNumber,
-          });
         } else {
           Alert.alert('Invalid OTP. Please try again.');
         }
