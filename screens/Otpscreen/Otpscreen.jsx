@@ -67,7 +67,9 @@ const Otpscreen = ({route}) => {
         if (response.data.success) {
           console.log('otp verified successfully');
 
-          if (response.data.token) {
+          if (response.data.user) {
+            console.log("this is user after otp verification",response.data.user);
+            
             await AsyncStorage.setItem('authToken', response.data.token);
             navigation.navigate('Profile', {isMobileVerified: true});
           } else {

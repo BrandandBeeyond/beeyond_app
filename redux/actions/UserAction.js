@@ -166,7 +166,7 @@ export const sendMobileOtp = mobileNumber => async dispatch => {
     dispatch({type: SEND_MOBILE_OTP_REQUEST});
 
     const response = await axios.post(`${serverApi}/send-otp`, {
-      mobile: mobileNumber,
+      phoneNumber: mobileNumber,
     });
 
     console.log('Full API Response:', response.data); // Debugging API response
