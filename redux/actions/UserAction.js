@@ -21,6 +21,9 @@ import {
   VERIFY_EMAIL_OTP_FAIL,
   VERIFY_EMAIL_OTP_REQUEST,
   VERIFY_EMAIL_OTP_SUCCESS,
+  VERIFY_MOBILE_OTP_FAIL,
+  VERIFY_MOBILE_OTP_REQUEST,
+  VERIFY_MOBILE_OTP_SUCCESS,
 } from '../constants/UserConstants';
 import {serverApi} from '../../config/serverApi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -165,18 +168,22 @@ export const sendMobileOtp = mobileNumber => async dispatch => {
   try {
     dispatch({type: SEND_MOBILE_OTP_REQUEST});
 
-    const response = await axios.post(`${serverApi}/send-otp`, {
-      phoneNumber: mobileNumber,
-    });
+    let formattedNumber = mobileNumber.trim();
 
-    console.log('Full API Response:', response.data); // Debugging API response
+    if (!formattedNumber.startsWith('+')) {
+      formattedNumber = `+91${formattedNumber}`;
+    }
+
+    const {data} = await axios.post(`${serverApi}/send-otp`, {
+      phoneNumber: formattedNumber,
+    });
 
     dispatch({
       type: SEND_MOBILE_OTP_SUCCESS,
-      payload: response.data.message,
+      payload: data.message,
     });
 
-    return {success: true, message: response.data.message};
+    return {success: true, message: data.message, formattedNumber};
   } catch (error) {
     console.error(
       'Error in sendMobileOtp:',
@@ -187,6 +194,62 @@ export const sendMobileOtp = mobileNumber => async dispatch => {
 
     dispatch({
       type: SEND_MOBILE_OTP_FAIL,
+      payload: errorMessage,
+    });
+
+    return {
+      success: false,
+      message: error.response?.data?.message || 'Failed to send OTP',
+    };
+  }
+};
+
+export const VerifyMobileOtp = (mobileNumber, otp) => async dispatch => {
+  try {
+    dispatch({
+      type: VERIFY_MOBILE_OTP_REQUEST,
+    });
+
+    const {data} = await axios.post(`${serverApi}/verify-otp`, {
+      phoneNumber: mobileNumber,
+      otp: otp,
+    });
+
+    if (data.success) {
+      dispatch({
+        type: VERIFY_MOBILE_OTP_SUCCESS,
+        payload: data.user || null,
+      });
+
+      if (data.user) {
+        console.log('user after verification', data.user);
+        AsyncStorage.setItem('authToken', data.token);
+        return {
+          success: true,
+          user: data.user,
+          token: data.token,
+          isRegistered: true,
+        };
+      } else {
+        return {success: true, isRegistered: false};
+      }
+    } else {
+      dispatch({
+        type: VERIFY_MOBILE_OTP_FAIL,
+        payload: 'Invalid OTP. Please try again.',
+      });
+
+      return {success: false, message: 'Invalid OTP. Please try again.'};
+    }
+  } catch (error) {
+    console.error('Error in verifying OTP:', error);
+
+    const errorMessage =
+      error.response?.data?.message ||
+      'Error in verifying OTP. Please try again later.';
+
+    dispatch({
+      type: VERIFY_MOBILE_OTP_FAIL,
       payload: errorMessage,
     });
 

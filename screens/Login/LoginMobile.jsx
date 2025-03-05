@@ -12,13 +12,14 @@ import {globalStyle} from '../../assets/styles/globalStyle';
 import AuthHeader from './AuthHeader';
 import {Routes} from '../../navigation/Routes';
 import {TextInput} from 'react-native-gesture-handler';
-import axios from 'axios';
-import {serverApi} from '../../config/serverApi';
+import {useDispatch} from 'react-redux';
+import {sendMobileOtp} from '../../redux/actions/UserAction';
 
 const LoginMobile = ({navigation}) => {
   const [mobileNumber, setMobileNumber] = useState('');
   const inputRef = useRef(null);
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (inputRef.current) {
@@ -47,22 +48,16 @@ const LoginMobile = ({navigation}) => {
     try {
       setLoading(true);
 
-      let formattedNumber = mobileNumber.trim();
+      const response = await dispatch(sendMobileOtp(mobileNumber));
 
-      if (!formattedNumber.startsWith('+')) {
-        formattedNumber = `+91${formattedNumber}`;
-      }
+      console.log(response);
 
-      const response = await axios.post(`${serverApi}/send-otp`, {
-        phoneNumber: formattedNumber,
-      });
-
-      console.log('Sending otp to:', formattedNumber);
-
-      if (response.data?.success) {
-        navigation.navigate(Routes.OtpScreen, {mobileNumber: formattedNumber});
+      if (response?.success) {
+        navigation.navigate(Routes.OtpScreen, {
+          mobileNumber: response.formattedNumber,
+        });
       } else {
-        Alert.alert('Error', response.data?.message || 'Failed to send OTP.');
+        Alert.alert('Error sending OTP');
       }
     } catch (error) {
       console.error('Error sending mobile OTP:', error);

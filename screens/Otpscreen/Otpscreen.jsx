@@ -12,13 +12,14 @@ import {globalStyle} from '../../assets/styles/globalStyle';
 import AuthHeader from '../Login/AuthHeader';
 import {OtpInput} from 'react-native-otp-entry';
 import {OtpStyle} from './Style';
-import axios from 'axios';
-import {serverApi} from '../../config/serverApi';
 import {useNavigation} from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useDispatch} from 'react-redux';
+import {VerifyMobileOtp} from '../../redux/actions/UserAction';
+import {Routes} from '../../navigation/Routes';
 
 const Otpscreen = ({route}) => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const {mobileNumber} = route.params || '';
   const [timer, setTimer] = useState(60);
   const [isTimerActive, setIsTimerActive] = useState(true);
@@ -56,39 +57,28 @@ const Otpscreen = ({route}) => {
   };
 
   const handleVerifyOtp = async () => {
+    if (otp.length !== 6) {
+      Alert.alert('Please enter a valid OTP.');
+      return;
+    }
+
     setLoadingVerify(true);
-    try {
-      if (otp.length === 6) {
-        const response = await axios.post(`${serverApi}/verify-otp`, {
-          phoneNumber: mobileNumber,
-          otp: otp,
-        });
 
-        if (response.data.success) {
-          console.log('otp verified successfully');
+    const result = await dispatch(VerifyMobileOtp(mobileNumber, otp));
 
-          if (response.data.user) {
-            console.log("this is user after otp verification",response.data.user);
-            
-            await AsyncStorage.setItem('authToken', response.data.token);
-            navigation.navigate('Profile', {isMobileVerified: true});
-          } else {
-            navigation.navigate('SignupEmail', {
-              isMobileVerified: true,
-              mobileNumber,
-            });
-          }
-        } else {
-          Alert.alert('Invalid OTP. Please try again.');
-        }
+    setLoadingVerify(false);
+
+    if (result.success) {
+      if (result.isRegistered) {
+        navigation.navigate('Profile', {isMobileVerified: true});
       } else {
-        Alert.alert('Please enter a valid OTP.');
+        navigation.navigate('SignupEmail', {
+          isMobileVerified: true,
+          mobileNumber,
+        });
       }
-    } catch (error) {
-      console.error('Error in verifying OTP:', error);
-      Alert.alert('Error in verifying OTP. Please try again later.');
-    } finally {
-      setLoadingVerify(false);
+    } else {
+      Alert.alert(result.message);
     }
   };
 
