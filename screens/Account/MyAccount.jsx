@@ -26,7 +26,6 @@ const MyAccount = ({navigation}) => {
   const [isEditing, setIsEditing] = useState(false);
   const [email, setEmail] = useState(user?.email || '');
   const [modalVisible, setModalVisible] = useState(false);
-  const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -97,17 +96,36 @@ const MyAccount = ({navigation}) => {
                 globalStyle.p8,
                 globalStyle.normalBorder,
               ]}>
-              <Text
+              <View
                 style={[
-                  globalStyle.small,
-                  globalStyle.fw700,
-                  globalStyle.textGray,
+                  globalStyle.drow,
+                  globalStyle.justifyBetween,
+                  globalStyle.alignCenter,
                 ]}>
-                Mobile Number
-              </Text>
-              <Text style={[globalStyle.xsSmall, globalStyle.mt3]}>
-                {user?.mobile ? `${user.mobile}` : 'Not Available'}
-              </Text>
+                <View>
+                  <Text
+                    style={[
+                      globalStyle.small,
+                      globalStyle.fw700,
+                      globalStyle.textGray,
+                    ]}>
+                    Mobile Number
+                  </Text>
+                  <Text style={[globalStyle.xsSmall, globalStyle.mt3]}>
+                    {user?.mobile ? `${user.mobile}` : 'Not Available'}
+                  </Text>
+                </View>
+                {user.isVerified ? (
+                  <View style={accountStyle.verified}>
+                    <Text style={accountStyle.verifiedText}>Verified</Text>
+                  </View>
+                ) : (
+                  <View style={accountStyle.nonverified}>
+                    <Text style={accountStyle.nonverifiedText}>unverified</Text>
+                  </View>
+                )}
+              </View>
+
               <View style={globalStyle.breakable}></View>
               <View style={globalStyle.emailInputUpdate}>
                 <TextInput
@@ -186,11 +204,8 @@ const MyAccount = ({navigation}) => {
             </View> */}
 
             <View>
-              <Pressable
-                style={[
-                  LoginStyle.loginBtn,
-                ]}>
-               <Text style={LoginStyle.loginBtnText}>Edit</Text>
+              <Pressable style={[LoginStyle.loginBtn]}>
+                <Text style={LoginStyle.loginBtnText}>Edit</Text>
               </Pressable>
             </View>
           </View>

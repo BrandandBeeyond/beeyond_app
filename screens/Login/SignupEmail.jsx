@@ -44,11 +44,13 @@ const SignupEmail = ({navigation, route}) => {
   }, [isMobileVerified, navigation]);
 
   const handleRegister = async () => {
+    setLoading(true);
     try {
       const response = await dispatch(
         UserRegister(name, mobileNumber, email, password),
       );
 
+      setLoading(false);
       console.log('this is response', response);
 
       if (response?.success) {

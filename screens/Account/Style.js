@@ -43,4 +43,26 @@ export const accountStyle = StyleSheet.create({
     fontSize: scaleFontSize(12),
     fontWeight: '600',
   },
+  verified: {
+    backgroundColor: '#CFFFD2',
+    width: 'auto',
+    paddingVertical: verticalScale(5),
+    paddingHorizontal:horizontalScale(9),
+    borderRadius: horizontalScale(5),
+  },
+  verifiedText: {
+    color: '#0D8500',
+    fontSize: scaleFontSize(11.3),
+  },
+  nonverified:{
+    backgroundColor: '#FFCFCF',
+    width: 'auto',
+    paddingVertical: verticalScale(5),
+    paddingHorizontal:horizontalScale(9),
+    borderRadius: horizontalScale(5),
+  },
+  nonverifiedText: {
+    color: '#FF2121',
+    fontSize: scaleFontSize(11.3),
+  },
 });

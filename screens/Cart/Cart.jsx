@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {
+  ActivityIndicator,
   Image,
   KeyboardAvoidingView,
   Modal,
@@ -33,7 +34,7 @@ import {productStyle} from '../Products/Style';
 
 const Cart = ({navigation}) => {
   const dispatch = useDispatch();
-  const {cart} = useSelector(state => state.cart);
+  const {loading, cart} = useSelector(state => state.cart);
   const {notifications} = useSelector(state => state.notifications);
   const {isAuthenticated} = useSelector(state => state.user);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -292,9 +293,23 @@ const Cart = ({navigation}) => {
               <Pressable
                 style={CartStyle.CheckoutBtn}
                 onPress={() => navigation.navigate(Routes.Checkoutform)}>
-                <Text style={CartStyle.checkoutBtnText}>
-                  Proceed to Checkout
-                </Text>
+                {loading ? (
+                  <View
+                    style={[
+                      globalStyle.drow,
+                      globalStyle.alignCenter,
+                      globalStyle.cg3,
+                    ]}>
+                    <ActivityIndicator size={20} color={'#fff'} />
+                    <Text style={CartStyle.checkoutBtnText}>
+                      Proceed to Checkout
+                    </Text>
+                  </View>
+                ) : (
+                  <Text style={CartStyle.checkoutBtnText}>
+                    Proceed to Checkout
+                  </Text>
+                )}
               </Pressable>
             </View>
           </View>
@@ -400,7 +415,7 @@ const Cart = ({navigation}) => {
                         globalStyle.alignCenter,
                         globalStyle.cg5,
                       ]}>
-                      <TrashIcon name="trash" color={'#f9b000'} size={17}/>
+                      <TrashIcon name="trash" color={'#f9b000'} size={17} />
                       <Text style={CartStyle.removeFromCartText}>Remove</Text>
                     </View>
                   </Pressable>
