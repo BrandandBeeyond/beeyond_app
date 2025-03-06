@@ -46,7 +46,7 @@ const Profile = ({navigation}) => {
           {isAuthenticated ? (
             <Pressable
               style={ProfileStyle.userAccount}
-              onPress={() => navigation.navigate(Routes.MyAccount)}>
+              onPress={() => navigation.navigate(Routes.MyAccount,{isMobileVerified:true})}>
               <View style={[globalStyle.drow, globalStyle.cg5, globalStyle.p5]}>
                 <View style={globalStyle.avatar}>
                   <View style={globalStyle.avatarInner}>
