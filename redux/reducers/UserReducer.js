@@ -28,7 +28,8 @@ import {
 } from '../constants/UserConstants';
 
 const initialState = {
-  user: {},
+  // user: {},
+  user: null,
   isAuthenticated: false,
   loading: false,
   error: null,
@@ -71,7 +72,6 @@ export const UserReducer = (state = initialState, action) => {
     case LOGIN_USER_SUCCESS:
     case REGISTER_USER_SUCCESS:
     case VERIFY_EMAIL_OTP_SUCCESS:
-    case VERIFY_MOBILE_OTP_SUCCESS:
       AsyncStorage.setItem('user', JSON.stringify(action.payload));
       return {
         ...state,
@@ -80,6 +80,18 @@ export const UserReducer = (state = initialState, action) => {
         user: action.payload,
         otpVerfiedEmail: action.type || VERIFY_EMAIL_OTP_SUCCESS,
         otpVerfiedMobile: action.type || VERIFY_MOBILE_OTP_SUCCESS,
+      };
+
+    case VERIFY_MOBILE_OTP_SUCCESS:
+      if (action.payload) {
+        AsyncStorage.setItem('user', JSON.stringify(action.payload));
+      }
+      return {
+        ...state,
+        loading: false,
+        isAuthenticated: !!action.payload, // Only true if user exists
+        user: action.payload || null, // Ensure `user` is null-safe
+        otpVerfiedMobile: action.type === VERIFY_MOBILE_OTP_SUCCESS,
       };
 
     case SEND_EMAIL_OTP_SUCCESS:

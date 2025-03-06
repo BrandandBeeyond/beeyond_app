@@ -69,13 +69,12 @@ const Otpscreen = ({route}) => {
     setLoadingVerify(false);
 
     if (result.success) {
-      if (result.isRegistered) {
+      if (result.isRegistered === true) {
+        console.log('user is registered or not', result.isRegistered);
+
         navigation.navigate('Profile', {isMobileVerified: true});
       } else {
-        navigation.navigate('SignupEmail', {
-          isMobileVerified: true,
-          mobileNumber,
-        });
+        navigation.navigate(Routes.SignupEmail,{isMobileVerified:true,mobileNumber});
       }
     } else {
       Alert.alert(result.message);

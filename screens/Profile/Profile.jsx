@@ -65,7 +65,9 @@ const Profile = ({navigation}) => {
                       globalStyle.relative,
                     ]}>
                     <View>
-                      <Text style={globalStyle.userName}>{user.name}</Text>
+                      <Text style={globalStyle.userName}>
+                        {user ? user.name : 'Guest'}
+                      </Text>
                     </View>
                     <View style={globalStyle.rightarricon}>
                       <ArrowIcon
@@ -169,7 +171,9 @@ const Profile = ({navigation}) => {
               <Text style={ProfileStyle.faqText}>FAQ's</Text>
             </Pressable>
 
-            <Pressable style={ProfileStyle.faq} onPress={()=>navigation.navigate(Routes.Contact)}>
+            <Pressable
+              style={ProfileStyle.faq}
+              onPress={() => navigation.navigate(Routes.Contact)}>
               <HeadPhoneIcon name="headphones" color={'#2B2A2A'} size={18} />
               <Text style={ProfileStyle.faqText}>Contact us</Text>
             </Pressable>
@@ -182,20 +186,12 @@ const Profile = ({navigation}) => {
               globalStyle.normalBorder,
             ]}>
             <Pressable style={[ProfileStyle.faq, ProfileStyle.brbtm]}>
-              <ShareIcon
-                color={'#2B2A2A'}
-                name="share"
-                size={22}
-              />
+              <ShareIcon color={'#2B2A2A'} name="share" size={22} />
               <Text style={ProfileStyle.faqText}>Share app</Text>
             </Pressable>
 
             <Pressable style={[ProfileStyle.faq, ProfileStyle.brbtm]}>
-              <InfoIcon
-                color={'#2B2A2A'}
-                name="infocirlce"
-                size={18}
-              />
+              <InfoIcon color={'#2B2A2A'} name="infocirlce" size={18} />
               <Text style={ProfileStyle.faqText}>About us</Text>
             </Pressable>
 
