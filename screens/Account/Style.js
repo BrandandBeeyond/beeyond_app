@@ -65,4 +65,11 @@ export const accountStyle = StyleSheet.create({
     color: '#FF2121',
     fontSize: scaleFontSize(11.3),
   },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: horizontalScale(0),
+    borderTopLeftRadius: horizontalScale(0),
+    borderTopRightRadius: horizontalScale(0),
+  },
+  
 });

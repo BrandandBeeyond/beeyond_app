@@ -26,6 +26,7 @@ const MyAccount = ({navigation}) => {
   const [isEditing, setIsEditing] = useState(false);
   const [email, setEmail] = useState(user?.email || '');
   const [modalVisible, setModalVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -188,8 +189,14 @@ const MyAccount = ({navigation}) => {
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}>
         <View style={CartStyle.modalOverlay}>
-          <View style={CartStyle.modalContent}>
-            <View style={[globalStyle.drow, globalStyle.justifyBetween]}>
+          <View style={accountStyle.modalContent}>
+            <View
+              style={[
+                globalStyle.drow,
+                globalStyle.justifyBetween,
+                globalStyle.bgSemiLight,
+                globalStyle.p5,
+              ]}>
               <View>
                 <Text style={[globalStyle.subtext, globalStyle.fwbold]}>
                   Update user name
@@ -199,15 +206,36 @@ const MyAccount = ({navigation}) => {
                 <CloseIcon name="closecircle" size={20} />
               </Pressable>
             </View>
-            {/* <View style={[globalStyle.emailInputUpdate,globalStyle.mt20]}>
-              <TextInput value={user.name} onChangeText={setEmail} />
-            </View> */}
-
-            <View>
-              <Pressable style={[LoginStyle.loginBtn]}>
-                <Text style={LoginStyle.loginBtnText}>Edit</Text>
-              </Pressable>
+            <View style={globalStyle.px10}>
+              <View style={[globalStyle.emailInputUpdate, globalStyle.mt20]}>
+                <TextInput value={user.name} onChangeText={setEmail} />
+              </View>
             </View>
+
+             <View style={[globalStyle.px10, globalStyle.mt10]}>
+                        <Pressable
+                          style={[
+                            LoginStyle.loginBtn,
+                            {backgroundColor: '#010101'},
+                          ]}
+                          >
+                          {loading ? (
+                            <View
+                              style={[
+                                globalStyle.drow,
+                                globalStyle.alignCenter,
+                                globalStyle.cg5,
+                              ]}>
+                              <ActivityIndicator size={20} color={'#fff'} />
+                              <Text style={LoginStyle.loginBtnText}>Submit</Text>
+                            </View>
+                          ) : (
+                            <View>
+                              <Text style={LoginStyle.loginBtnText}>Submit</Text>
+                            </View>
+                          )}
+                        </Pressable>
+                      </View>
           </View>
         </View>
       </Modal>

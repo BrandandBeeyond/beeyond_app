@@ -310,7 +310,10 @@ export const globalStyle = StyleSheet.create({
   my15: {
     marginVertical: verticalScale(15),
   },
-  mt15:{
-    marginTop:verticalScale(15)
-  }
+  mt15: {
+    marginTop: verticalScale(15),
+  },
+  bgSemiLight: {
+    backgroundColor: '#f1f1f1',
+  },
 });
