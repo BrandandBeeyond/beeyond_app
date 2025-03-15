@@ -29,7 +29,9 @@ import {
 
 const Products = () => {
   const dispatch = useDispatch();
-  const {products} = useSelector(state => state.products);
+  const {products,loading,error} = useSelector(state => state.products);
+  console.log("this are products",products);
+  
   const {cart} = useSelector(state => state.cart);
   const [loadingId, setLoadingId] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -103,7 +105,7 @@ const Products = () => {
                   navigation.navigate('ProductDetail', {product: item})
                 }>
                 <View style={globalStyle.relative}>
-                  <Image source={item.thumbnail} style={productStyle.mockup} />
+                <Image source={item.images?.[0] } style={productStyle.mockup} />
                   <Pressable
                     style={productStyle.wishlistContainer}
                     onPress={() => handleAddtoWishlist(item)}>
@@ -137,7 +139,7 @@ const Products = () => {
                     navigation.navigate('ProductDetail', {product: item})
                   }>
                   <View style={globalStyle.mt3}>
-                    <Text style={productStyle.title}>{item.title}</Text>
+                    <Text style={productStyle.title}>{item.name}</Text>
                     <View
                       style={[
                         globalStyle.drow,

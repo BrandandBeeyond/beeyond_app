@@ -212,30 +212,26 @@ const MyAccount = ({navigation}) => {
               </View>
             </View>
 
-             <View style={[globalStyle.px10, globalStyle.mt10]}>
-                        <Pressable
-                          style={[
-                            LoginStyle.loginBtn,
-                            {backgroundColor: '#010101'},
-                          ]}
-                          >
-                          {loading ? (
-                            <View
-                              style={[
-                                globalStyle.drow,
-                                globalStyle.alignCenter,
-                                globalStyle.cg5,
-                              ]}>
-                              <ActivityIndicator size={20} color={'#fff'} />
-                              <Text style={LoginStyle.loginBtnText}>Submit</Text>
-                            </View>
-                          ) : (
-                            <View>
-                              <Text style={LoginStyle.loginBtnText}>Submit</Text>
-                            </View>
-                          )}
-                        </Pressable>
-                      </View>
+            <View style={[globalStyle.px10, globalStyle.mt10]}>
+              <Pressable
+                style={[LoginStyle.loginBtn, {backgroundColor: '#010101'}]}>
+                {loading ? (
+                  <View
+                    style={[
+                      globalStyle.drow,
+                      globalStyle.alignCenter,
+                      globalStyle.cg5,
+                    ]}>
+                    <ActivityIndicator size={20} color={'#fff'} />
+                    <Text style={LoginStyle.loginBtnText}>Submit</Text>
+                  </View>
+                ) : (
+                  <View>
+                    <Text style={LoginStyle.loginBtnText}>Submit</Text>
+                  </View>
+                )}
+              </Pressable>
+            </View>
           </View>
         </View>
       </Modal>
