@@ -105,7 +105,7 @@ const Products = () => {
                   navigation.navigate('ProductDetail', {product: item})
                 }>
                 <View style={globalStyle.relative}>
-                <Image source={item.images?.[0] } style={productStyle.mockup} />
+                <Image source={item.images[0].url } style={productStyle.mockup} />
                   <Pressable
                     style={productStyle.wishlistContainer}
                     onPress={() => handleAddtoWishlist(item)}>
