@@ -21,17 +21,18 @@ import Notification from '../../components/Notification/Notification';
 import {AddNotification} from '../../redux/actions/NotificationAction';
 import {useNavigation} from '@react-navigation/native';
 import Hearticon from 'react-native-vector-icons/AntDesign';
+import CloseIcon from 'react-native-vector-icons/AntDesign';
 import {
   AddtoWishlist,
   RemoveFromWishlist,
 } from '../../redux/actions/WishlistAction';
-
+import { horizontalScale } from '../../assets/styles/Scaling';
 
 const Products = () => {
   const dispatch = useDispatch();
-  const {products,loading,error} = useSelector(state => state.products);
-  console.log("this are products",products);
-  
+  const {products, loading, error} = useSelector(state => state.products);
+  console.log('this are products', products);
+
   const {cart} = useSelector(state => state.cart);
   const [loadingId, setLoadingId] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -105,7 +106,10 @@ const Products = () => {
                   navigation.navigate('ProductDetail', {product: item})
                 }>
                 <View style={globalStyle.relative}>
-                <Image source={item.images[0].url } style={productStyle.mockup} />
+                  <Image
+                    source={{uri: item.images?.[0]?.url}}
+                    style={productStyle.mockup}
+                  />
                   <Pressable
                     style={productStyle.wishlistContainer}
                     onPress={() => handleAddtoWishlist(item)}>
@@ -187,23 +191,58 @@ const Products = () => {
         onRequestClose={() => setModalVisible(false)}>
         <View style={productStyle.modalOverlay}>
           <View style={productStyle.modalContent}>
+            <View style={[globalStyle.drow, globalStyle.justifyBetween,globalStyle.p5,globalStyle.bgSemiLight]}>
+              <View>
+                <Text style={[globalStyle.subtext, globalStyle.fwbold]}>
+                  Add item to cart?
+                </Text>
+              </View>
+              <Pressable onPress={() => setModalVisible(false)}>
+                <CloseIcon name="closecircle" size={20} />
+              </Pressable>
+            </View>
             {selectedProduct && (
               <>
-                <Image
-                  source={selectedProduct.thumbnail}
-                  style={productStyle.modalImage}
-                />
-                <Text style={productStyle.modalTitle}>
-                  {selectedProduct.title}
-                </Text>
-                <Text style={productStyle.modalPrice}>
-                  ₹ {selectedProduct.price}
-                </Text>
-                <Pressable
-                  style={productStyle.continueBtn}
-                  onPress={handleContinue}>
-                  <Text style={globalStyle.textWhite}>Continue</Text>
-                </Pressable>
+                <View
+                  style={[
+                    globalStyle.drow,
+                    globalStyle.cg5,
+                    globalStyle.p8,
+                    globalStyle.mt5,
+                  ]}>
+                  <View>
+                    <Image
+                      source={{uri: selectedProduct?.images?.[0]?.url}}
+                      style={productStyle.modalImage}
+                    />
+                  </View>
+
+                  <View style={[globalStyle.w100, {flex: 1}]}>
+                    <Text style={productStyle.modalTitle}>
+                      {selectedProduct.name}
+                    </Text>
+                    <Text
+                      style={[
+                        globalStyle.subtext,
+                        globalStyle.mt5,
+                        globalStyle.textCenter,
+                        {flexWrap: 'wrap'},
+                      ]}>
+                      {selectedProduct.description}
+                    </Text>
+                    <Text style={productStyle.modalPrice}>
+                      ₹ {selectedProduct.price}
+                    </Text>
+                  </View>
+                </View>
+
+                <View style={{margin:horizontalScale(8)}}>
+                  <Pressable
+                    style={productStyle.continueBtn}
+                    onPress={handleContinue}>
+                    <Text style={globalStyle.textWhite}>Continue</Text>
+                  </Pressable>
+                </View>
               </>
             )}
           </View>

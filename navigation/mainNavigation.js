@@ -366,6 +366,18 @@ export const MainNavigation = () => {
           headerTitle: 'Add delivery Address',
         })}
       />
+       {/* <Stack.Screen  name="Checkoutform"  options={({navigation}) => ({
+          headerLeft: () => <CustomBackButton navigation={navigation} />,
+          headerTitleStyle: {fontSize: scaleFontSize(17)},
+          headerTitle: 'Add delivery Address',
+        })}>
+            {({navigation})=>{
+              <ProtectedRoute navigation={navigation}>
+              <CheckoutForm />
+            </ProtectedRoute>
+            }}
+
+      </Stack.Screen> */}
 
       <Stack.Screen
         name="Contact"

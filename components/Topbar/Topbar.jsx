@@ -25,7 +25,7 @@ const Topbar = ({navigation}) => {
               <Text style={globalStyle.small}>Hello,</Text>
               {isAuthenticated ? (
                 <>
-                  <Text style={globalStyle.HelloText}>{user ? user.name : 'Guest'}</Text>
+                  <Text style={globalStyle.HelloText}>{ user ? user.name : 'Guest'}</Text>
                 </>
               ) : (
                 <Text style={globalStyle.HelloText}>Join us!</Text>

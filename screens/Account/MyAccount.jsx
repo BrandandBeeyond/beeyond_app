@@ -116,7 +116,7 @@ const MyAccount = ({navigation}) => {
                     {user?.mobile ? `${user.mobile}` : 'Not Available'}
                   </Text>
                 </View>
-                {user.isVerified ? (
+                {user && user.isVerified ? (
                   <View style={accountStyle.verified}>
                     <Text style={accountStyle.verifiedText}>Verified</Text>
                   </View>
@@ -208,7 +208,7 @@ const MyAccount = ({navigation}) => {
             </View>
             <View style={globalStyle.px10}>
               <View style={[globalStyle.emailInputUpdate, globalStyle.mt20]}>
-                <TextInput value={user.name} onChangeText={setEmail} />
+                {/* <TextInput value={user.name} onChangeText={setEmail} /> */}
               </View>
             </View>
 

@@ -125,13 +125,13 @@ const Cart = ({navigation}) => {
                       navigation.navigate(Routes.ProductDetail, {product: item})
                     }>
                     <Image
-                      source={item.thumbnail}
+                      source={{uri:item.images?.[0]?.url}}
                       style={[CartStyle.cartProd, globalStyle.rounded3]}
                     />
                   </Pressable>
 
                   <View>
-                    <Text style={globalStyle.medium}>{item.title}</Text>
+                    <Text style={globalStyle.medium}>{item.name}</Text>
                     <View style={[CartStyle.cartAddPrice]}>
                       <View>
                         <Text
