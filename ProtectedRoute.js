@@ -4,9 +4,11 @@ import {useSelector} from 'react-redux';
 const ProtectedRoute = ({navigation, children}) => {
   const {isAuthenticated, loading} = useSelector(state => state.user);
 
+  console.log('checking the user authentications', isAuthenticated);
+
   useEffect(() => {
     if (!loading && !isAuthenticated) {
-      navigation.replace('Login');
+      navigation.replace('EmailEntry',{ redirectTo: 'Checkoutform' });
     }
   }, [isAuthenticated, loading, navigation]);
 

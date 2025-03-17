@@ -49,16 +49,21 @@ export const checkOutStyle = StyleSheet.create({
     width: '48%',
   },
   saveButton: {
-    backgroundColor: '#D8D8D8', // Disabled button color
-    height: 50,
-    borderRadius: 8,
+    backgroundColor: '#4267B2',
+    height: verticalScale(47),
+    borderRadius: horizontalScale(10),
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: verticalScale(10),
   },
   saveButtonText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#A0A0A0', // Disabled text color
+    fontSize: scaleFontSize(15),
+    fontWeight: '600',
+    color: '#fff', // Disabled text color
+  },
+  errorText: {
+    color: 'red',
+    fontSize: scaleFontSize(12),
+    marginTop: horizontalScale(4),
   },
 });

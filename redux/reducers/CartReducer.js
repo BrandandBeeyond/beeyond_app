@@ -3,10 +3,12 @@ import {
   DECREMENT_QUANTITY,
   INCREMENT_QUANTITY,
   REMOVE_CART_ITEM,
+  SAVE_SHIPPING_INFO,
 } from '../constants/CartConstants';
 
 const initialState = {
   cart: [],
+  shippingInfo: {},
 };
 
 export const CartReducer = (state = initialState, action) => {
@@ -41,6 +43,12 @@ export const CartReducer = (state = initialState, action) => {
               : item,
           )
           .filter(item => item.quantity > 0),
+      };
+
+    case SAVE_SHIPPING_INFO:
+      return {
+        ...state,
+        shippingInfo: action.payload,
       };
 
     default:

@@ -18,6 +18,7 @@ export const Routes = {
   SignupEmail: 'SignupEmail',
   ForgotPassword: 'ForgotPassword',
   ResetPassword: 'ResetPassword',
+  SavedAddress: 'SavedAddress',
 
   // static pages
   Contact: 'Contact',

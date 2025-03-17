@@ -1,5 +1,10 @@
-import { ADD_TO_CART, DECREMENT_QUANTITY, INCREMENT_QUANTITY, REMOVE_CART_ITEM } from "../constants/CartConstants";
-
+import {
+  ADD_TO_CART,
+  DECREMENT_QUANTITY,
+  INCREMENT_QUANTITY,
+  REMOVE_CART_ITEM,
+  SAVE_SHIPPING_INFO,
+} from '../constants/CartConstants';
 
 export const AddtoCart = product => (dispatch, getState) => {
   const {cart} = getState().cart;
@@ -34,5 +39,12 @@ export const decrementQuantity = productId => dispatch => {
   dispatch({
     type: DECREMENT_QUANTITY,
     payload: productId,
+  });
+};
+
+export const saveShippingInfo = shippingData => dispatch => {
+  dispatch({
+    type: SAVE_SHIPPING_INFO,
+    payload: shippingData,
   });
 };

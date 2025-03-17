@@ -34,6 +34,9 @@ import ForgotPassword from '../screens/Login/ForgotPassword';
 import ResetPassword from '../screens/Login/ResetPassword';
 import Contact from '../screens/Contact/Contact';
 import SignupEmail from '../screens/Login/SignupEmail';
+import ProtectedRoute from '../ProtectedRoute';
+import CheckoutForm from '../screens/Checkout/Checkoutform';
+import SavedAddress from '../screens/Checkout/SavedAddress';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -358,6 +361,15 @@ export const MainNavigation = () => {
       />
 
       <Stack.Screen
+        name="SavedAddress"
+        component={SavedAddress}
+        options={({navigation}) => ({
+          headerLeft: () => <CustomBackButton navigation={navigation} />,
+          headerTitleStyle: {fontSize: scaleFontSize(17)},
+          headerTitle: 'Address',
+        })}
+      />
+      {/* <Stack.Screen
         name="Checkoutform"
         component={Checkoutform}
         options={({navigation}) => ({
@@ -365,19 +377,20 @@ export const MainNavigation = () => {
           headerTitleStyle: {fontSize: scaleFontSize(17)},
           headerTitle: 'Add delivery Address',
         })}
-      />
-       {/* <Stack.Screen  name="Checkoutform"  options={({navigation}) => ({
+      /> */}
+      <Stack.Screen
+        name="Checkoutform"
+        options={({navigation}) => ({
           headerLeft: () => <CustomBackButton navigation={navigation} />,
           headerTitleStyle: {fontSize: scaleFontSize(17)},
           headerTitle: 'Add delivery Address',
         })}>
-            {({navigation})=>{
-              <ProtectedRoute navigation={navigation}>
-              <CheckoutForm />
-            </ProtectedRoute>
-            }}
-
-      </Stack.Screen> */}
+        {({navigation}) => (
+          <ProtectedRoute navigation={navigation}>
+            <Checkoutform navigation={navigation} />
+          </ProtectedRoute>
+        )}
+      </Stack.Screen>
 
       <Stack.Screen
         name="Contact"
