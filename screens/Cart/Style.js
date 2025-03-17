@@ -149,19 +149,20 @@ export const CartStyle = StyleSheet.create({
   },
   CheckoutBtn: {
     backgroundColor: '#f9b000',
-    width: horizontalScale(130),
+    width: horizontalScale(190),
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     columnGap: horizontalScale(8),
     borderRadius: horizontalScale(6),
-    paddingVertical: verticalScale(10),
+    paddingVertical: verticalScale(16),
   },
   checkoutBtnText: {
     color: '#fff',
-    fontSize: scaleFontSize(13),
+    fontSize: scaleFontSize(14),
     fontWeight: '700',
+    textTransform: 'uppercase',
   },
   modalOverlay: {
     flex: 1,

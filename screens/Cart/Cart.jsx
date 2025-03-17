@@ -34,7 +34,7 @@ import {productStyle} from '../Products/Style';
 
 const Cart = ({navigation}) => {
   const dispatch = useDispatch();
-  const {loading, cart} = useSelector(state => state.cart);
+  const {loading, cart, shippingInfo} = useSelector(state => state.cart);
   const {notifications} = useSelector(state => state.notifications);
   const {isAuthenticated} = useSelector(state => state.user);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -125,7 +125,7 @@ const Cart = ({navigation}) => {
                       navigation.navigate(Routes.ProductDetail, {product: item})
                     }>
                     <Image
-                      source={{uri:item.images?.[0]?.url}}
+                      source={{uri: item.images?.[0]?.url}}
                       style={[CartStyle.cartProd, globalStyle.rounded3]}
                     />
                   </Pressable>
@@ -292,7 +292,13 @@ const Cart = ({navigation}) => {
             <View>
               <Pressable
                 style={CartStyle.CheckoutBtn}
-                onPress={() => navigation.navigate(Routes.Checkoutform)}>
+                onPress={() => {
+                  if (shippingInfo) {
+                    navigation.navigate(Routes.SavedAddress);
+                  } else {
+                    navigation.navigate(Routes.Checkoutform);
+                  }
+                }}>
                 {loading ? (
                   <View
                     style={[

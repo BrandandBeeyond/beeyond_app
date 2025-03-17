@@ -127,7 +127,7 @@ export const globalStyle = StyleSheet.create({
       '0 2px 2px 0 rgba(235, 229, 229, 0.5),0 2px 2px 0 rgb(219, 210, 210)',
   },
   bgTheme: {
-    backgroundColor: '#f3ebd8',
+    backgroundColor: '#eeeeee',
   },
   mt3: {
     marginTop: verticalScale(3),

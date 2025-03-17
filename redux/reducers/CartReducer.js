@@ -14,22 +14,34 @@ const initialState = {
 export const CartReducer = (state = initialState, action) => {
   switch (action.type) {
     case ADD_TO_CART:
-      return {
-        ...state,
-        cart: [...state.cart, action.payload],
-      };
+      const existingItem = state.cart.find(item => item.id === action.payload.id);
+      if (existingItem) {
+        return {
+          ...state,
+          cart: state.cart.map(item =>
+            item.id === action.payload.id
+              ? { ...item, quantity: item.quantity + action.payload.quantity }
+              : item
+          ),
+        };
+      } else {
+        return {
+          ...state,
+          cart: [...state.cart, action.payload],
+        };
+      }
+
     case REMOVE_CART_ITEM:
       return {
         ...state,
         cart: state.cart.filter(item => item.id !== action.payload),
       };
+
     case INCREMENT_QUANTITY:
       return {
         ...state,
         cart: state.cart.map(item =>
-          item.id === action.payload
-            ? {...item, quantity: item.quantity + 1}
-            : item,
+          item.id === action.payload ? { ...item, quantity: item.quantity + 1 } : item
         ),
       };
 
@@ -39,8 +51,8 @@ export const CartReducer = (state = initialState, action) => {
         cart: state.cart
           .map(item =>
             item.id === action.payload
-              ? {...item, quantity: item.quantity > 1 ? item.quantity - 1 : 1}
-              : item,
+              ? { ...item, quantity: Math.max(item.quantity - 1, 1) }
+              : item
           )
           .filter(item => item.quantity > 0),
       };
