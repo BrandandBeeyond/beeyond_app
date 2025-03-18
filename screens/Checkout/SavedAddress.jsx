@@ -4,10 +4,8 @@ import {globalStyle} from '../../assets/styles/globalStyle';
 import {useSelector} from 'react-redux';
 
 const SavedAddress = () => {
-  const {user} = useSelector(state => state.user);
-  const {shippingInfo} = useSelector(state => state.cart);
+  const {user, shippingInfo} = useSelector(state => state.user);
 
-  
   return (
     <SafeAreaView style={[globalStyle.flex, globalStyle.bgTheme]}>
       <ScrollView>
@@ -24,7 +22,9 @@ const SavedAddress = () => {
             <View style={[globalStyle.card, globalStyle.rounded3]}>
               <Text style={globalStyle.normalText}>{user.name}</Text>
               <View style={globalStyle.mt3}>
-                <Text style={globalStyle.normalText}>{shippingInfo.address}</Text>
+                <Text style={globalStyle.normalText}>
+                  {shippingInfo.address}
+                </Text>
               </View>
             </View>
           </View>

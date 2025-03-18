@@ -10,16 +10,19 @@ import {
 } from 'react-native';
 import {checkOutStyle} from './Style';
 import {useDispatch, useSelector} from 'react-redux';
-import {saveShippingInfo} from '../../redux/actions/CartAction';
 import {useNavigation} from '@react-navigation/native';
+import {
+  saveShippingInfo,
+  loadShippingInfo,
+} from '../../redux/actions/UserAction';
 
 const CheckoutForm = () => {
-  const {user} = useSelector(state => state.user);
-  const {shippingInfo} = useSelector(state => state.cart);
-  const [errors, setErrors] = useState({});
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
+  const {user, shippingInfo} = useSelector(state => state.user);
+
+  const [errors, setErrors] = useState({});
   const [form, setForm] = useState({
     fullName: '',
     email: '',
@@ -35,13 +38,25 @@ const CheckoutForm = () => {
   });
 
   useEffect(() => {
-    setForm(prevForm => ({
-      ...prevForm,
-      fullName: user?.name || '',
-      email: user?.email || '',
-      mobile: user?.mobile || '',
-      ...shippingInfo,
-    }));
+    dispatch(loadShippingInfo());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (user) {
+      setForm(prevForm => ({
+        ...prevForm,
+        fullName: user?.name || '',
+        email: user?.email || '',
+        mobile: user?.mobile || '',
+      }));
+    }
+
+    if (shippingInfo) {
+      setForm(prevForm => ({
+        ...prevForm,
+        ...shippingInfo,
+      }));
+    }
   }, [user, shippingInfo]);
 
   const handleChange = (name, value) => {
@@ -106,8 +121,9 @@ const CheckoutForm = () => {
       Alert.alert('Please fill all required fields correctly.');
       return;
     }
-    dispatch(saveShippingInfo(form));
 
+    // ✅ Save shipping info to Redux and AsyncStorage
+    dispatch(saveShippingInfo(form));
     navigation.navigate('SavedAddress');
     Alert.alert('Address saved successfully!');
   };
@@ -118,21 +134,54 @@ const CheckoutForm = () => {
         contentContainerStyle={{paddingBottom: 20}}
         showsVerticalScrollIndicator={false}>
         {[
-          {name: 'fullName', label: 'Full Name*'},
-          {name: 'email', label: 'Email ID*', keyboardType: 'email-address'},
-          {name: 'mobile', label: 'Mobile Number*', keyboardType: 'phone-pad'},
+          {
+            name: 'fullName',
+            label: 'Full Name*',
+          },
+          {
+            name: 'email',
+            label: 'Email ID*',
+            keyboardType: 'email-address',
+          },
+          {
+            name: 'mobile',
+            label: 'Mobile Number*',
+            keyboardType: 'phone-pad',
+          },
           {
             name: 'altMobile',
             label: 'Alternate Mobile Number (Optional)',
             keyboardType: 'phone-pad',
             optional: true,
           },
-          {name: 'pincode', label: 'Pincode*', keyboardType: 'number-pad'},
-          {name: 'city', label: 'City*', editable: false},
-          {name: 'state', label: 'State*', editable: false},
-          {name: 'address', label: 'Flat, House No., Building, Company*'},
-          {name: 'area', label: 'Area, Colony, Street, Sector, Village*'},
-          {name: 'landmark', label: 'Landmark (Optional)', optional: true},
+          {
+            name: 'pincode',
+            label: 'Pincode*',
+            keyboardType: 'number-pad',
+          },
+          {
+            name: 'city',
+            label: 'City*',
+            editable: false,
+          },
+          {
+            name: 'state',
+            label: 'State*',
+            editable: false,
+          },
+          {
+            name: 'address',
+            label: 'Flat, House No., Building, Company*',
+          },
+          {
+            name: 'area',
+            label: 'Area, Colony, Street, Sector, Village*',
+          },
+          {
+            name: 'landmark',
+            label: 'Landmark (Optional)',
+            optional: true,
+          },
         ].map(field => (
           <View key={field.name} style={checkOutStyle.inputContainer}>
             <Text style={checkOutStyle.label}>{field.label}</Text>

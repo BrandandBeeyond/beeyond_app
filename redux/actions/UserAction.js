@@ -27,6 +27,7 @@ import {
 } from '../constants/UserConstants';
 import {serverApi} from '../../config/serverApi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {SAVE_SHIPPING_INFO} from '../constants/CartConstants';
 
 export const checkUserExists = email => async dispatch => {
   try {
@@ -78,6 +79,13 @@ export const UserLogin = (email, password) => async dispatch => {
     );
 
     if (data?.user) {
+      const storedUser = await AsyncStorage.getItem('user');
+      const prevUser = storedUser ? JSON.parse(storedUser) : null;
+
+      if (!prevUser || prevUser.email !== data.user.email) {
+        await AsyncStorage.removeItem('shippingInfo');
+      }
+      await AsyncStorage.setItem('user', JSON.stringify(data.user));
       dispatch({type: LOGIN_USER_SUCCESS, payload: data.user});
     } else {
       throw new Error('Invalid API response');
@@ -261,4 +269,37 @@ export const VerifyMobileOtp = (mobileNumber, otp) => async dispatch => {
 
 export const logoutUser = () => async dispatch => {
   dispatch({type: LOGOUT_USER_SUCCESS});
+};
+
+export const saveShippingInfo = shippingInfo => async dispatch => {
+  try {
+    await AsyncStorage.setItem('shippingInfo', JSON.stringify(shippingInfo));
+
+    dispatch({
+      type: SAVE_SHIPPING_INFO,
+      payload: shippingInfo,
+    });
+  } catch (error) {
+    console.error('Failed to save shipping info:', error);
+  }
+};
+
+export const loadShippingInfo = () => async dispatch => {
+  try {
+    const shippingInfo = await AsyncStorage.getItem('shippingInfo');
+
+    if (shippingInfo) {
+      try {
+        const parsedInfo = JSON.parse(shippingInfo);
+        dispatch({type: SAVE_SHIPPING_INFO, payload: parsedInfo});
+      } catch (error) {
+        console.error('Invalid JSON format:', error);
+        await AsyncStorage.removeItem('shippingInfo');
+      }
+    } else {
+      console.log('No shipping info found');
+    }
+  } catch (error) {
+    console.error('Failed to load shipping info:', error);
+  }
 };

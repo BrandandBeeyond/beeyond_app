@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   Image,
@@ -31,14 +31,52 @@ import {AddNotification} from '../../redux/actions/NotificationAction';
 import Header from '../../components/Header/Header';
 import CloseIcon from 'react-native-vector-icons/AntDesign';
 import {productStyle} from '../Products/Style';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { SAVE_SHIPPING_INFO } from '../../redux/constants/CartConstants';
 
 const Cart = ({navigation}) => {
   const dispatch = useDispatch();
-  const {loading, cart, shippingInfo} = useSelector(state => state.cart);
+  const {loading, cart} = useSelector(state => state.cart);
   const {notifications} = useSelector(state => state.notifications);
-  const {isAuthenticated} = useSelector(state => state.user);
+  const {isAuthenticated, shippingInfo} = useSelector(state => state.user);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [storedShippingInfo, setStoredShippingInfo] = useState(null);
+
+  useEffect(() => {
+    const loadStoredShippingInfo = async () => {
+      try {
+        const info = await AsyncStorage.getItem('shippingInfo');
+
+        if (info) {
+          setStoredShippingInfo(JSON.parse(info));
+        }
+        dispatch({
+            type:SAVE_SHIPPING_INFO,
+            payload:JSON.parse(info),
+        })
+      } catch (error) {
+        console.error('Failed to load shipping info:', error);
+      }
+    };
+
+    loadStoredShippingInfo();
+  }, [dispatch]);
+
+  const handleCheckoutNavigation = () => {
+    if (!isAuthenticated) {
+      navigation.navigate(Routes.EmailEntry);  // Redirect to login if not authenticated
+    } else {
+      const hasShippingInfo = shippingInfo && Object.keys(shippingInfo).length > 0;
+      const hasStoredShippingInfo = storedShippingInfo && Object.keys(storedShippingInfo).length > 0;
+
+      if (hasShippingInfo || hasStoredShippingInfo) {
+        navigation.navigate(Routes.SavedAddress);  // Navigate to saved address if shipping info exists
+      } else {
+        navigation.navigate(Routes.Checkoutform);  // Navigate to checkout form if no shipping info
+      }
+    }
+  };
 
   const CalculateCartTotal = () => {
     return cart.reduce((total, item) => total + item.price * item.quantity, 0);
@@ -82,6 +120,7 @@ const Cart = ({navigation}) => {
     dispatch(decrementQuantity(productId));
     dispatch(AddNotification('Cart quantity updated successfully!'));
   };
+
   return (
     <SafeAreaView style={[globalStyle.flex, globalStyle.bgTheme]}>
       {cart.length > 0 ? (
@@ -292,13 +331,7 @@ const Cart = ({navigation}) => {
             <View>
               <Pressable
                 style={CartStyle.CheckoutBtn}
-                onPress={() => {
-                  if (shippingInfo) {
-                    navigation.navigate(Routes.SavedAddress);
-                  } else {
-                    navigation.navigate(Routes.Checkoutform);
-                  }
-                }}>
+                onPress={handleCheckoutNavigation}>
                 {loading ? (
                   <View
                     style={[

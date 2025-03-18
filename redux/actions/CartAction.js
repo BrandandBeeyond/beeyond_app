@@ -42,9 +42,4 @@ export const decrementQuantity = productId => dispatch => {
   });
 };
 
-export const saveShippingInfo = shippingData => dispatch => {
-  dispatch({
-    type: SAVE_SHIPPING_INFO,
-    payload: shippingData,
-  });
-};
+

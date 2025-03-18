@@ -26,6 +26,7 @@ import {
   VERIFY_MOBILE_OTP_REQUEST,
   VERIFY_MOBILE_OTP_SUCCESS,
 } from '../constants/UserConstants';
+import {SAVE_SHIPPING_INFO} from '../constants/CartConstants';
 
 const initialState = {
   // user: {},
@@ -38,6 +39,7 @@ const initialState = {
   otpVerfiedEmail: false,
   otpSentMobile: false,
   otpVerfiedMobile: false,
+  shippingInfo: {},
 };
 
 const updateUserInitialState = {
@@ -149,6 +151,7 @@ export const UserReducer = (state = initialState, action) => {
 
     case LOGOUT_USER_SUCCESS:
       AsyncStorage.removeItem('user');
+
       return {
         ...state,
         loading: false,
@@ -162,12 +165,16 @@ export const UserReducer = (state = initialState, action) => {
         error: null,
       };
 
+    case SAVE_SHIPPING_INFO:
+      AsyncStorage.setItem('shippingInfo', JSON.stringify(action.payload));
+      return {
+        ...state,
+        shippingInfo: action.payload,
+      };
+
     default:
       return state;
   }
 };
 
-
-export const profileReducer=(state = updateUserInitialState,action)=>{
-  
-}
+export const profileReducer = (state = updateUserInitialState, action) => {};

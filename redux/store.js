@@ -11,13 +11,13 @@ import {WishlistReducer} from './reducers/WishlistReducer';
 const persistUserConfig = {
   key: 'user',
   storage: AsyncStorage,
-  whitelist: ['user'],
+  whitelist: ['user','shippingInfo'],
 };
 
 const persistCartConfig = {
   key: 'cart',
   storage: AsyncStorage,
-  whitelist: ['cart', 'shippingInfo'],
+  whitelist: ['cart'],
 };
 const persistedUserReducer = persistReducer(persistUserConfig, UserReducer);
 const persistedCartReducer = persistReducer(persistCartConfig, CartReducer);

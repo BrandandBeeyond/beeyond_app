@@ -384,13 +384,9 @@ export const MainNavigation = () => {
           headerLeft: () => <CustomBackButton navigation={navigation} />,
           headerTitleStyle: {fontSize: scaleFontSize(17)},
           headerTitle: 'Add delivery Address',
-        })}>
-        {({navigation}) => (
-          <ProtectedRoute navigation={navigation}>
-            <Checkoutform navigation={navigation} />
-          </ProtectedRoute>
-        )}
-      </Stack.Screen>
+        })}
+        component={Checkoutform} // ✅ No need for ProtectedRoute
+      />
 
       <Stack.Screen
         name="Contact"
