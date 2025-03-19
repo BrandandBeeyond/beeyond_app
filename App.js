@@ -4,17 +4,13 @@ import {MainNavigation} from './navigation/mainNavigation';
 import {Provider, useDispatch} from 'react-redux';
 import store, {persistor} from './redux/store';
 import {PersistGate} from 'redux-persist/integration/react';
-import {loadShippingInfo, loadUser} from './redux/actions/UserAction';
+import {loadUser} from './redux/actions/UserAction';
 
 const AppContent = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(loadUser());
-  }, [dispatch]);
-
-  useEffect(() => {
-    dispatch(loadShippingInfo());
   }, [dispatch]);
 
   return (

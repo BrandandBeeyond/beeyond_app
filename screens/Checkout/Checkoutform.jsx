@@ -11,16 +11,13 @@ import {
 import {checkOutStyle} from './Style';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
-import {
-  saveShippingInfo,
-  loadShippingInfo,
-} from '../../redux/actions/UserAction';
+import {addShippingInfo} from '../../redux/actions/UserAction';
 
 const CheckoutForm = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
-  const {user, shippingInfo} = useSelector(state => state.user);
+  const {user} = useSelector(state => state.user);
 
   const [errors, setErrors] = useState({});
   const [form, setForm] = useState({
@@ -34,12 +31,9 @@ const CheckoutForm = () => {
     address: '',
     area: '',
     country: 'INDIA',
+    type: 'Home',
     landmark: '',
   });
-
-  useEffect(() => {
-    dispatch(loadShippingInfo());
-  }, [dispatch]);
 
   useEffect(() => {
     if (user) {
@@ -50,17 +44,13 @@ const CheckoutForm = () => {
         mobile: user?.mobile || '',
       }));
     }
-
-    if (shippingInfo) {
-      setForm(prevForm => ({
-        ...prevForm,
-        ...shippingInfo,
-      }));
-    }
-  }, [user, shippingInfo]);
+  }, [user]);
 
   const handleChange = (name, value) => {
-    setForm(prevForm => ({...prevForm, [name]: value}));
+    setForm(prevForm => ({
+      ...prevForm,
+      [name]: value,
+    }));
     validateField(name, value);
 
     if (name === 'pincode' && value.length === 6) {
@@ -80,8 +70,8 @@ const CheckoutForm = () => {
         !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
       ) {
         message = 'Please enter a valid email';
-      } else if (name === 'pincode' && value.trim().length !== 6) {
-        message = 'Pincode must be 6 digits';
+      } else if (name === 'postalCode' && value.trim().length !== 6) {
+        message = 'postalCode must be 6 digits';
       }
     }
     setErrors(prevErrors => ({...prevErrors, [name]: message}));
@@ -101,7 +91,7 @@ const CheckoutForm = () => {
           state: data[0].PostOffice[0].State,
         }));
       } else {
-        Alert.alert('Invalid Pincode', 'Please enter a valid pincode.');
+        Alert.alert('Invalid postalCode', 'Please enter a valid postalCode.');
       }
     } catch (error) {
       Alert.alert('Error', 'Failed to fetch city and state. Try again.');
@@ -110,22 +100,32 @@ const CheckoutForm = () => {
 
   const handleSaveAddress = () => {
     if (
-      !form.fullName.trim() ||
-      !form.email.trim() ||
-      !form.mobile.trim() ||
+      !form.flatNo.trim() ||
+      !form.area.trim() ||
       !form.pincode.trim() ||
       !form.state.trim() ||
-      !form.address.trim() ||
-      !form.area.trim()
+      !form.city.trim() ||
+      !form.phoneNumber.trim()
     ) {
       Alert.alert('Please fill all required fields correctly.');
       return;
     }
 
-    // ✅ Save shipping info to Redux and AsyncStorage
-    dispatch(saveShippingInfo(form));
-    navigation.navigate('SavedAddress');
-    Alert.alert('Address saved successfully!');
+    if (!user?._id) {
+      Alert.alert('Error', 'User not authenticated.');
+      return;
+    }
+
+    // ✅ Dispatch addShippingInfo API with userId
+    dispatch(addShippingInfo(user._id, form))
+      .then(() => {
+        Alert.alert('Success', 'Address saved successfully!');
+        navigation.navigate('SavedAddress');
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        Alert.alert('Error', 'Failed to save address.');
+      });
   };
 
   return (
@@ -156,7 +156,7 @@ const CheckoutForm = () => {
           },
           {
             name: 'pincode',
-            label: 'Pincode*',
+            label: 'pincode*',
             keyboardType: 'number-pad',
           },
           {

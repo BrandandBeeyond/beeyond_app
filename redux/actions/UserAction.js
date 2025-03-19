@@ -1,5 +1,8 @@
 import axios from 'axios';
 import {
+  ADD_SHIPPING_INFO_FAIL,
+  ADD_SHIPPING_INFO_REQUEST,
+  ADD_SHIPPING_INFO_SUCCESS,
   CHECK_USER_FAIL,
   CHECK_USER_REQUEST,
   CHECK_USER_SUCCESS,
@@ -267,39 +270,25 @@ export const VerifyMobileOtp = (mobileNumber, otp) => async dispatch => {
   }
 };
 
-export const logoutUser = () => async dispatch => {
-  dispatch({type: LOGOUT_USER_SUCCESS});
-};
-
-export const saveShippingInfo = shippingInfo => async dispatch => {
+export const addShippingInfo = address => async dispatch => {
   try {
-    await AsyncStorage.setItem('shippingInfo', JSON.stringify(shippingInfo));
+    dispatch({type: ADD_SHIPPING_INFO_REQUEST});
+
+    const {data} = await axios.post(`${serverApi}/shippingInfo/add`, address, {
+      withCredentials: true,
+    });
 
     dispatch({
-      type: SAVE_SHIPPING_INFO,
-      payload: shippingInfo,
+      type: ADD_SHIPPING_INFO_SUCCESS,
+      payload: data.shippingInfo,
     });
   } catch (error) {
-    console.error('Failed to save shipping info:', error);
+    dispatch({
+      type: ADD_SHIPPING_INFO_FAIL,
+      payload: error.response?.data?.message || 'Failed to add shipping info',
+    });
   }
 };
-
-export const loadShippingInfo = () => async dispatch => {
-  try {
-    const shippingInfo = await AsyncStorage.getItem('shippingInfo');
-
-    if (shippingInfo) {
-      try {
-        const parsedInfo = JSON.parse(shippingInfo);
-        dispatch({type: SAVE_SHIPPING_INFO, payload: parsedInfo});
-      } catch (error) {
-        console.error('Invalid JSON format:', error);
-        await AsyncStorage.removeItem('shippingInfo');
-      }
-    } else {
-      console.log('No shipping info found');
-    }
-  } catch (error) {
-    console.error('Failed to load shipping info:', error);
-  }
+export const logoutUser = () => async dispatch => {
+  dispatch({type: LOGOUT_USER_SUCCESS});
 };

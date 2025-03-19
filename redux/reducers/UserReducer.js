@@ -1,5 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
+  ADD_SHIPPING_INFO_FAIL,
+  ADD_SHIPPING_INFO_REQUEST,
+  ADD_SHIPPING_INFO_SUCCESS,
   CHECK_USER_FAIL,
   CHECK_USER_REQUEST,
   CHECK_USER_SUCCESS,
@@ -39,7 +42,7 @@ const initialState = {
   otpVerfiedEmail: false,
   otpSentMobile: false,
   otpVerfiedMobile: false,
-  shippingInfo: {},
+  shippingInfo: [],
 };
 
 const updateUserInitialState = {
@@ -57,6 +60,7 @@ export const UserReducer = (state = initialState, action) => {
     case SEND_MOBILE_OTP_REQUEST:
     case VERIFY_MOBILE_OTP_REQUEST:
     case VERIFY_EMAIL_OTP_REQUEST:
+    case ADD_SHIPPING_INFO_REQUEST:
       return {
         ...state,
         loading: true,
@@ -121,6 +125,7 @@ export const UserReducer = (state = initialState, action) => {
     case SEND_MOBILE_OTP_FAIL:
     case VERIFY_MOBILE_OTP_FAIL:
     case VERIFY_EMAIL_OTP_FAIL:
+    case ADD_SHIPPING_INFO_FAIL:
       return {
         ...state,
         loading: false,
@@ -159,17 +164,17 @@ export const UserReducer = (state = initialState, action) => {
         user: null,
       };
 
+    case ADD_SHIPPING_INFO_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        shippingInfo: [...state.shippingInfo, action.payload],
+      };
+
     case CLEAR_ERRORS:
       return {
         ...state,
         error: null,
-      };
-
-    case SAVE_SHIPPING_INFO:
-      AsyncStorage.setItem('shippingInfo', JSON.stringify(action.payload));
-      return {
-        ...state,
-        shippingInfo: action.payload,
       };
 
     default:
