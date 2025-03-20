@@ -270,25 +270,50 @@ export const VerifyMobileOtp = (mobileNumber, otp) => async dispatch => {
   }
 };
 
-export const addShippingInfo = address => async dispatch => {
-  try {
-    dispatch({type: ADD_SHIPPING_INFO_REQUEST});
+export const addShippingInfo = (userId, address) => async dispatch => {
+  if (!userId || !address) {
+    console.error('Invalid userId or address:', userId, address);
+    return;
+  }
 
-    const {data} = await axios.post(`${serverApi}/shippingInfo/add`, address, {
-      withCredentials: true,
-    });
+  try {
+    dispatch({ type: ADD_SHIPPING_INFO_REQUEST });
+
+    console.log('Dispatching payload:', { userId, ...address });  // ✅ Log the payload
+
+    const { data } = await axios.post(
+      `${serverApi}/shippingInfo/add`,
+      {
+        userId: userId || '',                    // Fallback for null userId
+        flatNo: address.flatNo || '',            // Fallback for null values
+        area: address.area || '',
+        landmark: address.landmark || '',
+        city: address.city || '',
+        state: address.state || '',
+        mobile: address.mobile || '',
+        pincode: address.pincode || '',
+        country: address.country || 'INDIA',
+        type: address.type || 'Home',
+        isDefault: address.isDefault ?? true,    // Nullish coalescing operator
+      },
+      { withCredentials: true }
+    );
 
     dispatch({
       type: ADD_SHIPPING_INFO_SUCCESS,
       payload: data.shippingInfo,
     });
   } catch (error) {
+    console.error('Error adding shipping info:', error);
     dispatch({
       type: ADD_SHIPPING_INFO_FAIL,
       payload: error.response?.data?.message || 'Failed to add shipping info',
     });
   }
 };
+
+export const getShippingInfo=()
+
 export const logoutUser = () => async dispatch => {
   dispatch({type: LOGOUT_USER_SUCCESS});
 };

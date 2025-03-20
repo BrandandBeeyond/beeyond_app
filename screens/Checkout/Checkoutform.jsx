@@ -7,11 +7,14 @@ import {
   SafeAreaView,
   ScrollView,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
+import Spinner from 'react-native-loading-spinner-overlay';
 import {checkOutStyle} from './Style';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import {addShippingInfo} from '../../redux/actions/UserAction';
+import {globalStyle} from '../../assets/styles/globalStyle';
 
 const CheckoutForm = () => {
   const dispatch = useDispatch();
@@ -20,6 +23,11 @@ const CheckoutForm = () => {
   const {user} = useSelector(state => state.user);
 
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+
+  const [fetchingCityState, setFetchingCityState] = useState(false);
+  const [cityStateFetched, setCityStateFetched] = useState(false);
+
   const [form, setForm] = useState({
     fullName: '',
     email: '',
@@ -28,7 +36,7 @@ const CheckoutForm = () => {
     pincode: '',
     city: '',
     state: '',
-    address: '',
+    flatNo: '',
     area: '',
     country: 'INDIA',
     type: 'Home',
@@ -70,14 +78,16 @@ const CheckoutForm = () => {
         !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
       ) {
         message = 'Please enter a valid email';
-      } else if (name === 'postalCode' && value.trim().length !== 6) {
-        message = 'postalCode must be 6 digits';
+      } else if (name === 'pincode' && value.trim().length !== 6) {
+        message = 'pincode must be 6 digits';
       }
     }
     setErrors(prevErrors => ({...prevErrors, [name]: message}));
   };
 
   const fetchCityState = async pincode => {
+    setFetchingCityState(true);
+    setCityStateFetched(false);
     try {
       const response = await fetch(
         `https://api.postalpincode.in/pincode/${pincode}`,
@@ -90,46 +100,70 @@ const CheckoutForm = () => {
           city: data[0].PostOffice[0].District,
           state: data[0].PostOffice[0].State,
         }));
+        setCityStateFetched(true);
       } else {
         Alert.alert('Invalid postalCode', 'Please enter a valid postalCode.');
       }
     } catch (error) {
       Alert.alert('Error', 'Failed to fetch city and state. Try again.');
+      setCityStateFetched(false);
+    } finally {
+      setFetchingCityState(false);
     }
   };
 
-  const handleSaveAddress = () => {
+  const handleSaveAddress = async () => {
     if (
-      !form.flatNo.trim() ||
-      !form.area.trim() ||
-      !form.pincode.trim() ||
-      !form.state.trim() ||
-      !form.city.trim() ||
-      !form.phoneNumber.trim()
+      !form.fullName?.trim() ||
+      !form.email?.trim() ||
+      !form.mobile?.trim() ||
+      !form.area?.trim() ||
+      !form.pincode?.trim() ||
+      !form.state?.trim() ||
+      !form.city?.trim() ||
+      !form.flatNo?.trim()
     ) {
       Alert.alert('Please fill all required fields correctly.');
       return;
     }
 
-    if (!user?._id) {
+    if (!user || !user._id) {
+      console.log('User object:', user); // ✅ Check the user object
       Alert.alert('Error', 'User not authenticated.');
       return;
     }
 
-    // ✅ Dispatch addShippingInfo API with userId
-    dispatch(addShippingInfo(user._id, form))
-      .then(() => {
-        Alert.alert('Success', 'Address saved successfully!');
-        navigation.navigate('SavedAddress');
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        Alert.alert('Error', 'Failed to save address.');
-      });
+    // ✅ Fallback values in case any field is null
+    const payload = {
+      flatNo: form.flatNo || '',
+      area: form.area || '',
+      landmark: form.landmark || '',
+      city: form.city || '',
+      state: form.state || '',
+      mobile: form.mobile || '',
+      pincode: form.pincode || '',
+      country: form.country || 'INDIA',
+      type: form.type || 'Home',
+      isDefault: true,
+    };
+
+    console.log('Dispatching Payload:', payload); // ✅ Verify before dispatching
+
+    setLoading(true);
+    try {
+      await dispatch(addShippingInfo(user._id, payload));
+      navigation.navigate('SavedAddress');
+    } catch (error) {
+      console.error('Error:', error);
+      Alert.alert('Error', 'Failed to save address.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <SafeAreaView style={checkOutStyle.container}>
+      <Spinner visible={fetchingCityState}/>
       <ScrollView
         contentContainerStyle={{paddingBottom: 20}}
         showsVerticalScrollIndicator={false}>
@@ -162,15 +196,15 @@ const CheckoutForm = () => {
           {
             name: 'city',
             label: 'City*',
-            editable: false,
+            editable: cityStateFetched,
           },
           {
             name: 'state',
             label: 'State*',
-            editable: false,
+            editable: cityStateFetched,
           },
           {
-            name: 'address',
+            name: 'flatNo',
             label: 'Flat, House No., Building, Company*',
           },
           {
@@ -210,9 +244,22 @@ const CheckoutForm = () => {
         </View>
 
         <TouchableOpacity
-          style={checkOutStyle.saveButton}
-          onPress={handleSaveAddress}>
-          <Text style={checkOutStyle.saveButtonText}>SAVE ADDRESS</Text>
+          style={[checkOutStyle.saveButton, {opacity: '0.5'}]}
+          onPress={handleSaveAddress}
+          disabled={loading}>
+          {loading ? (
+            <View
+              style={[
+                globalStyle.drow,
+                globalStyle.alignCenter,
+                globalStyle.cg3,
+              ]}>
+              <ActivityIndicator color="#fff" />
+              <Text style={checkOutStyle.saveButtonText}>SAVE ADDRESS</Text>
+            </View>
+          ) : (
+            <Text style={checkOutStyle.saveButtonText}>SAVE ADDRESS</Text>
+          )}
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>

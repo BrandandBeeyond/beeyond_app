@@ -7,6 +7,9 @@ import {
   CHECK_USER_REQUEST,
   CHECK_USER_SUCCESS,
   CLEAR_ERRORS,
+  GET_SHIPPING_INFO_FAIL,
+  GET_SHIPPING_INFO_REQUEST,
+  GET_SHIPPING_INFO_SUCCESS,
   LOAD_USER_FAIL,
   LOAD_USER_SUCCESS,
   LOGIN_USER_FAIL,
@@ -61,6 +64,7 @@ export const UserReducer = (state = initialState, action) => {
     case VERIFY_MOBILE_OTP_REQUEST:
     case VERIFY_EMAIL_OTP_REQUEST:
     case ADD_SHIPPING_INFO_REQUEST:
+    case GET_SHIPPING_INFO_REQUEST:
       return {
         ...state,
         loading: true,
@@ -126,6 +130,7 @@ export const UserReducer = (state = initialState, action) => {
     case VERIFY_MOBILE_OTP_FAIL:
     case VERIFY_EMAIL_OTP_FAIL:
     case ADD_SHIPPING_INFO_FAIL:
+    case GET_SHIPPING_INFO_FAIL:
       return {
         ...state,
         loading: false,
@@ -170,6 +175,13 @@ export const UserReducer = (state = initialState, action) => {
         loading: false,
         shippingInfo: [...state.shippingInfo, action.payload],
       };
+
+    case GET_SHIPPING_INFO_SUCCESS:
+      return{
+        ...state,
+        loading:false,
+        shippingInfo:action.payload
+      }
 
     case CLEAR_ERRORS:
       return {
