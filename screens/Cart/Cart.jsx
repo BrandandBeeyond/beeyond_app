@@ -62,6 +62,22 @@ const Cart = ({navigation}) => {
   const checkoutAmount =
     totalAmount + gstAmount + shippingCharges + platformFee;
 
+  const handleCheckOutNavigation = () => {
+    if (!isAuthenticated) {
+      navigation.navigate(Routes.EmailEntry);
+    } else if (
+      (shippingInfo?.addresses && shippingInfo.addresses.length > 0) || 
+      (shippingInfo?.data?.addresses && shippingInfo.data.addresses.length > 0)
+    )  {
+      navigation.navigate(Routes.SavedAddress);
+    } else {
+      navigation.navigate(Routes.Checkoutform);
+    }
+  };
+
+  console.log("shipping info from cart",shippingInfo);
+  
+
   const handleRemoveFromCart = product => {
     setSelectedProduct(product);
     setModalVisible(true);
@@ -295,7 +311,7 @@ const Cart = ({navigation}) => {
             <View>
               <Pressable
                 style={CartStyle.CheckoutBtn}
-                onPress={() => navigation.navigate(Routes.Checkoutform)}>
+                onPress={handleCheckOutNavigation}>
                 {loading ? (
                   <View
                     style={[

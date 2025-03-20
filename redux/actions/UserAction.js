@@ -6,6 +6,9 @@ import {
   CHECK_USER_FAIL,
   CHECK_USER_REQUEST,
   CHECK_USER_SUCCESS,
+  GET_SHIPPING_INFO_FAIL,
+  GET_SHIPPING_INFO_REQUEST,
+  GET_SHIPPING_INFO_SUCCESS,
   LOAD_USER_FAIL,
   LOAD_USER_SUCCESS,
   LOGIN_USER_FAIL,
@@ -277,15 +280,15 @@ export const addShippingInfo = (userId, address) => async dispatch => {
   }
 
   try {
-    dispatch({ type: ADD_SHIPPING_INFO_REQUEST });
+    dispatch({type: ADD_SHIPPING_INFO_REQUEST});
 
-    console.log('Dispatching payload:', { userId, ...address });  // ✅ Log the payload
+    console.log('Dispatching payload:', {userId, ...address}); // ✅ Log the payload
 
-    const { data } = await axios.post(
+    const {data} = await axios.post(
       `${serverApi}/shippingInfo/add`,
       {
-        userId: userId || '',                    // Fallback for null userId
-        flatNo: address.flatNo || '',            // Fallback for null values
+        userId: userId || '', // Fallback for null userId
+        flatNo: address.flatNo || '', // Fallback for null values
         area: address.area || '',
         landmark: address.landmark || '',
         city: address.city || '',
@@ -294,9 +297,9 @@ export const addShippingInfo = (userId, address) => async dispatch => {
         pincode: address.pincode || '',
         country: address.country || 'INDIA',
         type: address.type || 'Home',
-        isDefault: address.isDefault ?? true,    // Nullish coalescing operator
+        isDefault: address.isDefault ?? true, // Nullish coalescing operator
       },
-      { withCredentials: true }
+      {withCredentials: true},
     );
 
     dispatch({
@@ -312,7 +315,22 @@ export const addShippingInfo = (userId, address) => async dispatch => {
   }
 };
 
-export const getShippingInfo=()
+export const getShippingInfo = () => async dispatch => {
+  try {
+    dispatch({type: GET_SHIPPING_INFO_REQUEST});
+
+    const {data} = await axios.get(`${serverApi}/shippingInfo`, {
+      withCredentials: true,
+    });
+
+    dispatch({type: GET_SHIPPING_INFO_SUCCESS, payload: data.shippingInfo});
+  } catch (error) {
+    dispatch({
+      type: GET_SHIPPING_INFO_FAIL,
+      payload: error.response?.data?.message || 'Failed to fetch shipping info',
+    });
+  }
+};
 
 export const logoutUser = () => async dispatch => {
   dispatch({type: LOGOUT_USER_SUCCESS});
