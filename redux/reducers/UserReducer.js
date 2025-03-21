@@ -177,11 +177,11 @@ export const UserReducer = (state = initialState, action) => {
       };
 
     case GET_SHIPPING_INFO_SUCCESS:
-      return{
+      return {
         ...state,
-        loading:false,
-        shippingInfo:action.payload
-      }
+        loading: false,
+        shippingInfo: action.payload,
+      };
 
     case CLEAR_ERRORS:
       return {

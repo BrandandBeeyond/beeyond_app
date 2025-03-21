@@ -30,17 +30,19 @@ import Notification from '../../components/Notification/Notification';
 import {AddNotification} from '../../redux/actions/NotificationAction';
 import Header from '../../components/Header/Header';
 import CloseIcon from 'react-native-vector-icons/AntDesign';
-import {productStyle} from '../Products/Style';
+import {getShippingInfo} from '../../redux/actions/UserAction';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {SAVE_SHIPPING_INFO} from '../../redux/constants/CartConstants';
 
 const Cart = ({navigation}) => {
   const dispatch = useDispatch();
   const {loading, cart} = useSelector(state => state.cart);
   const {notifications} = useSelector(state => state.notifications);
-  const {isAuthenticated, shippingInfo} = useSelector(state => state.user);
+  const {isAuthenticated, shippingInfo, user} = useSelector(
+    state => state.user,
+  );
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [hasShippingInfo, setHasShippingInfo] = useState(false);
 
   const CalculateCartTotal = () => {
     return cart.reduce((total, item) => total + item.price * item.quantity, 0);
@@ -62,22 +64,46 @@ const Cart = ({navigation}) => {
   const checkoutAmount =
     totalAmount + gstAmount + shippingCharges + platformFee;
 
-  const handleCheckOutNavigation = () => {
-    if (!isAuthenticated) {
-      navigation.navigate(Routes.EmailEntry);
-    } else if (
-      (shippingInfo?.addresses && shippingInfo.addresses.length > 0) || 
-      (shippingInfo?.data?.addresses && shippingInfo.data.addresses.length > 0)
-    )  {
-      navigation.navigate(Routes.SavedAddress);
+  useEffect(() => {
+    if (isAuthenticated && user && user._id) {
+      dispatch(getShippingInfo(user._id));
+    }
+  }, [dispatch, isAuthenticated, user]);
+
+  useEffect(() => {
+    if (
+      shippingInfo &&
+      Array.isArray(shippingInfo?.addresses) &&
+      shippingInfo.addresses.length > 0
+    ) {
+      console.log(shippingInfo.addresses);
+
+      setHasShippingInfo(true);
     } else {
-      navigation.navigate(Routes.Checkoutform);
+      setHasShippingInfo(false);
+    }
+  }, [shippingInfo]);
+
+  const handleCheckOutNavigation = async () => {
+    try {
+      const formFilled = await AsyncStorage.getItem('formFilled');
+      console.log('Form Filled:', formFilled);
+  
+      if (!isAuthenticated) {
+        navigation.navigate(Routes.EmailEntry);
+      } 
+      // ✅ Check both formFilled and shippingInfo
+      else if (formFilled === 'true' && shippingInfo?.addresses?.length > 0) {
+        navigation.navigate(Routes.SavedAddress);
+      } 
+      else {
+        navigation.navigate(Routes.Checkoutform);
+      }
+    } catch (error) {
+      console.error('Navigation Error:', error);
     }
   };
-
-  console.log("shipping info from cart",shippingInfo);
   
-
   const handleRemoveFromCart = product => {
     setSelectedProduct(product);
     setModalVisible(true);

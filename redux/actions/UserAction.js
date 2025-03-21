@@ -85,13 +85,16 @@ export const UserLogin = (email, password) => async dispatch => {
     );
 
     if (data?.user) {
-      const storedUser = await AsyncStorage.getItem('user');
-      const prevUser = storedUser ? JSON.parse(storedUser) : null;
-
-      if (!prevUser || prevUser.email !== data.user.email) {
-        await AsyncStorage.removeItem('shippingInfo');
-      }
       await AsyncStorage.setItem('user', JSON.stringify(data.user));
+
+      // ✅ Store the shipping info locally if it exists
+      if (data?.shippingInfo) {
+        await AsyncStorage.setItem(
+          'shippingInfo',
+          JSON.stringify(data.shippingInfo),
+        );
+      }
+
       dispatch({type: LOGIN_USER_SUCCESS, payload: data.user});
     } else {
       throw new Error('Invalid API response');
@@ -301,11 +304,13 @@ export const addShippingInfo = (userId, address) => async dispatch => {
       },
       {withCredentials: true},
     );
-
+    await AsyncStorage.setItem('formFilled', 'true');
     dispatch({
       type: ADD_SHIPPING_INFO_SUCCESS,
       payload: data.shippingInfo,
     });
+
+    
   } catch (error) {
     console.error('Error adding shipping info:', error);
     dispatch({
@@ -315,23 +320,48 @@ export const addShippingInfo = (userId, address) => async dispatch => {
   }
 };
 
-export const getShippingInfo = () => async dispatch => {
+export const getShippingInfo = userId => async dispatch => {
   try {
-    dispatch({type: GET_SHIPPING_INFO_REQUEST});
+    dispatch({ type: GET_SHIPPING_INFO_REQUEST });
 
-    const {data} = await axios.get(`${serverApi}/shippingInfo`, {
+    const { data } = await axios.get(`${serverApi}/shippingInfo/${userId}`, {
       withCredentials: true,
     });
 
-    dispatch({type: GET_SHIPPING_INFO_SUCCESS, payload: data.shippingInfo});
+    const shippingInfo = data.shippingInfo || { addresses: [] };
+
+    dispatch({ type: GET_SHIPPING_INFO_SUCCESS, payload: shippingInfo });
+
+    // ✅ Set formFilled flag based on shipping info
+    if (shippingInfo.addresses.length > 0) {
+      await AsyncStorage.setItem('formFilled', 'true');
+    } else {
+      await AsyncStorage.setItem('formFilled', 'false');
+    }
+
   } catch (error) {
+    console.error('Error fetching shipping info:', error);
+
     dispatch({
       type: GET_SHIPPING_INFO_FAIL,
       payload: error.response?.data?.message || 'Failed to fetch shipping info',
     });
+
+    // ✅ Reset formFilled flag on failure
+    await AsyncStorage.setItem('formFilled', 'false');
+
+    dispatch({ type: GET_SHIPPING_INFO_SUCCESS, payload: null });
   }
 };
 
+
 export const logoutUser = () => async dispatch => {
+  await AsyncStorage.removeItem('user');
+  await AsyncStorage.removeItem('shippingInfo');
+  await AsyncStorage.removeItem('formFilled');
+
   dispatch({type: LOGOUT_USER_SUCCESS});
+
+  // ✅ Reset the shipping info state to prevent stale data
+  dispatch({type: GET_SHIPPING_INFO_SUCCESS, payload: null});
 };
