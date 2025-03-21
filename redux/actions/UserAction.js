@@ -332,13 +332,6 @@ export const getShippingInfo = userId => async dispatch => {
 
     dispatch({ type: GET_SHIPPING_INFO_SUCCESS, payload: shippingInfo });
 
-    // ✅ Set formFilled flag based on shipping info
-    if (shippingInfo.addresses.length > 0) {
-      await AsyncStorage.setItem('formFilled', 'true');
-    } else {
-      await AsyncStorage.setItem('formFilled', 'false');
-    }
-
   } catch (error) {
     console.error('Error fetching shipping info:', error);
 
@@ -347,19 +340,18 @@ export const getShippingInfo = userId => async dispatch => {
       payload: error.response?.data?.message || 'Failed to fetch shipping info',
     });
 
-    // ✅ Reset formFilled flag on failure
-    await AsyncStorage.setItem('formFilled', 'false');
-
-    dispatch({ type: GET_SHIPPING_INFO_SUCCESS, payload: null });
+    dispatch({ type: GET_SHIPPING_INFO_SUCCESS, payload: { addresses: [] } }); // Reset on error
   }
 };
 
 
+
+
+
 export const logoutUser = () => async dispatch => {
   await AsyncStorage.removeItem('user');
-  await AsyncStorage.removeItem('shippingInfo');
-  await AsyncStorage.removeItem('formFilled');
 
+ 
   dispatch({type: LOGOUT_USER_SUCCESS});
 
   // ✅ Reset the shipping info state to prevent stale data

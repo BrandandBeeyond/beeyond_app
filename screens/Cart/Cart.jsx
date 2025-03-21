@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   Image,
@@ -32,6 +32,7 @@ import Header from '../../components/Header/Header';
 import CloseIcon from 'react-native-vector-icons/AntDesign';
 import {getShippingInfo} from '../../redux/actions/UserAction';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
 
 const Cart = ({navigation}) => {
   const dispatch = useDispatch();
@@ -66,44 +67,33 @@ const Cart = ({navigation}) => {
 
   useEffect(() => {
     if (isAuthenticated && user && user._id) {
-      dispatch(getShippingInfo(user._id));
+      dispatch(getShippingInfo(user._id)); // Fetch shipping info on login
     }
   }, [dispatch, isAuthenticated, user]);
 
-  useEffect(() => {
-    if (
-      shippingInfo &&
-      Array.isArray(shippingInfo?.addresses) &&
-      shippingInfo.addresses.length > 0
-    ) {
-      console.log(shippingInfo.addresses);
-
-      setHasShippingInfo(true);
-    } else {
-      setHasShippingInfo(false);
-    }
-  }, [shippingInfo]);
-
-  const handleCheckOutNavigation = async () => {
-    try {
-      const formFilled = await AsyncStorage.getItem('formFilled');
-      console.log('Form Filled:', formFilled);
-  
-      if (!isAuthenticated) {
-        navigation.navigate(Routes.EmailEntry);
-      } 
-      // ✅ Check both formFilled and shippingInfo
-      else if (formFilled === 'true' && shippingInfo?.addresses?.length > 0) {
-        navigation.navigate(Routes.SavedAddress);
-      } 
-      else {
-        navigation.navigate(Routes.Checkoutform);
+  useFocusEffect(
+    useCallback(() => {
+      if (isAuthenticated && user && user._id) {
+        dispatch(getShippingInfo(user._id));  // Refetch on navigation
       }
-    } catch (error) {
-      console.error('Navigation Error:', error);
+    }, [dispatch, isAuthenticated, user])
+  );
+  const handleCheckOutNavigation = () => {
+    console.log('Shipping Info (Redux):', shippingInfo);
+  
+    if (!isAuthenticated) {
+      navigation.navigate(Routes.EmailEntry);
+    } 
+    // ✅ Skip checkout form if at least 1 address exists
+    else if (shippingInfo?.addresses?.length > 0) {
+      navigation.navigate(Routes.SavedAddress);
+    } 
+    else {
+      navigation.navigate(Routes.Checkoutform);
     }
   };
   
+
   const handleRemoveFromCart = product => {
     setSelectedProduct(product);
     setModalVisible(true);
