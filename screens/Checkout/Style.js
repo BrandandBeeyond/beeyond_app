@@ -66,4 +66,19 @@ export const checkOutStyle = StyleSheet.create({
     fontSize: scaleFontSize(12),
     marginTop: horizontalScale(4),
   },
+  addmoreAddress: {
+    backgroundColor: '#4267B2',
+    height: verticalScale(25),
+    borderRadius: horizontalScale(3),
+    width:'100%',
+    display:'flex',
+    alignItems:'center',
+    justifyContent:'center'
+  },
+  addmoreAddressText: {
+    color: '#ffffff',
+    fontSize: scaleFontSize(12),
+    fontWeight: '700',
+    textTransform: 'capitalize',
+  },
 });

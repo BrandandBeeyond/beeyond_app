@@ -32,18 +32,18 @@ import Header from '../../components/Header/Header';
 import CloseIcon from 'react-native-vector-icons/AntDesign';
 import {getShippingInfo} from '../../redux/actions/UserAction';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useFocusEffect } from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
 
 const Cart = ({navigation}) => {
   const dispatch = useDispatch();
-  const {loading, cart} = useSelector(state => state.cart);
+  const {cart} = useSelector(state => state.cart);
   const {notifications} = useSelector(state => state.notifications);
   const {isAuthenticated, shippingInfo, user} = useSelector(
     state => state.user,
   );
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [hasShippingInfo, setHasShippingInfo] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const CalculateCartTotal = () => {
     return cart.reduce((total, item) => total + item.price * item.quantity, 0);
@@ -74,25 +74,30 @@ const Cart = ({navigation}) => {
   useFocusEffect(
     useCallback(() => {
       if (isAuthenticated && user && user._id) {
-        dispatch(getShippingInfo(user._id));  // Refetch on navigation
+        dispatch(getShippingInfo(user._id)); // Refetch on navigation
       }
-    }, [dispatch, isAuthenticated, user])
+    }, [dispatch, isAuthenticated, user]),
   );
   const handleCheckOutNavigation = () => {
     console.log('Shipping Info (Redux):', shippingInfo);
-  
-    if (!isAuthenticated) {
-      navigation.navigate(Routes.EmailEntry);
-    } 
-    // ✅ Skip checkout form if at least 1 address exists
-    else if (shippingInfo?.addresses?.length > 0) {
-      navigation.navigate(Routes.SavedAddress);
-    } 
-    else {
-      navigation.navigate(Routes.Checkoutform);
-    }
+
+    setLoading(true);
+
+    setTimeout(() => {
+
+      setLoading(false);
+
+      if (!isAuthenticated) {
+        navigation.navigate(Routes.EmailEntry);
+      }
+      // ✅ Skip checkout form if at least 1 address exists
+      else if (shippingInfo?.addresses?.length > 0) {
+        navigation.navigate(Routes.SavedAddress);
+      } else {
+        navigation.navigate(Routes.Checkoutform);
+      }
+    }, 2000);
   };
-  
 
   const handleRemoveFromCart = product => {
     setSelectedProduct(product);
@@ -417,12 +422,12 @@ const Cart = ({navigation}) => {
               <View style={[globalStyle.mt10]}>
                 <View style={[CartStyle.removeFromCart, globalStyle.my10]}>
                   <Image
-                    source={selectedProduct.thumbnail}
+                    source={{uri:selectedProduct.images?.[0]?.url}}
                     style={CartStyle.modalImage}
                   />
                   <View>
                     <Text style={globalStyle.normalText}>
-                      {selectedProduct.title}
+                      {selectedProduct.name}
                     </Text>
                     <View style={globalStyle.mt5}>
                       <Text style={[CartStyle.cuttedPrice]}>

@@ -366,7 +366,7 @@ export const MainNavigation = () => {
         options={({navigation}) => ({
           headerLeft: () => <CustomBackButton navigation={navigation} />,
           headerTitleStyle: {fontSize: scaleFontSize(17)},
-          headerTitle: 'Address',
+          headerTitle: 'Order summary',
         })}
       />
       {/* <Stack.Screen
