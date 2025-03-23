@@ -309,8 +309,6 @@ export const addShippingInfo = (userId, address) => async dispatch => {
       type: ADD_SHIPPING_INFO_SUCCESS,
       payload: data.shippingInfo,
     });
-
-    
   } catch (error) {
     console.error('Error adding shipping info:', error);
     dispatch({
@@ -322,16 +320,15 @@ export const addShippingInfo = (userId, address) => async dispatch => {
 
 export const getShippingInfo = userId => async dispatch => {
   try {
-    dispatch({ type: GET_SHIPPING_INFO_REQUEST });
+    dispatch({type: GET_SHIPPING_INFO_REQUEST});
 
-    const { data } = await axios.get(`${serverApi}/shippingInfo/${userId}`, {
+    const {data} = await axios.get(`${serverApi}/shippingInfo/${userId}`, {
       withCredentials: true,
     });
 
-    const shippingInfo = data.shippingInfo || { addresses: [] };
+    const shippingInfo = data.shippingInfo || {addresses: []};
 
-    dispatch({ type: GET_SHIPPING_INFO_SUCCESS, payload: shippingInfo });
-
+    dispatch({type: GET_SHIPPING_INFO_SUCCESS, payload: shippingInfo});
   } catch (error) {
     console.error('Error fetching shipping info:', error);
 
@@ -340,18 +337,13 @@ export const getShippingInfo = userId => async dispatch => {
       payload: error.response?.data?.message || 'Failed to fetch shipping info',
     });
 
-    dispatch({ type: GET_SHIPPING_INFO_SUCCESS, payload: { addresses: [] } }); // Reset on error
+    dispatch({type: GET_SHIPPING_INFO_SUCCESS, payload: {addresses: []}}); // Reset on error
   }
 };
-
-
-
-
 
 export const logoutUser = () => async dispatch => {
   await AsyncStorage.removeItem('user');
 
- 
   dispatch({type: LOGOUT_USER_SUCCESS});
 
   // ✅ Reset the shipping info state to prevent stale data

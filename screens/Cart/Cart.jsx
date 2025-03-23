@@ -31,8 +31,14 @@ import {AddNotification} from '../../redux/actions/NotificationAction';
 import Header from '../../components/Header/Header';
 import CloseIcon from 'react-native-vector-icons/AntDesign';
 import {getShippingInfo} from '../../redux/actions/UserAction';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import Spinner from 'react-native-loading-spinner-overlay';
 import {useFocusEffect} from '@react-navigation/native';
+import {
+  AlertNotificationRoot,
+  ALERT_TYPE,
+  Dialog,
+  Toast
+} from 'react-native-alert-notification';
 
 const Cart = ({navigation}) => {
   const dispatch = useDispatch();
@@ -44,6 +50,7 @@ const Cart = ({navigation}) => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [loadingSpinner, setLoadingSpinner] = useState(false);
 
   const CalculateCartTotal = () => {
     return cart.reduce((total, item) => total + item.price * item.quantity, 0);
@@ -84,7 +91,6 @@ const Cart = ({navigation}) => {
     setLoading(true);
 
     setTimeout(() => {
-
       setLoading(false);
 
       if (!isAuthenticated) {
@@ -113,17 +119,28 @@ const Cart = ({navigation}) => {
   };
 
   const handleIncrementQuantity = productId => {
-    dispatch(incrementQuantity(productId));
-    dispatch(AddNotification('Cart quantity updated successfully!'));
+    setLoadingSpinner(true);
+
+    setTimeout(() => {
+      dispatch(incrementQuantity(productId));
+      dispatch(AddNotification('Cart quantity updated successfully!'));
+      setLoadingSpinner(false);
+    }, 1000);
   };
 
   const handleDecrementQuantity = productId => {
-    dispatch(decrementQuantity(productId));
-    dispatch(AddNotification('Cart quantity updated successfully!'));
+    setLoadingSpinner(true);
+
+    setTimeout(() => {
+      dispatch(decrementQuantity(productId));
+      dispatch(AddNotification('Cart quantity updated successfully!'));
+      setLoadingSpinner(false);
+    }, 1000);
   };
 
   return (
     <SafeAreaView style={[globalStyle.flex, globalStyle.bgTheme]}>
+      <Spinner visible={loadingSpinner} />
       {cart.length > 0 ? (
         <>
           <ScrollView showsVerticalScrollIndicator={false}>
@@ -422,7 +439,7 @@ const Cart = ({navigation}) => {
               <View style={[globalStyle.mt10]}>
                 <View style={[CartStyle.removeFromCart, globalStyle.my10]}>
                   <Image
-                    source={{uri:selectedProduct.images?.[0]?.url}}
+                    source={{uri: selectedProduct.images?.[0]?.url}}
                     style={CartStyle.modalImage}
                   />
                   <View>

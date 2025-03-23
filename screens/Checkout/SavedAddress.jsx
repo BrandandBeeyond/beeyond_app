@@ -49,8 +49,9 @@ const SavedAddress = () => {
   );
   const gstRate = 0.18; // 18% GST
   const gstAmount = totalAmount * gstRate;
-  const shippingCharges = totalAmount > 500 ? 0 : 50;
-  const platformFee = 30; // Fixed platform fee
+  // const shippingCharges = totalAmount > 500 ? 0 : 50;
+  const shippingCharges = 50;
+  const platformFee = 9; // Fixed platform fee
   const checkoutAmount =
     totalAmount + gstAmount + shippingCharges + platformFee;
 
