@@ -24,6 +24,7 @@ const Otpscreen = ({route}) => {
   const [timer, setTimer] = useState(60);
   const [isTimerActive, setIsTimerActive] = useState(true);
   const [otp, setOtp] = useState('');
+  const [isOtpInvalid, setIsOtpInvalid] = useState(false);
   const [loadingVerify, setLoadingVerify] = useState(false);
 
   useEffect(() => {
@@ -71,13 +72,16 @@ const Otpscreen = ({route}) => {
     if (result.success) {
       if (result.isRegistered === true) {
         console.log('user is registered or not', result.isRegistered);
-
+        setIsOtpInvalid(false);
         navigation.navigate('Profile', {isMobileVerified: true});
       } else {
-        navigation.navigate(Routes.SignupEmail,{isMobileVerified:true,mobileNumber});
+        navigation.navigate(Routes.SignupEmail, {
+          isMobileVerified: true,
+          mobileNumber,
+        });
       }
     } else {
-      Alert.alert(result.message);
+      setIsOtpInvalid(true);
     }
   };
 
@@ -99,12 +103,23 @@ const Otpscreen = ({route}) => {
             numberOfDigits={6}
             focusColor={'#f9b000'}
             type="numeric"
-            onFilled={value => setOtp(value)}
+            onFilled={value => {
+              setOtp(value);
+              setIsOtpInvalid(false); // Clear error when OTP changes
+            }}
             theme={{
-              pinCodeContainerStyle: OtpStyle.pinCodeContainer,
+              pinCodeContainerStyle: [
+                OtpStyle.pinCodeContainer,
+                isOtpInvalid ? {borderColor: 'red', shadowColor: 'red'} : {},
+              ],
               pinCodeTextStyle: OtpStyle.pincodeText,
             }}
           />
+          {isOtpInvalid && (
+            <Text style={[globalStyle.subtext, {color: 'red', marginTop: 10}]}>
+              Invalid OTP. Try again.
+            </Text>
+          )}
         </View>
         <View
           style={[OtpStyle.otpNotRecived, globalStyle.px10, globalStyle.mt20]}>

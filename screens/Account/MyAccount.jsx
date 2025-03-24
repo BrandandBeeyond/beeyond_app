@@ -27,6 +27,7 @@ const MyAccount = ({navigation}) => {
   const [email, setEmail] = useState(user?.email || '');
   const [modalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [loadingLogout, setLoadingLogout] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -34,6 +35,7 @@ const MyAccount = ({navigation}) => {
     setModalVisible(true);
   };
   const handleLogout = async () => {
+    setLoadingLogout(true);
     try {
       await dispatch(logoutUser());
       navigation.reset({
@@ -42,6 +44,8 @@ const MyAccount = ({navigation}) => {
       });
     } catch (error) {
       console.error('error logging out', error);
+    } finally {
+      setLoadingLogout(false);
     }
   };
   return (
@@ -173,11 +177,29 @@ const MyAccount = ({navigation}) => {
                 style={[
                   globalStyle.drow,
                   globalStyle.alignCenter,
-                  globalStyle.cg5,
+
+                  globalStyle.justifyBetween,
                 ]}
                 onPress={handleLogout}>
-                <LogoutIcon name="logout" color={'#111'} size={20} />
-                <Text style={accountStyle.utilText}>Logout</Text>
+                <View
+                  style={[
+                    globalStyle.drow,
+                    globalStyle.alignCenter,
+                    globalStyle.cg5,
+                  ]}>
+                  <LogoutIcon name="logout" color={'#111'} size={20} />
+                  <Text style={accountStyle.utilText}>Logout</Text>
+                </View>
+                <View>
+                  {loadingLogout && (
+                    <View>
+                      <ActivityIndicator
+                        loading={loadingLogout}
+                        color={'#000'}
+                      />
+                    </View>
+                  )}
+                </View>
               </Pressable>
             </View>
           </View>
