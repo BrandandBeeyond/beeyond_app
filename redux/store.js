@@ -7,11 +7,12 @@ import {UserReducer} from './reducers/UserReducer';
 import {persistReducer, persistStore} from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {WishlistReducer} from './reducers/WishlistReducer';
+import {PaymentReducer} from './reducers/PaymentReducer';
 
 const persistUserConfig = {
   key: 'user',
   storage: AsyncStorage,
-  whitelist: ['user','shippingInfo'],
+  whitelist: ['user', 'shippingInfo'],
 };
 
 const persistCartConfig = {
@@ -29,6 +30,7 @@ const store = configureStore({
     notifications: NotificationReducer,
     user: persistedUserReducer,
     wishlist: WishlistReducer,
+    payment: PaymentReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

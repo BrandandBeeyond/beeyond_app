@@ -28,6 +28,7 @@
     "react-native": "0.77.0",
     "react-native-alert-notification": "^0.4.2",
     "react-native-device-info": "^14.0.4",
+    "react-native-dotenv": "^3.4.11",
     "react-native-floating-label-input": "^1.4.3",
     "react-native-gesture-handler": "^2.23.0",
     "react-native-loading-spinner-overlay": "^3.0.1",

@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   Pressable,
   Image,
+  Alert,
 } from 'react-native';
 import {globalStyle} from '../../assets/styles/globalStyle';
 import {useDispatch, useSelector} from 'react-redux';
@@ -14,11 +15,18 @@ import {getShippingInfo} from '../../redux/actions/UserAction';
 import {checkOutStyle} from './Style';
 import {CartStyle} from '../Cart/Style';
 import Header from '../../components/Header/Header';
+import {
+  createPaymentOrder,
+  verifyPayment,
+} from '../../redux/actions/PaymentAction';
+import RazorpayCheckout from 'react-native-razorpay';
 
 const SavedAddress = () => {
   const dispatch = useDispatch();
   const {loading, shippingInfo, user} = useSelector(state => state.user);
-  const {cart} = useSelector(state => state.cart); // ✅ Fetch cart items from Redux
+  const {cart} = useSelector(state => state.cart);
+
+  const [loadingPayment, setLoadingPayment] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -55,6 +63,54 @@ const SavedAddress = () => {
   const checkoutAmount =
     totalAmount + gstAmount + shippingCharges + platformFee;
 
+  const handlePayment = async () => {
+    setLoadingPayment(true);
+    try {
+      const orderData = await dispatch(createPaymentOrder(checkoutAmount));
+
+      if (!orderData) {
+        Alert.alert('Error', 'Failed to create order');
+        return;
+      }
+
+      const options = {
+        description: 'Payment for your Order',
+        currency: 'INR',
+        key: 'rzp_test_D7EJNKkg5iH19i',
+        amount: orderData.amount,
+        name: 'Beeyond',
+        order_id: orderData.id,
+        prefill: {
+          email: user?.email || '',
+          contact: user?.phone || '',
+          name: user?.name || '',
+        },
+        theme: {color: '#f9b000'},
+      };
+
+      RazorpayCheckout.open(options)
+        .then(async data => {
+          const paymentData = {
+            razorpay_order_id: orderData.id,
+            razorpay_payment_id: data.razorpay_payment_id,
+            razorpay_signature: data.razorpay_signature,
+          };
+
+          await dispatch(verifyPayment(paymentData));
+
+          Alert.alert('Success', 'Payment verified successfully!');
+        })
+        .catch(error => {
+          console.log('Payment failed', error);
+          Alert.alert('Payment failed', 'Try again!');
+        });
+    } catch (error) {
+      console.error('Error in payment flow', error);
+      Alert.alert('Error', 'Something went wrong!');
+    }finally{
+      setLoadingPayment(false);
+    }
+  };
   return (
     <SafeAreaView style={[globalStyle.flex, globalStyle.bgTheme]}>
       <ScrollView>
@@ -267,8 +323,8 @@ const SavedAddress = () => {
             <Header title={`₹ ${checkoutAmount.toFixed(2)}`} type={3} />
           </View>
           <View>
-            <Pressable style={CartStyle.CheckoutBtn}>
-              {loading ? (
+            <Pressable style={CartStyle.CheckoutBtn} onPress={handlePayment} disabled={loadingPayment}>
+              {loadingPayment ? (
                 <View
                   style={[
                     globalStyle.drow,
@@ -276,14 +332,10 @@ const SavedAddress = () => {
                     globalStyle.cg3,
                   ]}>
                   <ActivityIndicator size={20} color={'#fff'} />
-                  <Text style={CartStyle.checkoutBtnText}>
-                   Continue
-                  </Text>
+                  <Text style={CartStyle.checkoutBtnText}>Continue</Text>
                 </View>
               ) : (
-                <Text style={CartStyle.checkoutBtnText}>
-                 Continue
-                </Text>
+                <Text style={CartStyle.checkoutBtnText}>Continue</Text>
               )}
             </Pressable>
           </View>
