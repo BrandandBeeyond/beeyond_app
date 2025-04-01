@@ -26,7 +26,8 @@ import {
   AddtoWishlist,
   RemoveFromWishlist,
 } from '../../redux/actions/WishlistAction';
-import { horizontalScale } from '../../assets/styles/Scaling';
+import {horizontalScale} from '../../assets/styles/Scaling';
+import LottieView from 'lottie-react-native';
 
 const Products = () => {
   const dispatch = useDispatch();
@@ -98,90 +99,110 @@ const Products = () => {
       <ScrollView
         contentContainerStyle={productStyle.container}
         showsVerticalScrollIndicator={false}>
-        {products.map((item, i) => (
-          <View style={productStyle.productCard} key={i}>
-            <View style={productStyle.productCardBody}>
-              <Pressable
-                onPress={() =>
-                  navigation.navigate('ProductDetail', {product: item})
-                }>
-                <View style={globalStyle.relative}>
-                  <Image
-                    source={{uri: item.images?.[0]?.url}}
-                    style={productStyle.mockup}
-                  />
+        {loading ? (
+          <>
+            <View style={globalStyle.mt20}>
+              <LottieView
+                style={{flex: 1}}
+                source={require('./loader.json')}
+                autoPlay
+                loop
+              />
+            </View>
+          </>
+        ) : (
+          <>
+            {products.map((item, i) => (
+              <View style={productStyle.productCard} key={i}>
+                <View style={productStyle.productCardBody}>
                   <Pressable
-                    style={productStyle.wishlistContainer}
-                    onPress={() => handleAddtoWishlist(item)}>
-                    <Hearticon
-                      name={isIteminWishlist(item) ? 'heart' : 'hearto'}
-                      color={isIteminWishlist(item) ? '#f35c6e' : '#000'}
-                      size={17}
-                    />
+                    onPress={() =>
+                      navigation.navigate('ProductDetail', {product: item})
+                    }>
+                    <View style={globalStyle.relative}>
+                      <Image
+                        source={{uri: item.images?.[0]?.url}}
+                        style={productStyle.mockup}
+                      />
+                      <Pressable
+                        style={productStyle.wishlistContainer}
+                        onPress={() => handleAddtoWishlist(item)}>
+                        <Hearticon
+                          name={isIteminWishlist(item) ? 'heart' : 'hearto'}
+                          color={isIteminWishlist(item) ? '#f35c6e' : '#000'}
+                          size={17}
+                        />
+                      </Pressable>
+                    </View>
                   </Pressable>
-                </View>
-              </Pressable>
-              <View style={globalStyle.mt3}>
-                <View
-                  style={[
-                    globalStyle.drow,
-                    globalStyle.g2,
-                    globalStyle.alignCenter,
-                  ]}>
-                  <View style={productStyle.ratings}>
-                    <Text style={productStyle.ratingText}>{item.ratings}</Text>
-                    <FontAwesomeIcon icon={faStar} color="#fff" size={10} />
-                  </View>
-                  <View>
-                    <Text style={[globalStyle.xsSmall, globalStyle.textSlate]}>
-                      ({item.reviews} Reviews)
-                    </Text>
-                  </View>
-                </View>
-                <Pressable
-                  onPress={() =>
-                    navigation.navigate('ProductDetail', {product: item})
-                  }>
                   <View style={globalStyle.mt3}>
-                    <Text style={productStyle.title}>{item.name}</Text>
                     <View
                       style={[
                         globalStyle.drow,
+                        globalStyle.g2,
                         globalStyle.alignCenter,
-                        globalStyle.cg5,
-                        globalStyle.mt3,
                       ]}>
-                      <Text style={productStyle.cuttedPrice}>
-                        ₹ {item.cuttedPrice}
-                      </Text>
-                    </View>
-                    <Text style={productStyle.price}>₹ {item.price}</Text>
-                  </View>
-                </Pressable>
-
-                <View style={globalStyle.mt10}>
-                  <Pressable
-                    style={productStyle.addtocart}
-                    onPress={() => handleAddtoCart(item)}>
-                    {loadingId === item.id ? (
-                      <View
-                        style={[
-                          globalStyle.drow,
-                          globalStyle.alignCenter,
-                          globalStyle.cg3,
-                        ]}>
-                        <ActivityIndicator size="small" color={'#fff'} />
-                        <Text style={globalStyle.textWhite}>Add to cart</Text>
+                      <View style={productStyle.ratings}>
+                        <Text style={productStyle.ratingText}>
+                          {item.ratings}
+                        </Text>
+                        <FontAwesomeIcon icon={faStar} color="#fff" size={10} />
                       </View>
-                    ) : (
-                      <Text style={globalStyle.textWhite}>Add to cart</Text>
-                    )}
-                  </Pressable>
+                      <View>
+                        <Text
+                          style={[globalStyle.xsSmall, globalStyle.textSlate]}>
+                          ({item.reviews} Reviews)
+                        </Text>
+                      </View>
+                    </View>
+                    <Pressable
+                      onPress={() =>
+                        navigation.navigate('ProductDetail', {product: item})
+                      }>
+                      <View style={globalStyle.mt3}>
+                        <Text style={productStyle.title}>{item.name}</Text>
+                        <View
+                          style={[
+                            globalStyle.drow,
+                            globalStyle.alignCenter,
+                            globalStyle.cg5,
+                            globalStyle.mt3,
+                          ]}>
+                          <Text style={productStyle.cuttedPrice}>
+                            ₹ {item.cuttedPrice}
+                          </Text>
+                        </View>
+                        <Text style={productStyle.price}>₹ {item.price}</Text>
+                      </View>
+                    </Pressable>
+
+                    <View style={globalStyle.mt10}>
+                      <Pressable
+                        style={productStyle.addtocart}
+                        onPress={() => handleAddtoCart(item)}>
+                        {loadingId === item.id ? (
+                          <View
+                            style={[
+                              globalStyle.drow,
+                              globalStyle.alignCenter,
+                              globalStyle.cg3,
+                            ]}>
+                            <ActivityIndicator size="small" color={'#fff'} />
+                            <Text style={globalStyle.textWhite}>
+                              Add to cart
+                            </Text>
+                          </View>
+                        ) : (
+                          <Text style={globalStyle.textWhite}>Add to cart</Text>
+                        )}
+                      </Pressable>
+                    </View>
+                  </View>
                 </View>
               </View>
-            </View>
-          </View>
-        ))}
+            ))}
+          </>
+        )}
       </ScrollView>
 
       <Modal
@@ -191,7 +212,13 @@ const Products = () => {
         onRequestClose={() => setModalVisible(false)}>
         <View style={productStyle.modalOverlay}>
           <View style={productStyle.modalContent}>
-            <View style={[globalStyle.drow, globalStyle.justifyBetween,globalStyle.p5,globalStyle.bgSemiLight]}>
+            <View
+              style={[
+                globalStyle.drow,
+                globalStyle.justifyBetween,
+                globalStyle.p5,
+                globalStyle.bgSemiLight,
+              ]}>
               <View>
                 <Text style={[globalStyle.subtext, globalStyle.fwbold]}>
                   Add item to cart?
@@ -236,7 +263,7 @@ const Products = () => {
                   </View>
                 </View>
 
-                <View style={{margin:horizontalScale(8)}}>
+                <View style={{margin: horizontalScale(8)}}>
                   <Pressable
                     style={productStyle.continueBtn}
                     onPress={handleContinue}>
