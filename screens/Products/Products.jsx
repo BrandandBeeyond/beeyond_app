@@ -101,7 +101,7 @@ const Products = () => {
         showsVerticalScrollIndicator={false}>
         {loading ? (
           <>
-            <View style={globalStyle.mt20}>
+            <View style={globalStyle.lottyani}>
               <LottieView
                 style={{flex: 1}}
                 source={require('./loader.json')}

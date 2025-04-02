@@ -20,6 +20,7 @@ import {
   verifyPayment,
 } from '../../redux/actions/PaymentAction';
 import RazorpayCheckout from 'react-native-razorpay';
+import { ALERT_TYPE, Dialog } from 'react-native-alert-notification';
 
 const SavedAddress = () => {
   const dispatch = useDispatch();
@@ -98,11 +99,21 @@ const SavedAddress = () => {
 
           await dispatch(verifyPayment(paymentData));
 
-          Alert.alert('Success', 'Payment verified successfully!');
+          Dialog.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: 'Success',
+            textBody: 'Payment Successfull',
+            button: 'close',
+          })
         })
         .catch(error => {
           console.log('Payment failed', error);
-          Alert.alert('Payment failed', 'Try again!');
+          Dialog.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: 'Success',
+            textBody: 'Payment Failed',
+            button: 'close',
+          })
         });
     } catch (error) {
       console.error('Error in payment flow', error);
