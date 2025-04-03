@@ -37,6 +37,7 @@ import SignupEmail from '../screens/Login/SignupEmail';
 import ProtectedRoute from '../ProtectedRoute';
 import CheckoutForm from '../screens/Checkout/Checkoutform';
 import SavedAddress from '../screens/Checkout/SavedAddress';
+import OrderPlaced from '../screens/OrderStatus/OrderPlaced';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -361,6 +362,14 @@ export const MainNavigation = () => {
       />
 
       <Stack.Screen
+        name={Routes.OrderPlaced}
+        component={OrderPlaced}
+        options={{
+           header:()=>null
+        }}
+      />
+
+      <Stack.Screen
         name="SavedAddress"
         component={SavedAddress}
         options={({navigation}) => ({
@@ -369,6 +378,7 @@ export const MainNavigation = () => {
           headerTitle: 'Order summary',
         })}
       />
+
       {/* <Stack.Screen
         name="Checkoutform"
         component={Checkoutform}

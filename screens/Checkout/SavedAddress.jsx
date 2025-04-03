@@ -20,13 +20,15 @@ import {
   verifyPayment,
 } from '../../redux/actions/PaymentAction';
 import RazorpayCheckout from 'react-native-razorpay';
-import { ALERT_TYPE, Dialog } from 'react-native-alert-notification';
+import {ALERT_TYPE, Dialog} from 'react-native-alert-notification';
+import {useNavigation} from '@react-navigation/native';
 
 const SavedAddress = () => {
   const dispatch = useDispatch();
   const {loading, shippingInfo, user} = useSelector(state => state.user);
   const {cart} = useSelector(state => state.cart);
 
+  const navigation = useNavigation();
   const [loadingPayment, setLoadingPayment] = useState(false);
 
   useEffect(() => {
@@ -99,12 +101,7 @@ const SavedAddress = () => {
 
           await dispatch(verifyPayment(paymentData));
 
-          Dialog.show({
-            type: ALERT_TYPE.SUCCESS,
-            title: 'Success',
-            textBody: 'Payment Successfull',
-            button: 'close',
-          })
+          navigation.navigate('OrderPlaced');
         })
         .catch(error => {
           console.log('Payment failed', error);
@@ -113,12 +110,12 @@ const SavedAddress = () => {
             title: 'Success',
             textBody: 'Payment Failed',
             button: 'close',
-          })
+          });
         });
     } catch (error) {
       console.error('Error in payment flow', error);
       Alert.alert('Error', 'Something went wrong!');
-    }finally{
+    } finally {
       setLoadingPayment(false);
     }
   };
@@ -334,7 +331,10 @@ const SavedAddress = () => {
             <Header title={`₹ ${checkoutAmount.toFixed(2)}`} type={3} />
           </View>
           <View>
-            <Pressable style={CartStyle.CheckoutBtn} onPress={handlePayment} disabled={loadingPayment}>
+            <Pressable
+              style={CartStyle.CheckoutBtn}
+              onPress={handlePayment}
+              disabled={loadingPayment}>
               {loadingPayment ? (
                 <View
                   style={[

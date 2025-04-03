@@ -1,3 +1,5 @@
+
+
 export const Routes = {
   Home: 'Home',
   Profile: 'Profile',
@@ -19,6 +21,7 @@ export const Routes = {
   ForgotPassword: 'ForgotPassword',
   ResetPassword: 'ResetPassword',
   SavedAddress: 'SavedAddress',
+  OrderPlaced:'OrderPlaced',
 
   // static pages
   Contact: 'Contact',

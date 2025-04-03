@@ -316,4 +316,12 @@ export const globalStyle = StyleSheet.create({
   bgSemiLight: {
     backgroundColor: '#f1f1f1',
   },
+  fs1: {
+    fontSize: scaleFontSize(20),
+    fontWeight: '600',
+  },
+  orderText: {
+    fontSize: scaleFontSize(14),
+    color: '#010101',
+  },
 });
