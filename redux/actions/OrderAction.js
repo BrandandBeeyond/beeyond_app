@@ -6,16 +6,13 @@ import {
 } from '../constants/OrderConstants';
 import {serverApi} from '../../config/serverApi';
 
-export const CreateOrder = orderData => async (getState, dispatch) => {
+export const CreateOrder = orderData => async dispatch => {
   try {
     dispatch({type: CREATE_ORDER_REQUEST});
-
-    const {user} = getState().user;
 
     const config = {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${user?.token}`,
       },
     };
 

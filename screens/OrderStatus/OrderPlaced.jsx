@@ -1,9 +1,14 @@
 import React from 'react';
-import {SafeAreaView, Text, View} from 'react-native';
+import {Pressable, SafeAreaView, Text, View} from 'react-native';
 import {globalStyle} from '../../assets/styles/globalStyle';
 import LottieView from 'lottie-react-native';
+import { LoginStyle } from '../Login/Style';
+import { Routes } from '../../navigation/Routes';
+import { useNavigation } from '@react-navigation/native';
 
 const OrderPlaced = () => {
+  const navigation = useNavigation();
+
   return (
     <SafeAreaView style={[globalStyle.flex, globalStyle.bgTheme]}>
       <View
@@ -11,7 +16,7 @@ const OrderPlaced = () => {
           globalStyle.justifyCenter,
           globalStyle.dflex,
           globalStyle.alignCenter,
-          globalStyle.mt40
+          globalStyle.mt40,
         ]}>
         <View style={[globalStyle.lottyani]}>
           <LottieView
@@ -29,16 +34,32 @@ const OrderPlaced = () => {
           ]}>
           <Text style={globalStyle.fs1}>Order Confirmed</Text>
           <View style={globalStyle.mt30}>
-            <Text style={[globalStyle.orderText, globalStyle.textCenter,globalStyle.px2]}>
+            <Text
+              style={[
+                globalStyle.orderText,
+                globalStyle.textCenter,
+                globalStyle.px2,
+              ]}>
               Thank you for your order. You will receive email confirmation
               shortly.
             </Text>
           </View>
           <View style={globalStyle.mt30}>
-            <Text style={[globalStyle.orderText, globalStyle.textCenter,globalStyle.px2]}>
-            Check the status of your order on the Order tracking page
+            <Text
+              style={[
+                globalStyle.orderText,
+                globalStyle.textCenter,
+                globalStyle.px2,
+              ]}>
+              Check the status of your order on the Order tracking page
             </Text>
           </View>
+
+          <Pressable
+            style={LoginStyle.mobilebtn}
+            onPress={() => navigation.navigate(Routes.Products)}>
+            <Text style={LoginStyle.mobilebtnText}>continue shopping</Text>
+          </Pressable>
         </View>
       </View>
     </SafeAreaView>

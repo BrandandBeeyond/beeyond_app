@@ -8,6 +8,7 @@ import {persistReducer, persistStore} from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {WishlistReducer} from './reducers/WishlistReducer';
 import {PaymentReducer} from './reducers/PaymentReducer';
+import {orderReducer} from './reducers/orderReducer';
 
 const persistUserConfig = {
   key: 'user',
@@ -31,6 +32,7 @@ const store = configureStore({
     user: persistedUserReducer,
     wishlist: WishlistReducer,
     payment: PaymentReducer,
+    order: orderReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

@@ -103,11 +103,20 @@ const SavedAddress = () => {
           await dispatch(verifyPayment(paymentData));
 
           const newOrder = {
-            user: user._id,
-            orderItems: cart,
-            shippingAddress: shippingInfo?.addresses[0] || {},
+            userId: user._id,
+            shippingId: shippingInfo._id,
+            orderItems: cart.map(item => ({
+              name: item.name,
+              price: item.price,
+              quantity: item.quantity,
+              image: item.image || item.images?.[0]?.url || '',
+              product: item.product || item.productId || item._id || '',
+            })),
             totalPrice: checkoutAmount.toFixed(2),
-            paymentInfo: paymentData,
+            paymentInfo: {
+              id: paymentData.razorpay_payment_id,
+              status: 'Paid',
+            },
           };
           console.log('this is order creation', newOrder);
 
