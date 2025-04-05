@@ -22,6 +22,7 @@ import {
 import RazorpayCheckout from 'react-native-razorpay';
 import {ALERT_TYPE, Dialog} from 'react-native-alert-notification';
 import {useNavigation} from '@react-navigation/native';
+import {CreateOrder} from '../../redux/actions/OrderAction';
 
 const SavedAddress = () => {
   const dispatch = useDispatch();
@@ -62,7 +63,7 @@ const SavedAddress = () => {
   const gstAmount = totalAmount * gstRate;
   // const shippingCharges = totalAmount > 500 ? 0 : 50;
   const shippingCharges = 50;
-  const platformFee = 9; // Fixed platform fee
+  const platformFee = 9;
   const checkoutAmount =
     totalAmount + gstAmount + shippingCharges + platformFee;
 
@@ -101,6 +102,16 @@ const SavedAddress = () => {
 
           await dispatch(verifyPayment(paymentData));
 
+          const newOrder = {
+            user: user._id,
+            orderItems: cart,
+            shippingAddress: shippingInfo?.addresses[0] || {},
+            totalPrice: checkoutAmount.toFixed(2),
+            paymentInfo: paymentData,
+          };
+          console.log('this is order creation', newOrder);
+
+          await dispatch(CreateOrder(newOrder));
           navigation.navigate('OrderPlaced');
         })
         .catch(error => {
