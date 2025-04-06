@@ -1,5 +1,12 @@
-import React from 'react';
-import {Pressable, SafeAreaView, ScrollView, Text, View} from 'react-native';
+import React, {useState} from 'react';
+import {
+  Pressable,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  View,
+  FlatList,
+} from 'react-native';
 import {globalStyle} from '../../assets/styles/globalStyle';
 import {OrderStyle} from './Style';
 import LottieView from 'lottie-react-native';
@@ -8,9 +15,40 @@ import {useSelector} from 'react-redux';
 
 const Orders = ({navigation}) => {
   const {isAuthenticated} = useSelector(state => state.user);
+  const [activeTab, setActiveTab] = useState('All');
+
+  const tabs = ['All', 'Paid', 'Delivered', 'Cancelled'];
+
+  const renderTabs = () => (
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      contentContainerStyle={OrderStyle.tabContainer}>
+      {tabs.map(tab => (
+        <Pressable
+          key={tab}
+          style={[
+            OrderStyle.tabItem,
+            activeTab === tab && OrderStyle.tabItemActive,
+          ]}
+          onPress={() => setActiveTab(tab)}>
+          <Text
+            style={[
+              OrderStyle.tabText,
+              activeTab === tab && OrderStyle.tabTextActive,
+            ]}>
+            {tab}
+          </Text>
+        </Pressable>
+      ))}
+    </ScrollView>
+  );
+
   return (
     <SafeAreaView style={[globalStyle.flex, globalStyle.bgTheme]}>
       <ScrollView>
+        {isAuthenticated && renderTabs()}
+
         <View style={OrderStyle.userNoLoggedIn}>
           <View style={globalStyle.lottyani}>
             <LottieView
@@ -20,14 +58,18 @@ const Orders = ({navigation}) => {
               loop
             />
           </View>
+
           <View style={[globalStyle.mt10, globalStyle.w100]}>
             {!isAuthenticated ? (
               <Text style={[globalStyle.subtext, globalStyle.textCenter]}>
-                please login to view your orders
+                Please login to view your orders
               </Text>
-            ):(<Text style={[globalStyle.subtext, globalStyle.textCenter]}>
-               No orders found
-            </Text>)}
+            ) : (
+              <Text style={[globalStyle.subtext, globalStyle.textCenter]}>
+                No orders found
+              </Text>
+            )}
+
             {isAuthenticated ? (
               <Pressable
                 style={OrderStyle.mainBtn}
@@ -41,7 +83,7 @@ const Orders = ({navigation}) => {
                 style={OrderStyle.mainBtn}
                 onPress={() => navigation.navigate(Routes.EmailEntry)}>
                 <View>
-                  <Text style={OrderStyle.mainBtnText}>login now</Text>
+                  <Text style={OrderStyle.mainBtnText}>Login now</Text>
                 </View>
               </Pressable>
             )}

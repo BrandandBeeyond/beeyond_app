@@ -1,9 +1,37 @@
 import {StyleSheet} from 'react-native';
-import { horizontalScale, scaleFontSize } from '../../assets/styles/Scaling';
-import { verticalScale } from 'react-native-size-matters';
+import {horizontalScale, scaleFontSize} from '../../assets/styles/Scaling';
+import {verticalScale} from 'react-native-size-matters';
 import getFontFamily from '../../assets/fonts/helper';
 
 export const OrderStyle = StyleSheet.create({
+  tabContainer: {
+    flexDirection: 'row',
+    paddingHorizontal: 10,
+    marginTop: 10,
+  },
+
+  tabItem: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+    backgroundColor: '#eee',
+    marginRight: 10,
+  },
+
+  tabItemActive: {
+    backgroundColor: '#f9b000',
+  },
+
+  tabText: {
+    color: '#333',
+    fontSize: 14,
+  },
+
+  tabTextActive: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+
   userNoLoggedIn: {
     backgroundColor: '#fff',
     padding: horizontalScale(15),
