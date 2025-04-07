@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Pressable,
   SafeAreaView,
@@ -6,15 +6,28 @@ import {
   Text,
   View,
   FlatList,
+  Image,
 } from 'react-native';
 import {globalStyle} from '../../assets/styles/globalStyle';
 import {OrderStyle} from './Style';
 import LottieView from 'lottie-react-native';
 import {Routes} from '../../navigation/Routes';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {getOrders} from '../../redux/actions/OrderAction';
+import {CartStyle} from '../Cart/Style';
 
 const Orders = ({navigation}) => {
+  const dispatch = useDispatch();
   const {isAuthenticated} = useSelector(state => state.user);
+  const {orders} = useSelector(state => state.orders);
+  console.log(orders);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      dispatch(getOrders); // ✅ Correct way
+    }
+  }, [isAuthenticated, dispatch]);
+
   const [activeTab, setActiveTab] = useState('All');
 
   const tabs = ['All', 'Paid', 'Delivered', 'Cancelled'];
@@ -47,7 +60,52 @@ const Orders = ({navigation}) => {
   return (
     <SafeAreaView style={[globalStyle.flex, globalStyle.bgTheme]}>
       <ScrollView>
-        {isAuthenticated && renderTabs()}
+        {isAuthenticated && orders?.length > 0 && renderTabs()}
+
+        { 
+        orders.map((item, index) => (
+          <View
+            key={index}
+            style={[
+              globalStyle.mx10,
+              globalStyle.py10,
+              globalStyle.bgWhite,
+              globalStyle.mt20,
+              globalStyle.px10,
+              globalStyle.rounded3,
+              globalStyle.dcol,
+            ]}>
+            {/* Loop through orderItems */}
+            {item.orderItems.map((orderItem, idx) => (
+              <View
+                key={idx}
+                style={[globalStyle.drow, globalStyle.cg10, globalStyle.mb10]}>
+                <Image
+                  source={{uri: orderItem.image}}
+                  style={[
+                    CartStyle.cartProd,
+                    globalStyle.rounded3
+                  ]}
+                  resizeMode="contain"
+                />
+                <View style={[globalStyle.flex1]}>
+                  <Text style={globalStyle.h6}>{orderItem.name}</Text>
+                  <Text style={globalStyle.subtext}>
+                    Qty: {orderItem.quantity}
+                  </Text>
+                  <Text style={globalStyle.price}>₹ {orderItem.price}</Text>
+                </View>
+              </View>
+            ))}
+
+            {/* Total Price */}
+            <View style={globalStyle.mt10}>
+              <Text style={globalStyle.h6}>
+                Total: ₹ {item.totalPrice.toFixed(2)}
+              </Text>
+            </View>
+          </View>
+        ))}
 
         <View style={OrderStyle.userNoLoggedIn}>
           <View style={globalStyle.lottyani}>

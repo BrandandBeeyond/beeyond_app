@@ -2,9 +2,9 @@ import React from 'react';
 import {Pressable, SafeAreaView, Text, View} from 'react-native';
 import {globalStyle} from '../../assets/styles/globalStyle';
 import LottieView from 'lottie-react-native';
-import { LoginStyle } from '../Login/Style';
-import { Routes } from '../../navigation/Routes';
-import { useNavigation } from '@react-navigation/native';
+import {LoginStyle} from '../Login/Style';
+import {Routes} from '../../navigation/Routes';
+import {useNavigation} from '@react-navigation/native';
 
 const OrderPlaced = () => {
   const navigation = useNavigation();
@@ -55,11 +55,20 @@ const OrderPlaced = () => {
             </Text>
           </View>
 
-          <Pressable
-            style={LoginStyle.mobilebtn}
-            onPress={() => navigation.navigate(Routes.Products)}>
-            <Text style={LoginStyle.mobilebtnText}>continue shopping</Text>
-          </Pressable>
+          <View style={globalStyle.mt40}>
+            <Pressable
+              style={globalStyle.fillbtn}
+              onPress={() => navigation.navigate(Routes.Products)}>
+              <Text style={globalStyle.textWhite}>continue shopping</Text>
+            </Pressable>
+          </View>
+          <View>
+            <Pressable
+              style={globalStyle.outborderbtn}
+              onPress={() => navigation.navigate(Routes.Products)}>
+              <Text style={globalStyle.textSlate}>Share order</Text>
+            </Pressable>
+          </View>
         </View>
       </View>
     </SafeAreaView>

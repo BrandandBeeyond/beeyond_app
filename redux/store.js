@@ -32,7 +32,7 @@ const store = configureStore({
     user: persistedUserReducer,
     wishlist: WishlistReducer,
     payment: PaymentReducer,
-    order: orderReducer,
+    orders: orderReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

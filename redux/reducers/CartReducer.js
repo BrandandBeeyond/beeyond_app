@@ -1,5 +1,6 @@
 import {
   ADD_TO_CART,
+  CLEAR_CART,
   DECREMENT_QUANTITY,
   INCREMENT_QUANTITY,
   REMOVE_CART_ITEM,
@@ -59,7 +60,12 @@ export const CartReducer = (state = initialState, action) => {
           .filter(item => item.quantity > 0),
       };
 
-   
+    case CLEAR_CART:
+      return {
+        ...state,
+        cart: [],
+      };
+
     default:
       return state;
   }
