@@ -19,6 +19,8 @@ import {faStar} from '@fortawesome/free-solid-svg-icons';
 const Wishlist = ({navigation}) => {
   const {wishlist} = useSelector(state => state.wishlist);
 
+  console.log(wishlist);
+
   return (
     <SafeAreaView>
       {wishlist.length > 0 ? (
@@ -40,14 +42,19 @@ const Wishlist = ({navigation}) => {
                   globalStyle.alignCenter,
                   globalStyle.cg5,
                 ]}>
-                <Image source={item.thumbnail} style={CartStyle.modalImage} />
+                <Image
+                  source={{uri: item.images?.[0]?.url}}
+                  style={[CartStyle.cartProd, globalStyle.rounded3]}
+                />
                 <View style={globalStyle.dcol}>
-                  <View style={[productStyle.ratings, globalStyle.inline]}>
-                    <Text style={productStyle.ratingText}>{item.ratings}</Text>
-                    <FontAwesomeIcon icon={faStar} color={'#fff'} size={9} />
-                  </View>
                   <View style={globalStyle.small}>
-                    <Text>{item.title}</Text>
+                    <Text>{item.name}</Text>
+                    <View>
+                      <Text style={globalStyle.xsSmall}>
+                        {item.description}
+                      </Text>
+                      <Text style={globalStyle.xsSmall}>{item.price}</Text>
+                    </View>
                   </View>
                 </View>
               </View>

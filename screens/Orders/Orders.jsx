@@ -62,91 +62,129 @@ const Orders = ({navigation}) => {
       <ScrollView>
         {isAuthenticated && orders?.length > 0 && renderTabs()}
 
-        { 
-        orders.map((item, index) => (
-          <View
-            key={index}
-            style={[
-              globalStyle.mx10,
-              globalStyle.py10,
-              globalStyle.bgWhite,
-              globalStyle.mt20,
-              globalStyle.px10,
-              globalStyle.rounded3,
-              globalStyle.dcol,
-            ]}>
-            {/* Loop through orderItems */}
-            {item.orderItems.map((orderItem, idx) => (
+        {isAuthenticated && orders.length > 0 ? (
+          <>
+            {orders.map((item, index) => (
               <View
-                key={idx}
-                style={[globalStyle.drow, globalStyle.cg10, globalStyle.mb10]}>
-                <Image
-                  source={{uri: orderItem.image}}
+                key={index}
+                style={[
+                  globalStyle.mx10,
+                  globalStyle.py10,
+                  globalStyle.bgWhite,
+                  globalStyle.mt20,
+                  globalStyle.px10,
+                  globalStyle.rounded3,
+                ]}>
+                {/* Order Header */}
+                <View
                   style={[
-                    CartStyle.cartProd,
-                    globalStyle.rounded3
-                  ]}
-                  resizeMode="contain"
-                />
-                <View style={[globalStyle.flex1]}>
-                  <Text style={globalStyle.h6}>{orderItem.name}</Text>
-                  <Text style={globalStyle.subtext}>
-                    Qty: {orderItem.quantity}
+                    globalStyle.drow,
+                    globalStyle.justifyBetween,
+                    globalStyle.mb10,
+                  ]}>
+                  <Text style={[globalStyle.textsmall,globalStyle.my10, {fontWeight: 'bold'}]}>
+                    {item.orderNumber}
                   </Text>
-                  <Text style={globalStyle.price}>₹ {orderItem.price}</Text>
+                  <Text style={[globalStyle.subtext]}>
+                    {new Date(item.createdAt).toLocaleDateString()}
+                  </Text>
+                </View>
+
+                {/* Order Items */}
+                {item.orderItems.map((orderItem, idx) => (
+                  <View
+                    key={idx}
+                    style={[
+                      globalStyle.drow,
+                      globalStyle.cg5,
+                      globalStyle.mb10,
+                      {
+                        borderBottomWidth:
+                          idx !== item.orderItems.length - 1 ? 1 : 0,
+                        borderColor: '#eee',
+                        paddingBottom: 10,
+                      },
+                    ]}>
+                    <Image
+                      source={{uri: orderItem.image}}
+                      style={[
+                        CartStyle.cartProd,
+                        globalStyle.rounded3,
+                        {width: 70, height: 70},
+                      ]}
+                    />
+                    <View style={[globalStyle.flex1]}>
+                      <Text style={[globalStyle.h6, {marginBottom: 4}]}>
+                        {orderItem.name}
+                      </Text>
+                      <Text style={globalStyle.subtext}>
+                        Qty: {orderItem.quantity}
+                      </Text>
+                      <Text style={globalStyle.price}>₹ {orderItem.price}</Text>
+                    </View>
+                  </View>
+                ))}
+
+                {/* Order Footer */}
+                <View
+                  style={[
+                    globalStyle.drow,
+                    globalStyle.justifyBetween,
+                    globalStyle.mt10,
+                    {borderTopWidth: 1, borderColor: '#eee', paddingTop: 10},
+                  ]}>
+                  <Text style={globalStyle.h6}>Status: {item.orderStatus}</Text>
+                  <Text style={[globalStyle.h6, {color: '#000'}]}>
+                    Total: ₹ {item.totalPrice.toFixed(2)}
+                  </Text>
                 </View>
               </View>
             ))}
+          </>
+        ) : (
+          <View style={OrderStyle.userNoLoggedIn}>
+            <View style={globalStyle.lottyani}>
+              <LottieView
+                style={{flex: 1}}
+                source={require('./noorders.json')}
+                autoPlay
+                loop
+              />
+            </View>
 
-            {/* Total Price */}
-            <View style={globalStyle.mt10}>
-              <Text style={globalStyle.h6}>
-                Total: ₹ {item.totalPrice.toFixed(2)}
-              </Text>
+            <View style={[globalStyle.mt10, globalStyle.w100]}>
+              {!isAuthenticated ? (
+                <Text style={[globalStyle.subtext, globalStyle.textCenter]}>
+                  Please login to view your orders
+                </Text>
+              ) : (
+                <Text style={[globalStyle.subtext, globalStyle.textCenter]}>
+                  No orders found
+                </Text>
+              )}
+
+              {isAuthenticated ? (
+                <Pressable
+                  style={OrderStyle.mainBtn}
+                  onPress={() => navigation.navigate(Routes.Products)}>
+                  <View>
+                    <Text style={OrderStyle.mainBtnText}>
+                      Continue shopping
+                    </Text>
+                  </View>
+                </Pressable>
+              ) : (
+                <Pressable
+                  style={OrderStyle.mainBtn}
+                  onPress={() => navigation.navigate(Routes.EmailEntry)}>
+                  <View>
+                    <Text style={OrderStyle.mainBtnText}>Login now</Text>
+                  </View>
+                </Pressable>
+              )}
             </View>
           </View>
-        ))}
-
-        <View style={OrderStyle.userNoLoggedIn}>
-          <View style={globalStyle.lottyani}>
-            <LottieView
-              style={{flex: 1}}
-              source={require('./noorders.json')}
-              autoPlay
-              loop
-            />
-          </View>
-
-          <View style={[globalStyle.mt10, globalStyle.w100]}>
-            {!isAuthenticated ? (
-              <Text style={[globalStyle.subtext, globalStyle.textCenter]}>
-                Please login to view your orders
-              </Text>
-            ) : (
-              <Text style={[globalStyle.subtext, globalStyle.textCenter]}>
-                No orders found
-              </Text>
-            )}
-
-            {isAuthenticated ? (
-              <Pressable
-                style={OrderStyle.mainBtn}
-                onPress={() => navigation.navigate(Routes.Products)}>
-                <View>
-                  <Text style={OrderStyle.mainBtnText}>Continue shopping</Text>
-                </View>
-              </Pressable>
-            ) : (
-              <Pressable
-                style={OrderStyle.mainBtn}
-                onPress={() => navigation.navigate(Routes.EmailEntry)}>
-                <View>
-                  <Text style={OrderStyle.mainBtnText}>Login now</Text>
-                </View>
-              </Pressable>
-            )}
-          </View>
-        </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );

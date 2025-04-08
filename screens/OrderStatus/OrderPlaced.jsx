@@ -65,8 +65,8 @@ const OrderPlaced = () => {
           <View>
             <Pressable
               style={globalStyle.outborderbtn}
-              onPress={() => navigation.navigate(Routes.Products)}>
-              <Text style={globalStyle.textSlate}>Share order</Text>
+              onPress={() => navigation.navigate(Routes.Orders)}>
+              <Text style={globalStyle.textSlate}>View Orders</Text>
             </Pressable>
           </View>
         </View>
