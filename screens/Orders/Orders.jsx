@@ -14,20 +14,23 @@ import {OrderStyle} from './Style';
 import LottieView from 'lottie-react-native';
 import {Routes} from '../../navigation/Routes';
 import {useDispatch, useSelector} from 'react-redux';
-import {getOrders} from '../../redux/actions/OrderAction';
+import {getUserOrders} from '../../redux/actions/OrderAction';
 import {CartStyle} from '../Cart/Style';
 
 const Orders = ({navigation}) => {
   const dispatch = useDispatch();
-  const {isAuthenticated} = useSelector(state => state.user);
+  const {isAuthenticated,user} = useSelector(state => state.user);
   const {orders} = useSelector(state => state.orders);
   console.log(orders);
 
+ 
+  
   useEffect(() => {
-    if (isAuthenticated) {
-      dispatch(getOrders); // ✅ Correct way
+    if (user && user._id) {
+      
+      dispatch(getUserOrders(user._id));
     }
-  }, [isAuthenticated, dispatch]);
+  }, [dispatch,user]);
 
   const [activeTab, setActiveTab] = useState('All');
 
