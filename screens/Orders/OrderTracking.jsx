@@ -15,11 +15,11 @@ const labels = [
   'Delivered',
 ];
 
-const currentPosition = 2;
+const currentPosition = 3;
 
 const customStyles = {
   stepIndicatorSize: 14,
-  currentStepIndicatorSize: 50,
+  currentStepIndicatorSize: 20,
   separatorStrokeWidth: 2,
   currentStepStrokeWidth: 2,
   stepStrokeCurrentColor: '#fe7013',
@@ -138,15 +138,15 @@ const styles = StyleSheet.create({
   },
   ripple: {
     position: 'absolute',
-    width: 20,
-    height: 20,
+    width: 40,
+    height: 40,
     borderRadius: 30,
     backgroundColor: '#fe7013',
     zIndex: -1,
   },
   circle: {
-    width: 14,
-    height: 14,
+    width: 7,
+    height: 7,
     borderRadius: 7,
     backgroundColor: '#ffffff',
     borderWidth: 2,
