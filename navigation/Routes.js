@@ -22,6 +22,7 @@ export const Routes = {
   ResetPassword: 'ResetPassword',
   SavedAddress: 'SavedAddress',
   OrderPlaced:'OrderPlaced',
+  OrderTracking:'OrderTracking',
 
   // static pages
   Contact: 'Contact',
