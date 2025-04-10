@@ -1,11 +1,7 @@
-import React, { useEffect, useRef } from 'react';
-import {
-  Animated,
-  View,
-  StyleSheet,
-} from 'react-native';
+import React, {useEffect, useRef} from 'react';
+import {Animated, View, StyleSheet} from 'react-native';
 import StepIndicator from 'react-native-step-indicator';
-import { globalStyle } from '../../assets/styles/globalStyle';
+import {globalStyle} from '../../assets/styles/globalStyle';
 
 const labels = [
   'Order Placed',
@@ -22,21 +18,24 @@ const customStyles = {
   currentStepIndicatorSize: 20,
   separatorStrokeWidth: 2,
   currentStepStrokeWidth: 2,
-  stepStrokeCurrentColor: '#fe7013',
+  stepStrokeCurrentColor: '#f9b000',
   stepStrokeWidth: 2,
-  stepStrokeFinishedColor: '#fe7013',
+  stepStrokeFinishedColor: '#f9b000',
   stepStrokeUnFinishedColor: '#aaaaaa',
-  separatorFinishedColor: '#fe7013',
+  separatorFinishedColor: '#f9b000',
   separatorUnFinishedColor: '#aaaaaa',
-  stepIndicatorFinishedColor: '#fe7013',
+  stepIndicatorFinishedColor: '#f9b000',
   stepIndicatorUnFinishedColor: '#ffffff',
   stepIndicatorCurrentColor: '#ffffff',
   stepIndicatorLabelFontSize: 0,
   currentStepIndicatorLabelFontSize: 0,
-  labelColor: '#999999',
-  labelSize: 13,
-  currentStepLabelColor: '#fe7013',
+  lalabelColor: '#999999',
+  labelAlign: 'flex-start',
+  labelPaddingTop: 4,
+  labelSize: 11,
+  currentStepLabelColor: '#f9b000',
 };
+
 
 const OrderTracking = () => {
   const rippleAnim = useRef(new Animated.Value(1)).current;
@@ -54,13 +53,13 @@ const OrderTracking = () => {
           duration: 800,
           useNativeDriver: true,
         }),
-      ])
+      ]),
     ).start();
   }, [rippleAnim]);
 
-  const renderStepIndicator = ({ position, stepStatus }) => {
+  const renderStepIndicator = ({position, stepStatus}) => {
     const isActive = position === currentPosition;
-  
+
     return (
       <View style={styles.circleWrapper}>
         {isActive && (
@@ -68,7 +67,7 @@ const OrderTracking = () => {
             style={[
               styles.ripple,
               {
-                transform: [{ scale: rippleAnim }],
+                transform: [{scale: rippleAnim}],
                 opacity: rippleAnim.interpolate({
                   inputRange: [1, 1.5],
                   outputRange: [0.4, 0],
@@ -82,13 +81,12 @@ const OrderTracking = () => {
             styles.circle,
             {
               backgroundColor:
-                stepStatus === 'finished'
-                  ? '#fe7013'
-                  : stepStatus === 'current'
-                  ? '#ffffff'
-                  : '#ffffff',
-              borderColor:
-                stepStatus === 'finished' ? '#fe7013' : '#aaaaaa',
+              stepStatus === 'finished'
+                ? '#f9b000'
+                : stepStatus === 'current'
+                ? '#ffffff'
+                : '#ffffff',
+            borderColor: stepStatus === 'finished' ? '#f9b000' : '#aaaaaa',
               borderWidth: stepStatus === 'current' ? 0 : 2,
             },
           ]}
@@ -96,9 +94,8 @@ const OrderTracking = () => {
       </View>
     );
   };
-  
 
-  const renderSeparator = ({ position }) => {
+  const renderSeparator = ({position}) => {
     const isFinished = position < currentPosition;
     return (
       <View style={styles.separatorContainer}>
