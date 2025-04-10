@@ -4,14 +4,12 @@ import StepIndicator from 'react-native-step-indicator';
 import {globalStyle} from '../../assets/styles/globalStyle';
 
 const labels = [
-  'Order Placed',
-  'Packed',
+  'Processing',
+
   'Shipped',
   'Out for Delivery',
   'Delivered',
 ];
-
-const currentPosition = 3;
 
 const customStyles = {
   stepIndicatorSize: 14,
@@ -36,12 +34,18 @@ const customStyles = {
   currentStepLabelColor: '#f9b000',
 };
 
+const OrderTracking = ({route}) => {
 
-const OrderTracking = () => {
+  const {orderStatus} = route.params;
   const rippleAnim = useRef(new Animated.Value(1)).current;
 
+  const currentPosition = labels.indexOf(orderStatus);
+  const isValidStatus = currentPosition !== -1;
+
   useEffect(() => {
-    Animated.loop(
+    if (!isValidStatus) return;
+
+    const animation = Animated.loop(
       Animated.sequence([
         Animated.timing(rippleAnim, {
           toValue: 1.5,
@@ -53,9 +57,13 @@ const OrderTracking = () => {
           duration: 800,
           useNativeDriver: true,
         }),
-      ]),
-    ).start();
-  }, [rippleAnim]);
+      ])
+    );
+
+    animation.start();
+
+    return () => animation.stop();
+  }, [rippleAnim, isValidStatus]);
 
   const renderStepIndicator = ({position, stepStatus}) => {
     const isActive = position === currentPosition;
@@ -81,12 +89,10 @@ const OrderTracking = () => {
             styles.circle,
             {
               backgroundColor:
-              stepStatus === 'finished'
-                ? '#f9b000'
-                : stepStatus === 'current'
-                ? '#ffffff'
-                : '#ffffff',
-            borderColor: stepStatus === 'finished' ? '#f9b000' : '#aaaaaa',
+                stepStatus === 'finished'
+                  ? '#f9b000'
+                  : '#ffffff',
+              borderColor: stepStatus === 'finished' ? '#f9b000' : '#aaaaaa',
               borderWidth: stepStatus === 'current' ? 0 : 2,
             },
           ]}
@@ -113,15 +119,23 @@ const OrderTracking = () => {
 
   return (
     <View style={[globalStyle.flex, globalStyle.bgTheme]}>
-      <StepIndicator
-        direction="vertical"
-        customStyles={customStyles}
-        currentPosition={currentPosition}
-        labels={labels}
-        stepCount={labels.length}
-        renderStepIndicator={renderStepIndicator}
-        renderSeparator={renderSeparator}
-      />
+      {isValidStatus ? (
+        <StepIndicator
+          direction="vertical"
+          customStyles={customStyles}
+          currentPosition={currentPosition}
+          labels={labels}
+          stepCount={labels.length}
+          renderStepIndicator={renderStepIndicator}
+          renderSeparator={renderSeparator}
+        />
+      ) : (
+        <View style={styles.invalidStatusContainer}>
+          <Animated.Text style={styles.invalidStatusText}>
+            Invalid order status
+          </Animated.Text>
+        </View>
+      )}
     </View>
   );
 };
@@ -159,6 +173,15 @@ const styles = StyleSheet.create({
     width: 2,
     height: '100%',
     borderRadius: 1,
+  },
+  invalidStatusContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  invalidStatusText: {
+    color: '#999',
+    fontSize: 16,
   },
 });
 

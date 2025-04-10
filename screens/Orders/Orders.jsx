@@ -31,6 +31,9 @@ const Orders = ({navigation}) => {
 
   const [activeTab, setActiveTab] = useState('All');
 
+  console.log(orders);
+  
+
   const tabs = ['All', 'Paid', 'Delivered', 'Cancelled'];
 
   const renderTabs = () => (
@@ -181,12 +184,13 @@ const Orders = ({navigation}) => {
                       <Text style={globalStyle.small}>
                         Status: {item.orderStatus}
                       </Text>
+
                       <Pressable
-                        onPress={() =>
+                        onPress={() => {
                           navigation.navigate('OrderTracking', {
                             orderStatus: item.orderStatus,
-                          })
-                        }>
+                          });
+                        }}>
                         <Text
                           style={[
                             globalStyle.small,
