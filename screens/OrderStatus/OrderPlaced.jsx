@@ -65,7 +65,7 @@ const OrderPlaced = () => {
           <View>
             <Pressable
               style={globalStyle.outborderbtn}
-              onPress={() => navigation.navigate(Routes.Orders)}>
+              onPress={() => navigation.navigate('BottomTabs',{screen:Routes.Orders})}>
               <Text style={globalStyle.textSlate}>View Orders</Text>
             </Pressable>
           </View>

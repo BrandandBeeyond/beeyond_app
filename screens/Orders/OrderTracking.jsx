@@ -5,7 +5,6 @@ import {globalStyle} from '../../assets/styles/globalStyle';
 
 const labels = [
   'Processing',
-
   'Shipped',
   'Out for Delivery',
   'Delivered',
