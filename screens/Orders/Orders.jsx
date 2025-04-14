@@ -189,6 +189,7 @@ const Orders = ({navigation}) => {
                         onPress={() => {
                           navigation.navigate('OrderTracking', {
                             orderStatus: item.orderStatus,
+                            orderItems:item.orderItems
                           });
                         }}>
                         <Text
