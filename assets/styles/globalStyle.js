@@ -355,7 +355,17 @@ export const globalStyle = StyleSheet.create({
     fontSize: scaleFontSize(13),
     marginVertical: verticalScale(5),
   },
-  ps3:{
-    paddingLeft:horizontalScale(10)
-  }
+  ps3: {
+    paddingLeft: horizontalScale(10),
+  },
+  mx15: {
+    marginHorizontal: horizontalScale(20),
+  },
+  simplebtn: {
+    height: verticalScale(40),
+    flex: 1,
+    justifyContent:'center',
+    alignItems:'center',
+    borderRadius:horizontalScale(10)
+  },
 });

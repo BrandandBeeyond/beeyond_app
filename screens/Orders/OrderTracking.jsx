@@ -7,6 +7,7 @@ import {
   Text,
   TouchableOpacity,
   Alert,
+  Pressable,
 } from 'react-native';
 import StepIndicator from 'react-native-step-indicator';
 import {globalStyle} from '../../assets/styles/globalStyle';
@@ -215,7 +216,6 @@ const OrderTracking = ({route}) => {
           {alignItems: 'flex-start'},
         ]}>
         {isValidStatus ? (
-          
           <View style={styles.trackerContainer}>
             <StepIndicator
               direction="vertical"
@@ -234,6 +234,25 @@ const OrderTracking = ({route}) => {
             </Animated.Text>
           </View>
         )}
+        <View
+          style={[
+            globalStyle.dflex,
+            globalStyle.drow,
+            globalStyle.justifyBetween,
+            globalStyle.mx15,
+            globalStyle.cg5,
+          ]}>
+          <Pressable style={[globalStyle.bgWhite, globalStyle.simplebtn]} onPress={handleCancelOrder}>
+            <Text style={[globalStyle.h6, globalStyle.fw700]}>
+              Cancel order
+            </Text>
+            <Pressable />
+          </Pressable>
+          <Pressable style={[globalStyle.bgWhite, globalStyle.simplebtn]}>
+            <Text style={[globalStyle.h6, globalStyle.fw700]}>Need Help?</Text>
+            <Pressable />
+          </Pressable>
+        </View>
       </View>
     </>
   );
