@@ -331,8 +331,8 @@ export const globalStyle = StyleSheet.create({
     marginVertical: verticalScale(20),
     borderRadius: horizontalScale(100),
     alignItems: 'center',
-    backgroundColor:'#010101',
-    borderColor:'#010101',
+    backgroundColor: '#010101',
+    borderColor: '#010101',
   },
   outborderbtn: {
     width: 340,
@@ -341,7 +341,21 @@ export const globalStyle = StyleSheet.create({
     marginVertical: verticalScale(20),
     borderRadius: horizontalScale(100),
     alignItems: 'center',
-    borderWidth:1,
-    borderColor:'#010101',
+    borderWidth: 1,
+    borderColor: '#010101',
   },
+  h2: {
+    fontSize: scaleFontSize(15),
+  },
+  h4: {
+    fontSize: scaleFontSize(19),
+    marginTop: verticalScale(10),
+  },
+  h6: {
+    fontSize: scaleFontSize(13),
+    marginVertical: verticalScale(5),
+  },
+  ps3:{
+    paddingLeft:horizontalScale(10)
+  }
 });

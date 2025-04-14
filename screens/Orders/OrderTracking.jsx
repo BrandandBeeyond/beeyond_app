@@ -1,5 +1,13 @@
 import React, {useEffect, useRef} from 'react';
-import {Animated, View, StyleSheet, Image, Text, TouchableOpacity, Alert} from 'react-native';
+import {
+  Animated,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import StepIndicator from 'react-native-step-indicator';
 import {globalStyle} from '../../assets/styles/globalStyle';
 import {CartStyle} from '../Cart/Style';
@@ -60,20 +68,16 @@ const OrderTracking = ({route}) => {
   }, [rippleAnim, isValidStatus]);
 
   const handleCancelOrder = () => {
-    Alert.alert(
-      'Cancel Order',
-      'Are you sure you want to cancel the order?',
-      [
-        {text: 'No'},
-        {
-          text: 'Yes',
-          onPress: () => {
-            console.log('Order cancelled'); // Implement your cancellation logic here
-            Alert.alert('Order Cancelled', 'Your order has been cancelled.');
-          },
+    Alert.alert('Cancel Order', 'Are you sure you want to cancel the order?', [
+      {text: 'No'},
+      {
+        text: 'Yes',
+        onPress: () => {
+          console.log('Order cancelled'); // Implement your cancellation logic here
+          Alert.alert('Order Cancelled', 'Your order has been cancelled.');
         },
-      ],
-    );
+      },
+    ]);
   };
 
   const renderStepIndicator = ({position, stepStatus}) => {
@@ -137,15 +141,6 @@ const OrderTracking = ({route}) => {
           globalStyle.px10,
           globalStyle.rounded3,
         ]}>
-        <Text
-          style={[
-            globalStyle.fontMd,
-            globalStyle.fw700,
-            {color: 'green', marginBottom: 10},
-          ]}>
-          Order Status: {orderStatus}
-        </Text>
-
         {orderItems.map((item, index) => (
           <View
             key={index}
@@ -154,9 +149,20 @@ const OrderTracking = ({route}) => {
               globalStyle.justifyBetween,
               globalStyle.mb10,
               globalStyle.bgWhite,
-              globalStyle.p10,
+
               globalStyle.rounded3,
             ]}>
+            <View style={[globalStyle.flex, globalStyle.mx10]}>
+              <Text style={[globalStyle.h2]}>{item.name}</Text>
+              <Text
+                style={[
+                  globalStyle.h4,
+                  globalStyle.fw700,
+                  globalStyle.textGray,
+                ]}>
+                ₹ {item.price}
+              </Text>
+            </View>
             <Image
               source={{uri: item.image}}
               style={[
@@ -165,16 +171,23 @@ const OrderTracking = ({route}) => {
                 {width: 70, height: 70},
               ]}
             />
-            <View style={[globalStyle.flex, globalStyle.mx10]}>
-              <Text style={[globalStyle.fontMd, globalStyle.fw700]}>
-                {item.name}
-              </Text>
-            </View>
           </View>
         ))}
+        <View
+          style={[
+            globalStyle.dflex,
+            globalStyle.justifyCenter,
+            globalStyle.ps3,
+          ]}>
+          <Text style={[globalStyle.h6, {color: 'green', marginBottom: 10}]}>
+            <Text style={[globalStyle.h6, globalStyle.textGray]}>
+              Order Status:
+            </Text>{' '}
+            {orderStatus}
+          </Text>
+        </View>
 
-        {/* Cancel Order Button */}
-        {currentPosition < 2 ? (
+        {/* {currentPosition < 2 ? (
           <TouchableOpacity
             onPress={handleCancelOrder}
             style={{
@@ -192,7 +205,7 @@ const OrderTracking = ({route}) => {
           <Text style={{color: '#888', marginTop: 10}}>
             Cancellation not allowed at this stage.
           </Text>
-        )}
+        )} */}
       </View>
 
       <View
@@ -202,6 +215,7 @@ const OrderTracking = ({route}) => {
           {alignItems: 'flex-start'},
         ]}>
         {isValidStatus ? (
+          
           <View style={styles.trackerContainer}>
             <StepIndicator
               direction="vertical"
