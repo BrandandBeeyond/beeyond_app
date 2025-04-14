@@ -9,6 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {WishlistReducer} from './reducers/WishlistReducer';
 import {PaymentReducer} from './reducers/PaymentReducer';
 import {orderReducer} from './reducers/orderReducer';
+import {OrderNotificationReducer} from './reducers/OrderNotificationReducer';
 
 const persistUserConfig = {
   key: 'user',
@@ -33,6 +34,7 @@ const store = configureStore({
     wishlist: WishlistReducer,
     payment: PaymentReducer,
     orders: orderReducer,
+    orderNotification: OrderNotificationReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
