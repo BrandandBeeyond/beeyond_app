@@ -23,6 +23,7 @@ import RazorpayCheckout from 'react-native-razorpay';
 import {ALERT_TYPE, Dialog} from 'react-native-alert-notification';
 import {useNavigation} from '@react-navigation/native';
 import {CreateOrder} from '../../redux/actions/OrderAction';
+import {SendEmailNotification} from '../../redux/actions/OrderNotificationAction';
 
 const SavedAddress = () => {
   const dispatch = useDispatch();
@@ -70,7 +71,9 @@ const SavedAddress = () => {
   const handlePayment = async () => {
     setLoadingPayment(true);
     try {
+      console.log('Step 1: Creating payment order...');
       const orderData = await dispatch(createPaymentOrder(checkoutAmount));
+      console.log('Order Data:', orderData);
 
       if (!orderData) {
         Alert.alert('Error', 'Failed to create order');
@@ -92,14 +95,18 @@ const SavedAddress = () => {
         theme: {color: '#f9b000'},
       };
 
+      console.log('Step 2: Opening Razorpay Checkout...');
       RazorpayCheckout.open(options)
         .then(async data => {
+          console.log('Payment Successful:', data);
+
           const paymentData = {
             razorpay_order_id: orderData.id,
             razorpay_payment_id: data.razorpay_payment_id,
             razorpay_signature: data.razorpay_signature,
           };
 
+          console.log('Step 3: Verifying payment...');
           await dispatch(verifyPayment(paymentData));
 
           const newOrder = {
@@ -118,9 +125,35 @@ const SavedAddress = () => {
               status: 'Paid',
             },
           };
-          console.log('this is order creation', newOrder);
 
-          await dispatch(CreateOrder(newOrder));
+          const createdOrder = await dispatch(CreateOrder(newOrder));
+          console.log("order creation detail",createdOrder.order);
+          
+
+          if (createdOrder.order._id) {
+            const emailPayload = {
+              eventType: 'order_placed',
+              user: {
+                name: user.name,
+                email: user.email,
+                mobile: user.mobile,
+              },
+              orderDetails: {
+                orderId: createdOrder.order.orderNumber,
+                ...createdOrder.order,
+              },
+            };
+
+            console.log("email payload is",emailPayload);
+            
+            const emailResult = await dispatch(
+              SendEmailNotification(emailPayload),
+            );
+            console.log('Email dispatch result:', emailResult);
+          } else {
+            console.warn('Order ID not found in payload. Email not sent.');
+          }
+
           navigation.navigate('OrderPlaced');
         })
         .catch(error => {
@@ -139,6 +172,7 @@ const SavedAddress = () => {
       setLoadingPayment(false);
     }
   };
+
   return (
     <SafeAreaView style={[globalStyle.flex, globalStyle.bgTheme]}>
       <ScrollView>

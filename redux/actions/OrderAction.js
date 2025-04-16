@@ -25,13 +25,14 @@ export const CreateOrder = orderData => async dispatch => {
     dispatch({type: CREATE_ORDER_SUCCESS, payload: data});
 
     dispatch({type: CLEAR_CART});
+
+    return data;
   } catch (error) {
+    const errorMsg = error.response?.data?.message || error.message;
+
     dispatch({
       type: CREATE_ORDER_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
+      payload: errorMsg,
     });
   }
 };
