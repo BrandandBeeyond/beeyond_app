@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "947680701785",
+    "project_id": "beeyond-b3ab7",
+    "storage_bucket": "beeyond-b3ab7.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:947680701785:android:b347424cc4559599167048",
+        "android_client_info": {
+          "package_name": "com.beeyond"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAfsTeWxtkr1EAQ_yG1FXGmZ4LTFoAF-U4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
