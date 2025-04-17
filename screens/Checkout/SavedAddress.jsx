@@ -24,6 +24,7 @@ import {ALERT_TYPE, Dialog} from 'react-native-alert-notification';
 import {useNavigation} from '@react-navigation/native';
 import {CreateOrder} from '../../redux/actions/OrderAction';
 import {SendEmailNotification} from '../../redux/actions/OrderNotificationAction';
+import notifee from '@notifee/react-native';
 
 const SavedAddress = () => {
   const dispatch = useDispatch();
@@ -127,8 +128,7 @@ const SavedAddress = () => {
           };
 
           const createdOrder = await dispatch(CreateOrder(newOrder));
-          console.log("order creation detail",createdOrder.order);
-          
+          console.log('order creation detail', createdOrder.order);
 
           if (createdOrder.order._id) {
             const emailPayload = {
@@ -144,12 +144,27 @@ const SavedAddress = () => {
               },
             };
 
-            console.log("email payload is",emailPayload);
-            
+            console.log('email payload is', emailPayload);
+
             const emailResult = await dispatch(
               SendEmailNotification(emailPayload),
             );
             console.log('Email dispatch result:', emailResult);
+
+            
+            await notifee.createChannel({
+              id: 'default',
+              name: 'Default Channel',
+            });
+
+            await notifee.displayNotification({
+              title: 'Order Placed Successfully 🎉',
+              body: `Thanks, ${user.name}, your order has been placed!`,
+              android: {
+                channelId: 'default',
+                smallIcon: 'ic_launcher',
+              },
+            });
           } else {
             console.warn('Order ID not found in payload. Email not sent.');
           }
