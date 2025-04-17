@@ -25,6 +25,7 @@ import {useNavigation} from '@react-navigation/native';
 import {CreateOrder} from '../../redux/actions/OrderAction';
 import {SendEmailNotification} from '../../redux/actions/OrderNotificationAction';
 import notifee from '@notifee/react-native';
+import {addNotification} from '../../redux/actions/BellNotiAction';
 
 const SavedAddress = () => {
   const dispatch = useDispatch();
@@ -151,7 +152,6 @@ const SavedAddress = () => {
             );
             console.log('Email dispatch result:', emailResult);
 
-            
             await notifee.createChannel({
               id: 'default',
               name: 'Default Channel',
@@ -165,6 +165,14 @@ const SavedAddress = () => {
                 smallIcon: 'ic_launcher',
               },
             });
+
+            await dispatch(
+              addNotification({
+                title: 'Order Placed!',
+                message: 'Your order has been successfully placed.',
+                type: 'order',
+              }),
+            );
           } else {
             console.warn('Order ID not found in payload. Email not sent.');
           }

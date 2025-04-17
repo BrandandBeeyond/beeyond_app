@@ -39,6 +39,7 @@ import CheckoutForm from '../screens/Checkout/Checkoutform';
 import SavedAddress from '../screens/Checkout/SavedAddress';
 import OrderPlaced from '../screens/OrderStatus/OrderPlaced';
 import OrderTracking from '../screens/Orders/OrderTracking';
+import BellNotification from '../screens/Notifications/BellNotification';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -366,7 +367,7 @@ export const MainNavigation = () => {
         name={Routes.OrderPlaced}
         component={OrderPlaced}
         options={{
-           header:()=>null
+          header: () => null,
         }}
       />
 
@@ -380,7 +381,7 @@ export const MainNavigation = () => {
         })}
       />
 
-<Stack.Screen
+      <Stack.Screen
         name="OrderTracking"
         component={OrderTracking}
         options={({navigation}) => ({
@@ -389,7 +390,6 @@ export const MainNavigation = () => {
           headerTitle: 'Order details',
         })}
       />
-
 
       {/* <Stack.Screen
         name="Checkoutform"
@@ -408,6 +408,16 @@ export const MainNavigation = () => {
           headerTitle: 'Add delivery Address',
         })}
         component={Checkoutform} // ✅ No need for ProtectedRoute
+      />
+
+      <Stack.Screen
+        name="BellNotification"
+        component={BellNotification}
+        options={({navigation}) => ({
+          headerLeft: () => <CustomBackButton navigation={navigation} />,
+          headerTitleStyle: {fontSize: scaleFontSize(17)},
+          headerTitle: 'Notifications',
+        })}
       />
 
       <Stack.Screen

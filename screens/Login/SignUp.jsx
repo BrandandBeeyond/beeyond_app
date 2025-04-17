@@ -49,7 +49,7 @@ const Signup = ({navigation, route}) => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigation.replace('BottomTabs');
+      navigation.replace('OtpScreen');
     }
   }, [isAuthenticated, navigation]);
 

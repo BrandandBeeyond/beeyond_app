@@ -10,6 +10,7 @@ import {WishlistReducer} from './reducers/WishlistReducer';
 import {PaymentReducer} from './reducers/PaymentReducer';
 import {orderReducer} from './reducers/orderReducer';
 import {OrderNotificationReducer} from './reducers/OrderNotificationReducer';
+import {BellNotiReducer} from './reducers/BellNotiReducer';
 
 const persistUserConfig = {
   key: 'user',
@@ -35,6 +36,7 @@ const store = configureStore({
     payment: PaymentReducer,
     orders: orderReducer,
     orderNotification: OrderNotificationReducer,
+    bellnotifications: BellNotiReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

@@ -1,5 +1,6 @@
 
 
+
 export const Routes = {
   Home: 'Home',
   Profile: 'Profile',
@@ -23,6 +24,7 @@ export const Routes = {
   SavedAddress: 'SavedAddress',
   OrderPlaced:'OrderPlaced',
   OrderTracking:'OrderTracking',
+  BellNotification:'BellNotification',
 
   // static pages
   Contact: 'Contact',
