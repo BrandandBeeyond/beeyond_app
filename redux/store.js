@@ -23,8 +23,21 @@ const persistCartConfig = {
   storage: AsyncStorage,
   whitelist: ['cart'],
 };
+
+const persistWishlistConfig = {
+  key: 'wishlist',
+  storage: AsyncStorage,
+  whitelist: ['wishlist'],
+};
+const persistBellNotiConfig = {
+  key: 'bellnotifications',
+  storage: AsyncStorage,
+  whitelist: ['bellnotifications'],
+};
 const persistedUserReducer = persistReducer(persistUserConfig, UserReducer);
 const persistedCartReducer = persistReducer(persistCartConfig, CartReducer);
+const persistedWishlistReducer = persistReducer(persistWishlistConfig, WishlistReducer);
+const persistedBellNotiReducer = persistReducer(persistBellNotiConfig, BellNotiReducer);
 
 const store = configureStore({
   reducer: {
@@ -32,11 +45,11 @@ const store = configureStore({
     cart: persistedCartReducer,
     notifications: NotificationReducer,
     user: persistedUserReducer,
-    wishlist: WishlistReducer,
+    wishlist: persistedWishlistReducer,
     payment: PaymentReducer,
     orders: orderReducer,
     orderNotification: OrderNotificationReducer,
-    bellnotifications: BellNotiReducer,
+    bellnotifications: persistedBellNotiReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
