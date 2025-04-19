@@ -1,6 +1,3 @@
-
-
-
 export const Routes = {
   Home: 'Home',
   Profile: 'Profile',
@@ -14,6 +11,7 @@ export const Routes = {
   PasswordEntry: 'PasswordEntry',
   Mobilelogin: 'Mobilelogin',
   EmailOtpScreen: 'EmailOtpScreen',
+  EmailOtpVerification: 'EmailOtpVerification',
   OtpScreen: 'OtpScreen',
   ProductDetail: 'ProductDetail',
   Checkoutform: 'Checkoutform',
@@ -22,9 +20,9 @@ export const Routes = {
   ForgotPassword: 'ForgotPassword',
   ResetPassword: 'ResetPassword',
   SavedAddress: 'SavedAddress',
-  OrderPlaced:'OrderPlaced',
-  OrderTracking:'OrderTracking',
-  BellNotification:'BellNotification',
+  OrderPlaced: 'OrderPlaced',
+  OrderTracking: 'OrderTracking',
+  BellNotification: 'BellNotification',
 
   // static pages
   Contact: 'Contact',

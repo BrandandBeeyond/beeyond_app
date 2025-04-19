@@ -18,6 +18,9 @@ import {
   REGISTER_USER_FAIL,
   REGISTER_USER_REQUEST,
   REGISTER_USER_SUCCESS,
+  RESET_PASSWORD_FAIL,
+  RESET_PASSWORD_REQUEST,
+  RESET_PASSWORD_SUCCESS,
   SEND_EMAIL_OTP_FAIL,
   SEND_EMAIL_OTP_REQUEST,
   SEND_EMAIL_OTP_SUCCESS,
@@ -25,6 +28,9 @@ import {
   SEND_MOBILE_OTP_REQUEST,
   SEND_MOBILE_OTP_SUCCESS,
   VERIFY_EMAIL_OTP_FAIL,
+  VERIFY_EMAIL_OTP_FORGOT_FAIL,
+  VERIFY_EMAIL_OTP_FORGOT_REQUEST,
+  VERIFY_EMAIL_OTP_FORGOT_SUCCESS,
   VERIFY_EMAIL_OTP_REQUEST,
   VERIFY_EMAIL_OTP_SUCCESS,
   VERIFY_MOBILE_OTP_FAIL,
@@ -173,11 +179,72 @@ export const VerifyOTPEmail = (email, otp) => async dispatch => {
       type: VERIFY_EMAIL_OTP_SUCCESS,
       payload: data.user,
     });
+
+    return {success: true, user: data.user};
   } catch (error) {
     dispatch({
       type: VERIFY_EMAIL_OTP_FAIL,
       payload: error.response?.data?.message || 'Failed to verify OTP',
     });
+  }
+};
+
+export const VerifyOTPEmailForgot = (email, otp) => async dispatch => {
+  try {
+    dispatch({type: VERIFY_EMAIL_OTP_FORGOT_REQUEST});
+
+    // Replace with actual API call
+    const response = await axios.post(`${serverApi}/verify-email-otp`, {
+      email,
+      otp,
+    });
+
+    dispatch({
+      type: VERIFY_EMAIL_OTP_FORGOT_SUCCESS,
+      payload: response.data,
+    });
+
+    return response.data;
+  } catch (error) {
+    dispatch({
+      type: VERIFY_EMAIL_OTP_FORGOT_FAIL,
+      payload: error.response?.data?.message || 'Something went wrong',
+    });
+    return {success: false};
+  }
+};
+
+export const resetPassword = (email, password) => async dispatch => {
+  dispatch({type: RESET_PASSWORD_REQUEST});
+  try {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    const {data} = await axios.post(
+      `${serverApi}/reset-password`,
+      {email, password},
+      config,
+    );
+
+   
+    console.log("this is the response from action",data);
+    
+
+    dispatch({type: RESET_PASSWORD_SUCCESS, payload: data});
+    return data;
+
+  } catch (error) {
+    dispatch({
+      type: RESET_PASSWORD_FAIL,
+      payload:
+        error.response?.data?.message ||
+        error.message ||
+        'Something went wrong',
+    });
+    return {success: false};
   }
 };
 

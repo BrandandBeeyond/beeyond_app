@@ -11,10 +11,11 @@ import {globalStyle} from '../../assets/styles/globalStyle';
 import AuthHeader from '../Login/AuthHeader';
 import {OtpInput} from 'react-native-otp-entry';
 import {OtpStyle} from './Style';
-import {useDispatch, useSelector} from 'react-redux';
-import {SendOTPEmail, VerifyOTPEmail} from '../../redux/actions/UserAction';
+import {useDispatch} from 'react-redux';
+import {SendOTPEmail, VerifyOTPEmailForgot} from '../../redux/actions/UserAction';
+import {Routes} from '../../navigation/Routes';
 
-const EmailOtpScreen = ({route, navigation}) => {
+const EmailOtpVerification = ({route, navigation}) => {
   const {email} = route.params || '';
   const [otp, setOtp] = useState('');
   const [timer, setTimer] = useState(60);
@@ -23,13 +24,6 @@ const EmailOtpScreen = ({route, navigation}) => {
   const [loadingVerify, setLoadingVerify] = useState(false);
 
   const dispatch = useDispatch();
-  const {isAuthenticated} = useSelector(state => state.user);
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigation.replace('Profile');
-    }
-  }, [isAuthenticated,navigation]);
 
   useEffect(() => {
     let interval;
@@ -55,15 +49,15 @@ const EmailOtpScreen = ({route, navigation}) => {
     }
   };
 
-  const handleVerifyOtp = async () => {
+  const handleVerifyEmailOtp = async () => {
     setLoadingVerify(true);
     if (otp.length === 6) {
       try {
-        const response = await dispatch(VerifyOTPEmail(email, otp));
+        const response = await dispatch(VerifyOTPEmailForgot(email, otp));
         if (response?.success) {
           setIsOtpInvalid(false);
 
-         
+          navigation.navigate(Routes.ResetPassword);
         } else {
           setIsOtpInvalid(true);
         }
@@ -145,7 +139,7 @@ const EmailOtpScreen = ({route, navigation}) => {
               LoginStyle.loginBtn,
               {backgroundColor: otp.length === 6 ? '#010101' : '#b4b3b3'},
             ]}
-            onPress={handleVerifyOtp}
+            onPress={handleVerifyEmailOtp}
             disabled={otp.length !== 6 || loadingVerify}>
             {loadingVerify ? (
               <View
@@ -167,4 +161,4 @@ const EmailOtpScreen = ({route, navigation}) => {
   );
 };
 
-export default EmailOtpScreen;
+export default EmailOtpVerification;

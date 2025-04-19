@@ -40,6 +40,7 @@ import SavedAddress from '../screens/Checkout/SavedAddress';
 import OrderPlaced from '../screens/OrderStatus/OrderPlaced';
 import OrderTracking from '../screens/Orders/OrderTracking';
 import BellNotification from '../screens/Notifications/BellNotification';
+import EmailOtpVerification from '../screens/Otpscreen/EmailOtpVerfication';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -326,6 +327,19 @@ export const MainNavigation = () => {
       <Stack.Screen
         name={Routes.EmailOtpScreen}
         component={EmailOtpScreen}
+        options={{
+          headerTitle: () => null,
+          headerTitleStyle: {fontSize: scaleFontSize(17)},
+          headerStyle: {
+            backgroundColor: '#f9b000',
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+        }}
+      />
+      <Stack.Screen
+        name={Routes.EmailOtpVerification}
+        component={EmailOtpVerification}
         options={{
           headerTitle: () => null,
           headerTitleStyle: {fontSize: scaleFontSize(17)},

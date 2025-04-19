@@ -14,6 +14,7 @@ import {Routes} from '../../navigation/Routes';
 import {TextInput} from 'react-native-gesture-handler';
 import {useDispatch} from 'react-redux';
 import {checkUserExists, SendOTPEmail} from '../../redux/actions/UserAction';
+import { FlowTypes } from '../../flowTypes';
 
 const ForgotPassword = ({route, navigation}) => {
   const emailRef = useRef(null);
@@ -47,7 +48,7 @@ const ForgotPassword = ({route, navigation}) => {
       const response = await dispatch(SendOTPEmail(email));
 
       if (response.success) {
-        navigation.navigate(Routes.ResetPassword, {email});
+        navigation.navigate(Routes.EmailOtpVerification, {email});
       } else {
         Alert.alert('Error', 'Failed to send OTP. Please try again.');
       }

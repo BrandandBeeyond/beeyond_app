@@ -19,6 +19,9 @@ import {
   REGISTER_USER_FAIL,
   REGISTER_USER_REQUEST,
   REGISTER_USER_SUCCESS,
+  RESET_PASSWORD_FAIL,
+  RESET_PASSWORD_REQUEST,
+  RESET_PASSWORD_SUCCESS,
   SEND_EMAIL_OTP_FAIL,
   SEND_EMAIL_OTP_REQUEST,
   SEND_EMAIL_OTP_SUCCESS,
@@ -26,6 +29,9 @@ import {
   SEND_MOBILE_OTP_REQUEST,
   SEND_MOBILE_OTP_SUCCESS,
   VERIFY_EMAIL_OTP_FAIL,
+  VERIFY_EMAIL_OTP_FORGOT_FAIL,
+  VERIFY_EMAIL_OTP_FORGOT_REQUEST,
+  VERIFY_EMAIL_OTP_FORGOT_SUCCESS,
   VERIFY_EMAIL_OTP_REQUEST,
   VERIFY_EMAIL_OTP_SUCCESS,
   VERIFY_MOBILE_OTP_FAIL,
@@ -65,6 +71,7 @@ export const UserReducer = (state = initialState, action) => {
     case VERIFY_EMAIL_OTP_REQUEST:
     case ADD_SHIPPING_INFO_REQUEST:
     case GET_SHIPPING_INFO_REQUEST:
+    case VERIFY_EMAIL_OTP_FORGOT_REQUEST:
       return {
         ...state,
         loading: true,
@@ -96,6 +103,13 @@ export const UserReducer = (state = initialState, action) => {
         user: action.payload,
         otpVerfiedEmail: action.type || VERIFY_EMAIL_OTP_SUCCESS,
         otpVerfiedMobile: action.type || VERIFY_MOBILE_OTP_SUCCESS,
+      };
+
+    case VERIFY_EMAIL_OTP_FORGOT_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        otpVerfiedEmail: true,
       };
 
     case VERIFY_MOBILE_OTP_SUCCESS:
@@ -131,6 +145,7 @@ export const UserReducer = (state = initialState, action) => {
     case VERIFY_EMAIL_OTP_FAIL:
     case ADD_SHIPPING_INFO_FAIL:
     case GET_SHIPPING_INFO_FAIL:
+    case VERIFY_EMAIL_OTP_FORGOT_FAIL:
       return {
         ...state,
         loading: false,
@@ -188,6 +203,13 @@ export const UserReducer = (state = initialState, action) => {
         ...state,
         error: null,
       };
+
+    case RESET_PASSWORD_REQUEST:
+      return {loading: true};
+    case RESET_PASSWORD_SUCCESS:
+      return {loading: false, success: true};
+    case RESET_PASSWORD_FAIL:
+      return {loading: false, error: action.payload};
 
     default:
       return state;

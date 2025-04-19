@@ -16,6 +16,7 @@ import {SendOTPEmail, UserLogin} from '../../redux/actions/UserAction';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faEye, faEyeSlash} from '@fortawesome/free-regular-svg-icons';
 import {Routes} from '../../navigation/Routes';
+import { FlowTypes } from '../../flowTypes';
 
 const PasswordEntry = ({route, navigation}) => {
   const {email} = route.params;
