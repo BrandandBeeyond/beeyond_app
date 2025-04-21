@@ -1,3 +1,4 @@
+
 export const Routes = {
   Home: 'Home',
   Profile: 'Profile',
@@ -19,6 +20,7 @@ export const Routes = {
   SignupEmail: 'SignupEmail',
   ForgotPassword: 'ForgotPassword',
   ResetPassword: 'ResetPassword',
+  ChangePassword: 'ChangePassword',
   SavedAddress: 'SavedAddress',
   OrderPlaced: 'OrderPlaced',
   OrderTracking: 'OrderTracking',

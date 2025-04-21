@@ -388,6 +388,15 @@ export const MainNavigation = () => {
           },
         }}
       />
+      <Stack.Screen
+        name={Routes.ChangePassword}
+        component={ChangePassword}
+        options={({navigation}) => ({
+          headerLeft: () => <CustomBackButton navigation={navigation} />,
+          headerTitleStyle: {fontSize: scaleFontSize(17)},
+          headerTitle: 'Change password',
+        })}
+      />
 
       <Stack.Screen
         name={Routes.OrderPlaced}
