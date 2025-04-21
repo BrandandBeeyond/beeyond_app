@@ -15,7 +15,11 @@ import {TextInput} from 'react-native-gesture-handler';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faEye, faEyeSlash} from '@fortawesome/free-regular-svg-icons';
 import {useDispatch, useSelector} from 'react-redux';
-import {sendMobileOtp, UserRegister} from '../../redux/actions/UserAction';
+import {
+  sendMobileOtp,
+  UserRegister,
+  userRegisterOtp,
+} from '../../redux/actions/UserAction';
 
 const Signup = ({navigation, route}) => {
   const dispatch = useDispatch();
@@ -42,23 +46,34 @@ const Signup = ({navigation, route}) => {
 
   const handleRegister = async () => {
     try {
-      const res = await dispatch(UserRegister(name, mobile, email, password));
-  
-      if (res?.user) {
-        // ✅ First send the OTP
+      const registrationResponse = await dispatch(
+        userRegisterOtp(name, mobile, email, password),
+      );
+
+      console.log("registration res", registrationResponse);
+
+      if (registrationResponse?.user) {
+     
         const otpResponse = await dispatch(sendMobileOtp(mobile));
-  
+
+     
+       
+        
         if (otpResponse?.success) {
-          // ✅ Navigate to OTP screen only if OTP was successfully sent
           navigation.replace('OtpScreen', {mobileNumber: mobile});
         } else {
-          console.warn('OTP not sent:', otpResponse.message);
-          // Optionally show a toast or alert to the user here
+        
+          console.warn(
+            'OTP not sent:',
+            otpResponse?.message || 'Unknown error',
+          );
+         
         }
       }
     } catch (error) {
-      console.error('Registration failed:', error);
-      // You can show a toast/snackbar here if you want
+      console.error('Error sending mobile OTP:', error);
+
+      console.log('Error Response:', error.response?.data || error.message);
     }
   };
 

@@ -156,9 +156,9 @@ export const UserLogin = (email, password) => async dispatch => {
 //   };
 
 export const userRegisterOtp =
-  ({name, email, mobile, password, otp}) =>
+  ({ name, email, mobile, password, otp }) =>
   async dispatch => {
-    dispatch({type: REGISTER_USER_REQUEST});
+    dispatch({ type: REGISTER_USER_REQUEST });
 
     try {
       const config = {
@@ -167,24 +167,30 @@ export const userRegisterOtp =
         },
       };
 
-      const {data} = await axios.post(
+      const { data } = await axios.post(
         `${serverApi}/verify-otp-register`,
-        {name, mobile, email, password, otp},
-        config,
+        { name, mobile, email, password, otp },
+        config
       );
 
-
-      dispatch({type:REGISTER_USER_SUCCESS,payload:data.user});
+      dispatch({
+        type: REGISTER_USER_SUCCESS,
+        payload: data.user,
+      });
 
       return data;
     } catch (error) {
-      console.error('Registration Error:', error.response?.data || error.message);
+      console.error(
+        'Registration Error:',
+        error.response?.data || error.message
+      );
       dispatch({
         type: REGISTER_USER_FAIL,
         payload: error.response?.data?.message || 'Something went wrong',
       });
     }
   };
+
 
 export const SendOTPEmail = email => async dispatch => {
   try {
