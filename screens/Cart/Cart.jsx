@@ -27,7 +27,7 @@ import {
   RemovefromCart,
 } from '../../redux/actions/CartAction';
 import Notification from '../../components/Notification/Notification';
-import {AddNotification} from '../../redux/actions/NotificationAction';
+
 import Header from '../../components/Header/Header';
 import CloseIcon from 'react-native-vector-icons/AntDesign';
 import {getShippingInfo} from '../../redux/actions/UserAction';

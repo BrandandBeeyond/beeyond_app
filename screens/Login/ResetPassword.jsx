@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   Pressable,
@@ -10,21 +10,21 @@ import {
 import {LoginStyle} from '../Login/Style';
 import {globalStyle} from '../../assets/styles/globalStyle';
 import AuthHeader from '../Login/AuthHeader';
-
-import {useDispatch, useSelector} from 'react-redux';
-
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faEye, faEyeSlash} from '@fortawesome/free-regular-svg-icons';
 import {Routes} from '../../navigation/Routes';
-import {resetPassword} from '../../redux/actions/UserAction';
+import axios from 'axios';
+import {serverApi} from '../../config/serverApi';
+import {
+  AlertNotificationRoot,
+  ALERT_TYPE,
+  Dialog,
+  Toast,
+} from 'react-native-alert-notification';
 
 const ResetPassword = ({route, navigation}) => {
-  const dispatch = useDispatch();
-
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
-
-  // for password fields
 
   const {email} = route.params || '';
   const [password, setPassword] = useState('');
@@ -33,8 +33,6 @@ const ResetPassword = ({route, navigation}) => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-   
-
     if (password.length >= 6 && password === confirmPassword) {
       setIsButtonDisabled(false);
       setError('');
@@ -50,16 +48,44 @@ const ResetPassword = ({route, navigation}) => {
     }
   }, [password, confirmPassword]);
 
-  const handleResetPassword = async () => {
+  const handleResetPassword = async ({email, password}) => {
     setLoading(true);
 
     try {
-      const response = await dispatch(resetPassword(email, password));
+      const response = await axios.post(`${serverApi}/reset-password`, {
+        email,
+        password,
+      });
 
-      console.log("getting response",response);
-      
-      if (response?.message === "Password reset successfully") {
-        navigation.navigate(Routes.Profile);
+      console.log('✅ Response from reset-password:', response?.data);
+
+      if (response?.data?.message === 'Password reset successfully') {
+        navigation.navigate(Routes.EmailEntry);
+        Toast.show({
+          type: ALERT_TYPE.SUCCESS,
+          textBody: 'Password reset successfully!',
+          autoClose: 3000,
+          title: '', // No title
+          theme: 'dark', // Force dark theme
+          containerStyle: {
+            height: 20,
+            paddingVertical: 5,
+            borderRadius: 8,
+            backgroundColor: '#1c1c1e', // Dark background
+            justifyContent: 'center',
+            alignItems: 'center',
+            shadowColor: '#000',
+            shadowOpacity: 0.3,
+            shadowOffset: {width: 0, height: 2},
+            shadowRadius: 4,
+            elevation: 5,
+          },
+          textBodyStyle: {
+            color: '#ffffff', // White text
+            fontSize: 14,
+            fontWeight: '500',
+          },
+        });
       } else {
         setError('Failed to reset password. Try again.');
       }
@@ -69,6 +95,7 @@ const ResetPassword = ({route, navigation}) => {
       setLoading(false);
     }
   };
+
   return (
     <SafeAreaView style={[LoginStyle.loginBg, globalStyle.flex]}>
       <AuthHeader
@@ -128,8 +155,8 @@ const ResetPassword = ({route, navigation}) => {
               LoginStyle.loginBtn,
               {backgroundColor: isButtonDisabled ? '#b4b3b3' : '#010101'},
             ]}
-            onPress={handleResetPassword}
-            disabled={loading}>
+            onPress={() => handleResetPassword({email, password})}
+            disabled={loading || isButtonDisabled}>
             {loading ? (
               <View
                 style={[

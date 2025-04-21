@@ -57,7 +57,7 @@ const EmailOtpVerification = ({route, navigation}) => {
         if (response?.success) {
           setIsOtpInvalid(false);
 
-          navigation.navigate(Routes.ResetPassword);
+          navigation.navigate(Routes.ResetPassword,{email});
         } else {
           setIsOtpInvalid(true);
         }
