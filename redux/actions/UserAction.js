@@ -84,8 +84,7 @@ export const UserLogin = (email, password) => async dispatch => {
       headers: {'Content-Type': 'application/json'},
     };
 
-    const {data} = await axios.post(
-      `${serverApi}/login`,
+    const {data} = await axios.post(`${serverApi}/login`,
       {email, password},
       config,
     );
@@ -93,25 +92,28 @@ export const UserLogin = (email, password) => async dispatch => {
     if (data?.user) {
       await AsyncStorage.setItem('user', JSON.stringify(data.user));
 
-      // ✅ Store the shipping info locally if it exists
       if (data?.shippingInfo) {
-        await AsyncStorage.setItem(
-          'shippingInfo',
-          JSON.stringify(data.shippingInfo),
-        );
+        await AsyncStorage.setItem('shippingInfo', JSON.stringify(data.shippingInfo));
       }
 
       dispatch({type: LOGIN_USER_SUCCESS, payload: data.user});
+
+      // 👇 RETURN something for the caller
+      return { success: true, user: data.user };
     } else {
       throw new Error('Invalid API response');
     }
   } catch (error) {
     console.error('Login Error:', error.response?.data || error.message);
+
     dispatch({
       type: LOGIN_USER_FAIL,
       payload: error.response?.data?.message || 'Something went wrong',
     });
-  }
+
+    // 👇 RETURN the error manually for the caller
+    return { success: false, message: error.response?.data?.message || 'Something went wrong' };
+  }
 };
 
 export const UserRegister =

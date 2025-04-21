@@ -364,8 +364,14 @@ export const globalStyle = StyleSheet.create({
   simplebtn: {
     height: verticalScale(40),
     flex: 1,
-    justifyContent:'center',
-    alignItems:'center',
-    borderRadius:horizontalScale(10)
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: horizontalScale(10),
+  },
+  errorText: {
+    color: 'red',
+    fontSize: scaleFontSize(14),
+    paddingVertical: verticalScale(14),
+    marginHorizontal: horizontalScale(20),
   },
 });

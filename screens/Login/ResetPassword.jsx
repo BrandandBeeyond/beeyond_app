@@ -15,12 +15,7 @@ import {faEye, faEyeSlash} from '@fortawesome/free-regular-svg-icons';
 import {Routes} from '../../navigation/Routes';
 import axios from 'axios';
 import {serverApi} from '../../config/serverApi';
-import {
-  AlertNotificationRoot,
-  ALERT_TYPE,
-  Dialog,
-  Toast,
-} from 'react-native-alert-notification';
+
 
 const ResetPassword = ({route, navigation}) => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
@@ -60,32 +55,10 @@ const ResetPassword = ({route, navigation}) => {
       console.log('✅ Response from reset-password:', response?.data);
 
       if (response?.data?.message === 'Password reset successfully') {
-        navigation.navigate(Routes.EmailEntry);
-        Toast.show({
-          type: ALERT_TYPE.SUCCESS,
-          textBody: 'Password reset successfully!',
-          autoClose: 3000,
-          title: '', // No title
-          theme: 'dark', // Force dark theme
-          containerStyle: {
-            height: 20,
-            paddingVertical: 5,
-            borderRadius: 8,
-            backgroundColor: '#1c1c1e', // Dark background
-            justifyContent: 'center',
-            alignItems: 'center',
-            shadowColor: '#000',
-            shadowOpacity: 0.3,
-            shadowOffset: {width: 0, height: 2},
-            shadowRadius: 4,
-            elevation: 5,
-          },
-          textBodyStyle: {
-            color: '#ffffff', // White text
-            fontSize: 14,
-            fontWeight: '500',
-          },
+        navigation.navigate(Routes.EmailEntry,{
+          showToast:true
         });
+       
       } else {
         setError('Failed to reset password. Try again.');
       }

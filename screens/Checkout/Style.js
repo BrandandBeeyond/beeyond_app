@@ -27,6 +27,13 @@ export const checkOutStyle = StyleSheet.create({
     fontSize: scaleFontSize(13),
     color: '#000',
   },
+  floatingLabel: {
+    position: 'absolute',
+    left: 15,
+    backgroundColor: '#fff',
+    paddingHorizontal: 4,
+    color: '#999',
+  },
   verifiedContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -51,6 +58,14 @@ export const checkOutStyle = StyleSheet.create({
   saveButton: {
     backgroundColor: '#4267B2',
     height: verticalScale(47),
+    borderRadius: horizontalScale(10),
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: verticalScale(10),
+  },
+  ChangePassword:{
+    backgroundColor: '#4267B2',
+    height: verticalScale(35),
     borderRadius: horizontalScale(10),
     justifyContent: 'center',
     alignItems: 'center',

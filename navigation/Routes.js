@@ -23,7 +23,7 @@ export const Routes = {
   OrderPlaced: 'OrderPlaced',
   OrderTracking: 'OrderTracking',
   BellNotification: 'BellNotification',
-
+  ChangePassword:'ChangePassword',
   // static pages
   Contact: 'Contact',
 };

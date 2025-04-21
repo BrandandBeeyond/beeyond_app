@@ -87,4 +87,10 @@ export const LoginStyle = StyleSheet.create({
     top: 20,
     right: 20,
   },
+  showCloseIconChangePass: {
+    position: 'absolute',
+    top: 42,
+    right: 20,
+  },
+  
 });

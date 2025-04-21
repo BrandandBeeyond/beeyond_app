@@ -160,7 +160,8 @@ const MyAccount = ({navigation}) => {
                   globalStyle.drow,
                   globalStyle.alignCenter,
                   globalStyle.cg5,
-                ]}>
+                ]}
+                onPress={() => navigation.navigate('ChangePassword')}>
                 <LockIcon name="lock" color={'#111'} size={20} />
                 <Text style={accountStyle.utilText}>Change password</Text>
               </Pressable>

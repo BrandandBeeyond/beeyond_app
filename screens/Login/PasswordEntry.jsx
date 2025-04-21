@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
-  Alert,
   Pressable,
   SafeAreaView,
   Text,
@@ -16,7 +15,7 @@ import {SendOTPEmail, UserLogin} from '../../redux/actions/UserAction';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faEye, faEyeSlash} from '@fortawesome/free-regular-svg-icons';
 import {Routes} from '../../navigation/Routes';
-import { FlowTypes } from '../../flowTypes';
+import {FlowTypes} from '../../flowTypes';
 
 const PasswordEntry = ({route, navigation}) => {
   const {email} = route.params;
@@ -26,6 +25,7 @@ const PasswordEntry = ({route, navigation}) => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [otploading, setOtploading] = useState(false);
   const [signinLoading, setSigninLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const dispatch = useDispatch();
 
@@ -35,7 +35,21 @@ const PasswordEntry = ({route, navigation}) => {
 
   const handleSignIn = async () => {
     setSigninLoading(true);
-    await dispatch(UserLogin(email, password));
+    try {
+      const response = await dispatch(UserLogin(email, password));
+
+      if (response.success) {
+        setErrorMessage('');
+      } else {
+        setErrorMessage(response.message || 'Invalid credentials');
+      }
+    } catch (error) {
+      let errMsg = 'Something went wrong';
+      if (error?.response?.data?.message) {
+        errMsg = error.response.data.message;
+      }
+      setErrorMessage(errMsg);
+    }
     setSigninLoading(false);
   };
 
@@ -47,10 +61,10 @@ const PasswordEntry = ({route, navigation}) => {
       if (response.success) {
         navigation.navigate('EmailOtpScreen', {email});
       } else {
-        Alert.alert('Error', 'Failed to send OTP. Please try again.');
+        setErrorMessage('Failed to send OTP. Please try again.');
       }
     } catch (error) {
-      Alert.alert('Error', 'Something went wrong. Please try again.');
+      setErrorMessage('Something went wrong. Please try again.');
     }
     setOtploading(false);
   };
@@ -81,7 +95,10 @@ const PasswordEntry = ({route, navigation}) => {
                 placeholder="Password"
                 style={LoginStyle.emailpass}
                 value={password}
-                onChangeText={setPassword}
+                onChangeText={text => {
+                  setPassword(text);
+                  if (errorMessage) setErrorMessage('');
+                }}
                 secureTextEntry={!passwordVisible}
               />
               <Pressable
@@ -95,21 +112,24 @@ const PasswordEntry = ({route, navigation}) => {
               </Pressable>
             </View>
           </View>
+
+          {/* Error message under password field */}
+          {errorMessage ? (
+            <Text style={globalStyle.errorText}>{errorMessage}</Text>
+          ) : null}
+
           <View style={[globalStyle.mt10, globalStyle.px20]}>
             <Pressable
-              style={{alignSelf:'flex-end'}}
+              style={{alignSelf: 'flex-end'}}
               onPress={() =>
                 navigation.navigate(Routes.ForgotPassword, {email})
               }>
-              <Text
-                style={[
-                  globalStyle.textEnd,
-                  globalStyle.subtext,
-                ]}>
+              <Text style={[globalStyle.textEnd, globalStyle.subtext]}>
                 Forgot password ?
               </Text>
             </Pressable>
           </View>
+
           <View style={globalStyle.px10}>
             <Pressable
               style={[
@@ -136,30 +156,28 @@ const PasswordEntry = ({route, navigation}) => {
             </Pressable>
           </View>
         </View>
+
         <View style={globalStyle.container}>
           <View style={LoginStyle.line}></View>
           <Text style={globalStyle.orText}>OR</Text>
           <View style={LoginStyle.line}></View>
         </View>
+
         <View style={globalStyle.px10}>
           <Pressable
             style={LoginStyle.emailOtpBtn}
             onPress={handleSendEmailOtp}
             disabled={otploading}>
             {otploading ? (
-              <>
-                <View
-                  style={[
-                    globalStyle.drow,
-                    globalStyle.alignCenter,
-                    globalStyle.cg3,
-                  ]}>
-                  <ActivityIndicator size={20} color={'#fff'} />
-                  <Text style={LoginStyle.emailOtpBtnText}>
-                    Sign in with OTP
-                  </Text>
-                </View>
-              </>
+              <View
+                style={[
+                  globalStyle.drow,
+                  globalStyle.alignCenter,
+                  globalStyle.cg3,
+                ]}>
+                <ActivityIndicator size={20} color={'#fff'} />
+                <Text style={LoginStyle.emailOtpBtnText}>Sign in with OTP</Text>
+              </View>
             ) : (
               <View>
                 <Text style={LoginStyle.emailOtpBtnText}>Sign in with OTP</Text>

@@ -6,6 +6,7 @@ import store, {persistor} from './redux/store';
 import {PersistGate} from 'redux-persist/integration/react';
 import {loadUser} from './redux/actions/UserAction';
 import notifee from '@notifee/react-native';
+import {AlertNotificationRoot} from 'react-native-alert-notification';
 
 const AppContent = () => {
   const dispatch = useDispatch();
@@ -28,9 +29,11 @@ const AppContent = () => {
   }, [dispatch]);
 
   return (
-    <NavigationContainer>
-      <MainNavigation />
-    </NavigationContainer>
+    <AlertNotificationRoot theme="dark">
+      <NavigationContainer>
+        <MainNavigation />
+      </NavigationContainer>
+    </AlertNotificationRoot>
   );
 };
 

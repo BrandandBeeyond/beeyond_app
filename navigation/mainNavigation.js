@@ -41,6 +41,7 @@ import OrderPlaced from '../screens/OrderStatus/OrderPlaced';
 import OrderTracking from '../screens/Orders/OrderTracking';
 import BellNotification from '../screens/Notifications/BellNotification';
 import EmailOtpVerification from '../screens/Otpscreen/EmailOtpVerfication';
+import ChangePassword from '../screens/Login/ChangePassword';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -350,6 +351,17 @@ export const MainNavigation = () => {
           },
         }}
       />
+
+<Stack.Screen
+        name={Routes.ChangePassword}
+        component={ChangePassword}
+        options={({navigation}) => ({
+          headerLeft: () => <CustomBackButton navigation={navigation} />,
+          headerTitleStyle: {fontSize: scaleFontSize(17)},
+          headerTitle: 'Change password',
+        })}
+      />
+
       <Stack.Screen
         name={Routes.ForgotPassword}
         component={ForgotPassword}

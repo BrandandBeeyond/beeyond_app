@@ -13,10 +13,46 @@ import {Routes} from '../../navigation/Routes';
 import {TextInput} from 'react-native-gesture-handler';
 import {useDispatch} from 'react-redux';
 import {checkUserExists} from '../../redux/actions/UserAction';
+import {
+  AlertNotificationRoot,
+  ALERT_TYPE,
+  Dialog,
+  Toast,
+} from 'react-native-alert-notification';
 
-const EmailEntry = ({navigation}) => {
+const EmailEntry = ({navigation, route}) => {
   const emailRef = useRef(null);
   const [email, setEmail] = useState('');
+
+  useEffect(() => {
+    if (route.params?.showToast) {
+      Toast.show({
+        type: ALERT_TYPE.SUCCESS,
+        textBody: 'Password reset successfully!',
+        autoClose: 3000,
+        title: '',
+        theme: 'dark',
+        containerStyle: {
+          height: 20,
+          paddingVertical: 5,
+          borderRadius: 8,
+          backgroundColor: '#1c1c1e',
+          justifyContent: 'center',
+          alignItems: 'center',
+          shadowColor: '#000',
+          shadowOpacity: 0.3,
+          shadowOffset: {width: 0, height: 2},
+          shadowRadius: 4,
+          elevation: 5,
+        },
+        textBodyStyle: {
+          color: '#ffffff',
+          fontSize: 14,
+          fontWeight: '500',
+        },
+      });
+    }
+  }, [route.params]);
 
   const dispatch = useDispatch();
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
