@@ -92,19 +92,28 @@ export const UserReducer = (state = initialState, action) => {
         userExists: action.payload,
       };
 
-    case LOGIN_USER_SUCCESS:
-    case REGISTER_USER_SUCCESS:
-    case VERIFY_EMAIL_OTP_SUCCESS:
-      AsyncStorage.setItem('user', JSON.stringify(action.payload));
-      return {
-        ...state,
-        loading: false,
-        isAuthenticated: true,
-        user: action.payload,
-        otpVerfiedEmail: action.type || VERIFY_EMAIL_OTP_SUCCESS,
-        otpVerfiedMobile: action.type || VERIFY_MOBILE_OTP_SUCCESS,
-      };
-
+      case REGISTER_USER_SUCCESS:
+        AsyncStorage.setItem('tempUser', JSON.stringify(action.payload)); // Store temporarily for OTP verification
+        return {
+          ...state,
+          loading: false,
+          isAuthenticated: false, 
+          user: action.payload,
+        };
+      
+      case VERIFY_EMAIL_OTP_SUCCESS:
+      case VERIFY_MOBILE_OTP_SUCCESS:
+      case LOGIN_USER_SUCCESS:
+        AsyncStorage.setItem('user', JSON.stringify(action.payload)); // ✅ Now store the real authenticated user
+        return {
+          ...state,
+          loading: false,
+          isAuthenticated: true,
+          user: action.payload,
+          otpVerfiedEmail: action.type === VERIFY_EMAIL_OTP_SUCCESS,
+          otpVerfiedMobile: action.type === VERIFY_MOBILE_OTP_SUCCESS,
+        };
+      
     case VERIFY_EMAIL_OTP_FORGOT_SUCCESS:
       return {
         ...state,

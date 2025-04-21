@@ -15,7 +15,7 @@ import {TextInput} from 'react-native-gesture-handler';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faEye, faEyeSlash} from '@fortawesome/free-regular-svg-icons';
 import {useDispatch, useSelector} from 'react-redux';
-import {UserRegister} from '../../redux/actions/UserAction';
+import {sendMobileOtp, UserRegister} from '../../redux/actions/UserAction';
 
 const Signup = ({navigation, route}) => {
   const dispatch = useDispatch();
@@ -25,7 +25,8 @@ const Signup = ({navigation, route}) => {
   const [password, setPassword] = useState('');
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
-  const {loading, isAuthenticated} = useSelector(state => state.user);
+
+  const {loading, user, isAuthenticated} = useSelector(state => state.user);
 
   useEffect(() => {
     if (
@@ -41,17 +42,25 @@ const Signup = ({navigation, route}) => {
 
   const handleRegister = async () => {
     try {
-      await dispatch(UserRegister(name, mobile, email, password));
+      const res = await dispatch(UserRegister(name, mobile, email, password));
+  
+      if (res?.user) {
+        // ✅ First send the OTP
+        const otpResponse = await dispatch(sendMobileOtp(mobile));
+  
+        if (otpResponse?.success) {
+          // ✅ Navigate to OTP screen only if OTP was successfully sent
+          navigation.replace('OtpScreen', {mobileNumber: mobile});
+        } else {
+          console.warn('OTP not sent:', otpResponse.message);
+          // Optionally show a toast or alert to the user here
+        }
+      }
     } catch (error) {
       console.error('Registration failed:', error);
+      // You can show a toast/snackbar here if you want
     }
   };
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigation.replace('OtpScreen');
-    }
-  }, [isAuthenticated, navigation]);
 
   return (
     <SafeAreaView style={[LoginStyle.loginBg, globalStyle.flex]}>
@@ -79,6 +88,7 @@ const Signup = ({navigation, route}) => {
             <TextInput
               placeholder="Mobile No"
               style={LoginStyle.emailpass}
+              keyboardType="numeric"
               value={mobile}
               onChangeText={text => setMobile(text)}
             />
@@ -110,6 +120,7 @@ const Signup = ({navigation, route}) => {
                 LoginStyle.loginBtn,
                 {backgroundColor: isButtonDisabled ? '#b4b3b3' : '#010101'},
               ]}
+              disabled={isButtonDisabled}
               onPress={handleRegister}>
               {loading ? (
                 <View
@@ -122,9 +133,7 @@ const Signup = ({navigation, route}) => {
                   <Text style={LoginStyle.loginBtnText}>Sign up</Text>
                 </View>
               ) : (
-                <View>
-                  <Text style={LoginStyle.loginBtnText}>Sign up</Text>
-                </View>
+                <Text style={LoginStyle.loginBtnText}>Sign up</Text>
               )}
             </Pressable>
           </View>
