@@ -84,7 +84,8 @@ export const UserLogin = (email, password) => async dispatch => {
       headers: {'Content-Type': 'application/json'},
     };
 
-    const {data} = await axios.post(`${serverApi}/login`,
+    const {data} = await axios.post(
+      `${serverApi}/login`,
       {email, password},
       config,
     );
@@ -93,13 +94,16 @@ export const UserLogin = (email, password) => async dispatch => {
       await AsyncStorage.setItem('user', JSON.stringify(data.user));
 
       if (data?.shippingInfo) {
-        await AsyncStorage.setItem('shippingInfo', JSON.stringify(data.shippingInfo));
+        await AsyncStorage.setItem(
+          'shippingInfo',
+          JSON.stringify(data.shippingInfo),
+        );
       }
 
       dispatch({type: LOGIN_USER_SUCCESS, payload: data.user});
 
       // 👇 RETURN something for the caller
-      return { success: true, user: data.user };
+      return {success: true, user: data.user};
     } else {
       throw new Error('Invalid API response');
     }
@@ -112,15 +116,51 @@ export const UserLogin = (email, password) => async dispatch => {
     });
 
     // 👇 RETURN the error manually for the caller
-    return { success: false, message: error.response?.data?.message || 'Something went wrong' };
-  }
+    return {
+      success: false,
+      message: error.response?.data?.message || 'Something went wrong',
+    };
+  }
 };
 
-export const UserRegister =
-  (name, mobile, email, password) => async dispatch => {
-    try {
-      dispatch({type: REGISTER_USER_REQUEST});
+// export const UserRegister =
+//   (name, mobile, email, password) => async dispatch => {
+//     try {
+//       dispatch({type: REGISTER_USER_REQUEST});
 
+//       const config = {
+//         headers: {
+//           'Content-Type': 'application/json',
+//         },
+//       };
+
+//       const {data} = await axios.post(
+//         `${serverApi}/register`,
+//         {name, mobile, password, email},
+//         config,
+//       );
+
+//       dispatch({type: REGISTER_USER_SUCCESS, payload: data.user});
+
+//       return data;
+//     } catch (error) {
+//       console.error(
+//         'Registration Error:',
+//         error.response?.data || error.message,
+//       );
+//       dispatch({
+//         type: REGISTER_USER_FAIL,
+//         payload: error.response?.data?.message || 'Something went wrong',
+//       });
+//     }
+//   };
+
+export const userRegisterOtp =
+  ({name, email, mobile, password, otp}) =>
+  async dispatch => {
+    dispatch({type: REGISTER_USER_REQUEST});
+
+    try {
       const config = {
         headers: {
           'Content-Type': 'application/json',
@@ -128,19 +168,17 @@ export const UserRegister =
       };
 
       const {data} = await axios.post(
-        `${serverApi}/register`,
-        {name, mobile, password, email},
+        `${serverApi}/verify-otp-register`,
+        {name, mobile, email, password, otp},
         config,
       );
 
-      dispatch({type: REGISTER_USER_SUCCESS, payload: data.user});
+
+      dispatch({type:REGISTER_USER_SUCCESS,payload:data.user});
 
       return data;
     } catch (error) {
-      console.error(
-        'Registration Error:',
-        error.response?.data || error.message,
-      );
+      console.error('Registration Error:', error.response?.data || error.message);
       dispatch({
         type: REGISTER_USER_FAIL,
         payload: error.response?.data?.message || 'Something went wrong',
@@ -231,13 +269,10 @@ export const resetPassword = (email, password) => async dispatch => {
       config,
     );
 
-   
-    console.log("this is the response from action",data);
-    
+    console.log('this is the response from action', data);
 
     dispatch({type: RESET_PASSWORD_SUCCESS, payload: data});
     return data;
-
   } catch (error) {
     dispatch({
       type: RESET_PASSWORD_FAIL,
