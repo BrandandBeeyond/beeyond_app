@@ -66,7 +66,7 @@ const ChangePassword = ({navigation}) => {
       console.log('✅ Response from change-password:', response?.data);
   
       if (response?.data?.message === 'Password changed successfully') {
-        navigation.navigate(Routes.MyAccount);
+        navigation.navigate(Routes.MyAccount,{showToast:true});
       } else {
         setError('Failed to change password. Try again.');
       }
