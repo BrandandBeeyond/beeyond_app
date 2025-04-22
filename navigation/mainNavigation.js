@@ -42,6 +42,7 @@ import OrderTracking from '../screens/Orders/OrderTracking';
 import BellNotification from '../screens/Notifications/BellNotification';
 import EmailOtpVerification from '../screens/Otpscreen/EmailOtpVerfication';
 import ChangePassword from '../screens/Login/ChangePassword';
+import OtpScreenNewuser from '../screens/Otpscreen/OtpScreenNewuser';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -315,6 +316,19 @@ export const MainNavigation = () => {
       <Stack.Screen
         name={Routes.OtpScreen}
         component={Otpscreen}
+        options={{
+          headerTitle: () => null,
+          headerTitleStyle: {fontSize: scaleFontSize(17)},
+          headerStyle: {
+            backgroundColor: '#f9b000',
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+        }}
+      />
+      <Stack.Screen
+        name={Routes.OtpScreenNewuser}
+        component={OtpScreenNewuser}
         options={{
           headerTitle: () => null,
           headerTitleStyle: {fontSize: scaleFontSize(17)},

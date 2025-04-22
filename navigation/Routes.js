@@ -1,4 +1,5 @@
 
+
 export const Routes = {
   Home: 'Home',
   Profile: 'Profile',
@@ -14,6 +15,7 @@ export const Routes = {
   EmailOtpScreen: 'EmailOtpScreen',
   EmailOtpVerification: 'EmailOtpVerification',
   OtpScreen: 'OtpScreen',
+  OtpScreenNewuser:'OtpScreenNewuser',
   ProductDetail: 'ProductDetail',
   Checkoutform: 'Checkoutform',
   Signup: 'Signup',

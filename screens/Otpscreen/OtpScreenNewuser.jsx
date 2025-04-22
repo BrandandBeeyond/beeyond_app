@@ -14,10 +14,14 @@ import {OtpInput} from 'react-native-otp-entry';
 import {OtpStyle} from './Style';
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch} from 'react-redux';
-import {userRegisterOtp, VerifyMobileOtp} from '../../redux/actions/UserAction';
+import {
+  userRegisterOtp,
+  VerifyMobileOtp,
+  verifyOtpAndRegisterUser,
+} from '../../redux/actions/UserAction';
 import {Routes} from '../../navigation/Routes';
 
-const Otpscreen = ({route}) => {
+const OtpScreenNewuser = ({route}) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const {mobileNumber} = route.params || '';
@@ -93,44 +97,34 @@ const Otpscreen = ({route}) => {
 
     setLoadingVerify(true);
 
-    const result = await dispatch(VerifyMobileOtp(mobileNumber, otp));
+    const {name, email, password} = route.params || {};
 
-    console.log('OTP verification result:', result);
+    console.log('this are results', name, email, password);
 
+    const result = await dispatch(
+      verifyOtpAndRegisterUser({
+        name,
+        email,
+        password,
+        mobile: mobileNumber,
+        otp,
+      }),
+    );
 
+    console.log('OTP + Registration Result:', result);
     setLoadingVerify(false);
 
     if (result?.success) {
       setIsOtpInvalid(false);
-
-      if (result?.isRegistered) {
-        navigation.navigate('Profile', {isMobileVerified: true});
-      } else {
-        const {name, email, password} = route.params || {};
-
-        if (name && email && password) {
-          const registrationResponse = await dispatch(
-            userRegisterOtp(name, mobileNumber, email, password),
-          );
-
-          if (registrationResponse?.user) {
-            navigation.navigate('Profile', {isMobileVerified: true});
-          } else {
-            Alert.alert(
-              'Registration Failed',
-              registrationResponse?.message || 'Please try again.',
-            );
-          }
-        } else {
-          navigation.navigate(Routes.SignupEmail, {
-            isMobileVerified: true,
-            mobileNumber,
-          });
-        }
-      }
-    }else{
+      navigation.navigate('Profile', {isMobileVerified: true});
+    } else {
       setIsOtpInvalid(true);
+      Alert.alert('Verification Failed', result?.message || 'Try again');
     }
+
+    setLoadingVerify(false);
+
+    
   };
   return (
     <SafeAreaView style={[LoginStyle.loginBg, globalStyle.flex]}>
@@ -220,4 +214,4 @@ const Otpscreen = ({route}) => {
   );
 };
 
-export default Otpscreen;
+export default OtpScreenNewuser;

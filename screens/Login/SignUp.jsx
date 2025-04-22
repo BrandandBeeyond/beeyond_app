@@ -46,33 +46,20 @@ const Signup = ({navigation, route}) => {
 
   const handleRegister = async () => {
     try {
-      const registrationResponse = await dispatch(
-        userRegisterOtp(name, mobile, email, password),
-      );
+      const otpResponse = await dispatch(sendMobileOtp(mobile));
 
-      console.log("registration res", registrationResponse);
-
-      if (registrationResponse?.user) {
-     
-        const otpResponse = await dispatch(sendMobileOtp(mobile));
-
-     
-       
-        
-        if (otpResponse?.success) {
-          navigation.replace('OtpScreen', {mobileNumber: mobile});
-        } else {
-        
-          console.warn(
-            'OTP not sent:',
-            otpResponse?.message || 'Unknown error',
-          );
-         
-        }
+      if (otpResponse?.success) {
+        navigation.replace('OtpScreenNewuser', {
+          name,
+          mobileNumber:mobile,
+          email,
+          password,
+        });
+      } else {
+        console.warn('OTP not sent:', otpResponse?.message || 'Unknown error');
       }
     } catch (error) {
       console.error('Error sending mobile OTP:', error);
-
       console.log('Error Response:', error.response?.data || error.message);
     }
   };

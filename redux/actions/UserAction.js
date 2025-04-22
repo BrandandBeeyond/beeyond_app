@@ -155,41 +155,56 @@ export const UserLogin = (email, password) => async dispatch => {
 //     }
 //   };
 
-export const userRegisterOtp =
-  ({ name, email, mobile, password, otp }) =>
-  async dispatch => {
-    dispatch({ type: REGISTER_USER_REQUEST });
+export const verifyOtpAndRegisterUser = ({ name, email, password, mobile, otp }) => async dispatch => {
+  try {
+    dispatch({ type: VERIFY_MOBILE_OTP_REQUEST });
 
-    try {
-      const config = {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      };
+    console.log('Registering new user with:', { name, email, mobile, otp });
 
-      const { data } = await axios.post(
-        `${serverApi}/verify-otp-register`,
-        { name, mobile, email, password, otp },
-        config
-      );
+    const { data } = await axios.post(`${serverApi}/verify-otp-register`, {
+      name,
+      email,
+      password,
+      mobile,
+      otp,
+    });
 
+    if (data.success) {
       dispatch({
-        type: REGISTER_USER_SUCCESS,
+        type: VERIFY_MOBILE_OTP_SUCCESS,
         payload: data.user,
       });
 
-      return data;
-    } catch (error) {
-      console.error(
-        'Registration Error:',
-        error.response?.data || error.message
-      );
+      console.log('Registration + OTP success:', data.user);
+      AsyncStorage.setItem('authToken', data.token);
+
+      return {
+        success: true,
+        user: data.user,
+        token: data.token,
+        isRegistered: true,
+      };
+    } else {
       dispatch({
-        type: REGISTER_USER_FAIL,
-        payload: error.response?.data?.message || 'Something went wrong',
+        type: VERIFY_MOBILE_OTP_FAIL,
+        payload: data.message || 'OTP verification failed',
       });
+
+      return { success: false, message: data.message };
     }
-  };
+  } catch (error) {
+    console.error('Error in verifyOtpAndRegisterUser:', error);
+
+    const errorMessage = error.response?.data?.message || 'Something went wrong';
+
+    dispatch({
+      type: VERIFY_MOBILE_OTP_FAIL,
+      payload: errorMessage,
+    });
+
+    return { success: false, message: errorMessage };
+  }
+};
 
 
 export const SendOTPEmail = email => async dispatch => {
