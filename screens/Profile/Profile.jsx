@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Image,
   Pressable,
@@ -28,9 +28,44 @@ import HeadPhoneIcon from 'react-native-vector-icons/FontAwesome6';
 import ShareIcon from 'react-native-vector-icons/Entypo';
 import InfoIcon from 'react-native-vector-icons/AntDesign';
 import PrivacyIcon from 'react-native-vector-icons/MaterialIcons';
+import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 
-const Profile = ({navigation}) => {
+const Profile = ({navigation,route}) => {
   const {user, isAuthenticated} = useSelector(state => state.user);
+
+
+
+  
+
+   useEffect(() => {
+        if (route.params?.showToast) {
+          Toast.show({
+            type: ALERT_TYPE.SUCCESS,
+            textBody: 'Otp verified Successfully...Signed in!',
+            autoClose: 3000,
+            title: '',
+            theme: 'dark',
+            containerStyle: {
+              height: 20,
+              paddingVertical: 5,
+              borderRadius: 8,
+              backgroundColor: '#1c1c1e',
+              justifyContent: 'center',
+              alignItems: 'center',
+              shadowColor: '#000',
+              shadowOpacity: 0.3,
+              shadowOffset: {width: 0, height: 2},
+              shadowRadius: 4,
+              elevation: 5,
+            },
+            textBodyStyle: {
+              color: '#ffffff',
+              fontSize: 14,
+              fontWeight: '500',
+            },
+          });
+        }
+      }, [route.params]);
 
   return (
     <SafeAreaView style={[globalStyle.bgTheme, globalStyle.flex]}>

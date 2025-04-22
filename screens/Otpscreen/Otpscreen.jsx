@@ -57,34 +57,6 @@ const Otpscreen = ({route}) => {
     )}`;
   };
 
-  // const handleVerifyOtp = async () => {
-  //   if (otp.length !== 6) {
-  //     Alert.alert('Please enter a valid OTP.');
-  //     return;
-  //   }
-
-  //   setLoadingVerify(true);
-
-  //   const result = await dispatch(VerifyMobileOtp(mobileNumber, otp));
-
-  //   setLoadingVerify(false);
-
-  //   if (result.success) {
-  //     if (result.isRegistered === true) {
-  //       console.log('user is registered or not', result.isRegistered);
-  //       setIsOtpInvalid(false);
-  //       navigation.navigate('Profile', {isMobileVerified: true});
-  //     } else {
-  //       navigation.navigate(Routes.SignupEmail, {
-  //         isMobileVerified: true,
-  //         mobileNumber,
-  //       });
-  //     }
-  //   } else {
-  //     setIsOtpInvalid(true);
-  //   }
-  // };
-
   const handleVerifyOtp = async () => {
     if (otp.length !== 6) {
       Alert.alert('Please enter a valid OTP.');
@@ -95,43 +67,25 @@ const Otpscreen = ({route}) => {
 
     const result = await dispatch(VerifyMobileOtp(mobileNumber, otp));
 
-    console.log('OTP verification result:', result);
-
-
     setLoadingVerify(false);
 
-    if (result?.success) {
-      setIsOtpInvalid(false);
-
-      if (result?.isRegistered) {
-        navigation.navigate('Profile', {isMobileVerified: true});
+    if (result.success) {
+      if (result.isRegistered === true) {
+        console.log('user is registered or not', result.isRegistered);
+        setIsOtpInvalid(false);
+        navigation.replace('Profile', {isMobileVerified: true,showToast:true});
       } else {
-        const {name, email, password} = route.params || {};
-
-        if (name && email && password) {
-          const registrationResponse = await dispatch(
-            userRegisterOtp(name, mobileNumber, email, password),
-          );
-
-          if (registrationResponse?.user) {
-            navigation.navigate('Profile', {isMobileVerified: true});
-          } else {
-            Alert.alert(
-              'Registration Failed',
-              registrationResponse?.message || 'Please try again.',
-            );
-          }
-        } else {
-          navigation.navigate(Routes.SignupEmail, {
-            isMobileVerified: true,
-            mobileNumber,
-          });
-        }
+        navigation.navigate(Routes.SignupEmail, {
+          isMobileVerified: true,
+          mobileNumber,
+        });
       }
-    }else{
+    } else {
       setIsOtpInvalid(true);
     }
   };
+
+  
   return (
     <SafeAreaView style={[LoginStyle.loginBg, globalStyle.flex]}>
       <AuthHeader

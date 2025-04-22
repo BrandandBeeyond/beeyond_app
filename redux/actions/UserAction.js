@@ -366,6 +366,8 @@ export const VerifyMobileOtp = (mobileNumber, otp) => async dispatch => {
       if (data.user) {
         console.log('User is already registered:', data.user);
         console.log('user after verification', data.user);
+
+        
         AsyncStorage.setItem('authToken', data.token);
         return {
           success: true,

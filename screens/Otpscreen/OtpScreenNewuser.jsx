@@ -15,6 +15,7 @@ import {OtpStyle} from './Style';
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch} from 'react-redux';
 import {
+  sendMobileOtp,
   userRegisterOtp,
   VerifyMobileOtp,
   verifyOtpAndRegisterUser,
@@ -47,9 +48,15 @@ const OtpScreenNewuser = ({route}) => {
     }
   }, [timer]);
 
-  const handleResendOtpTimer = () => {
+  const handleResendOtpTimer = async () => {
     setTimer(60);
     setIsTimerActive(true);
+
+    try {
+      await dispatch(sendMobileOtp(mobileNumber));
+    } catch (error) {
+      console.error('error sending otp to email');
+    }
   };
 
   const formattedTimer = time => {
@@ -116,15 +123,13 @@ const OtpScreenNewuser = ({route}) => {
 
     if (result?.success) {
       setIsOtpInvalid(false);
-      navigation.navigate('Profile', {isMobileVerified: true});
+      navigation.replace('Home', { isMobileVerified: true,showToast:true });
     } else {
       setIsOtpInvalid(true);
       Alert.alert('Verification Failed', result?.message || 'Try again');
     }
 
     setLoadingVerify(false);
-
-    
   };
   return (
     <SafeAreaView style={[LoginStyle.loginBg, globalStyle.flex]}>
