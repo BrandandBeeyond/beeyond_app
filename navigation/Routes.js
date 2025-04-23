@@ -1,5 +1,4 @@
 
-
 export const Routes = {
   Home: 'Home',
   Profile: 'Profile',
@@ -27,6 +26,7 @@ export const Routes = {
   OrderPlaced: 'OrderPlaced',
   OrderTracking: 'OrderTracking',
   BellNotification: 'BellNotification',
+  SelectAddress:'SelectAddress',
 
   // static pages
   Contact: 'Contact',

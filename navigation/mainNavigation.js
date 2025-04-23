@@ -43,6 +43,7 @@ import BellNotification from '../screens/Notifications/BellNotification';
 import EmailOtpVerification from '../screens/Otpscreen/EmailOtpVerfication';
 import ChangePassword from '../screens/Login/ChangePassword';
 import OtpScreenNewuser from '../screens/Otpscreen/OtpScreenNewuser';
+import SelectAddress from '../screens/Checkout/SelectAddress';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -366,8 +367,6 @@ export const MainNavigation = () => {
         }}
       />
 
-
-
       <Stack.Screen
         name={Routes.ForgotPassword}
         component={ForgotPassword}
@@ -450,7 +449,15 @@ export const MainNavigation = () => {
         })}
         component={Checkoutform} // ✅ No need for ProtectedRoute
       />
-
+      <Stack.Screen
+        name="SelectAddress"
+        options={({navigation}) => ({
+          headerLeft: () => <CustomBackButton navigation={navigation} />,
+          headerTitleStyle: {fontSize: scaleFontSize(17)},
+          headerTitle: 'Select Delivery Address',
+        })}
+        component={SelectAddress} // ✅ No need for ProtectedRoute
+      />
       <Stack.Screen
         name="BellNotification"
         component={BellNotification}

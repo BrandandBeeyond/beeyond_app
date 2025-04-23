@@ -26,6 +26,7 @@ import {CreateOrder} from '../../redux/actions/OrderAction';
 import {SendEmailNotification} from '../../redux/actions/OrderNotificationAction';
 import notifee from '@notifee/react-native';
 import {addNotification} from '../../redux/actions/BellNotiAction';
+import { Routes } from '../../navigation/Routes';
 
 const SavedAddress = () => {
   const dispatch = useDispatch();
@@ -236,7 +237,7 @@ const SavedAddress = () => {
                     </Text>
                   </View>
                   <View style={globalStyle.mt10}>
-                    <Pressable style={[checkOutStyle.addmoreAddress]}>
+                    <Pressable style={[checkOutStyle.addmoreAddress]} onPress={()=>navigation.navigate(Routes.SelectAddress)}>
                       <Text
                         style={[
                           checkOutStyle.addmoreAddressText,

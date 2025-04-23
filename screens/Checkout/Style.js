@@ -96,4 +96,23 @@ export const checkOutStyle = StyleSheet.create({
     fontWeight: '700',
     textTransform: 'capitalize',
   },
+  addmoreAddInner: {
+    background: 'transparent',
+    borderWidth:horizontalScale(1.5),
+    borderColor:'#4267B2',
+    height: verticalScale(32),
+    borderRadius: horizontalScale(7),
+    width:'100%',
+    display:'flex',
+    flexDirection:'row',
+    alignItems:'center',
+    justifyContent:'center',
+    gap:horizontalScale(10)
+  },
+  addmoreAddInnerText: {
+    color: '#4267B2',
+    fontSize: scaleFontSize(12),
+    fontWeight: '700',
+    textTransform: 'capitalize',
+  },
 });
