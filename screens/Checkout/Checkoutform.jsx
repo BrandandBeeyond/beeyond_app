@@ -13,7 +13,10 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import {checkOutStyle} from './Style';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {addShippingInfo, editShippingInfo} from '../../redux/actions/UserAction';
+import {
+  addShippingInfo,
+  editShippingInfo,
+} from '../../redux/actions/UserAction';
 import {globalStyle} from '../../assets/styles/globalStyle';
 
 const CheckoutForm = () => {
@@ -46,19 +49,31 @@ const CheckoutForm = () => {
 
   // Prefill on edit
   useEffect(() => {
-    if (addressToEdit) {
-      setForm(prevForm => ({
-        ...prevForm,
-        ...addressToEdit,
-      }));
-      setCityStateFetched(true); // If editing, assume data is complete
-    } else if (user) {
-      setForm(prevForm => ({
-        ...prevForm,
+    if (user) {
+      const baseForm = {
         fullName: user?.name || '',
         email: user?.email || '',
         mobile: user?.mobile || '',
-      }));
+        altMobile: '',
+        pincode: '',
+        city: '',
+        state: '',
+        flatNo: '',
+        area: '',
+        country: 'INDIA',
+        type: 'Home',
+        landmark: '',
+      };
+
+      if (addressToEdit) {
+        setForm({
+          ...baseForm,
+          ...addressToEdit,
+        });
+        setCityStateFetched(true);
+      } else {
+        setForm(baseForm);
+      }
     }
   }, [user, addressToEdit]);
 
@@ -97,7 +112,9 @@ const CheckoutForm = () => {
     setFetchingCityState(true);
     setCityStateFetched(false);
     try {
-      const response = await fetch(`https://api.postalpincode.in/pincode/${pincode}`);
+      const response = await fetch(
+        `https://api.postalpincode.in/pincode/${pincode}`,
+      );
       const data = await response.json();
 
       if (data[0].Status === 'Success') {
@@ -137,6 +154,7 @@ const CheckoutForm = () => {
       return;
     }
 
+    console.log('user name is', user.name);
     const payload = {
       flatNo: form.flatNo || '',
       area: form.area || '',
@@ -155,8 +173,8 @@ const CheckoutForm = () => {
     try {
       if (addressToEdit && addressToEdit._id) {
         // Simulate update logic (replace this with updateShippingInfo if available)
-        await dispatch(editShippingInfo(addressToEdit._id,payload));
-        
+        await dispatch(editShippingInfo(addressToEdit._id, payload));
+
         Alert.alert('Success', 'Address updated successfully.');
       } else {
         await dispatch(addShippingInfo(user._id, payload));
@@ -173,35 +191,60 @@ const CheckoutForm = () => {
 
   return (
     <SafeAreaView style={checkOutStyle.container}>
-      <Spinner visible={fetchingCityState}/>
-      <ScrollView contentContainerStyle={{paddingBottom: 20}} showsVerticalScrollIndicator={false}>
+      <Spinner visible={fetchingCityState} />
+      <ScrollView
+        contentContainerStyle={{paddingBottom: 20}}
+        showsVerticalScrollIndicator={false}>
         {[
-          {name: 'fullName', label: 'Full Name*'},
-          {name: 'email', label: 'Email ID*', keyboardType: 'email-address'},
-          {name: 'mobile', label: 'Mobile Number*', keyboardType: 'phone-pad'},
-          {name: 'altMobile', label: 'Alternate Mobile Number (Optional)', keyboardType: 'phone-pad', optional: true},
+          {name: 'fullName', label: 'Full Name*', disabled: true},
+          {
+            name: 'email',
+            label: 'Email ID*',
+            keyboardType: 'email-address',
+            disabled: true,
+          },
+          {
+            name: 'mobile',
+            label: 'Mobile Number*',
+            keyboardType: 'phone-pad',
+            disabled: true,
+          },
+          {
+            name: 'altMobile',
+            label: 'Alternate Mobile Number (Optional)',
+            keyboardType: 'phone-pad',
+            optional: true,
+          },
           {name: 'pincode', label: 'pincode*', keyboardType: 'number-pad'},
           {name: 'city', label: 'City*', editable: cityStateFetched},
           {name: 'state', label: 'State*', editable: cityStateFetched},
           {name: 'flatNo', label: 'Flat, House No., Building, Company*'},
           {name: 'area', label: 'Area, Colony, Street, Sector, Village*'},
           {name: 'landmark', label: 'Landmark (Optional)', optional: true},
-        ].map(field => (
-          <View key={field.name} style={checkOutStyle.inputContainer}>
-            <Text style={checkOutStyle.label}>{field.label}</Text>
-            <TextInput
-              style={checkOutStyle.input}
-              placeholder={field.label}
-              keyboardType={field.keyboardType || 'default'}
-              value={form[field.name]}
-              onChangeText={text => handleChange(field.name, text)}
-              editable={field.editable !== false}
-            />
-            {errors[field.name] && !field.optional && (
-              <Text style={checkOutStyle.errorText}>{errors[field.name]}</Text>
-            )}
-          </View>
-        ))}
+        ].map(field => {
+          const isDisabled = field.disabled || field.editable === false;
+          return (
+            <View key={field.name} style={checkOutStyle.inputContainer}>
+              <Text style={checkOutStyle.label}>{field.label}</Text>
+              <TextInput
+                style={[
+                  checkOutStyle.input,
+                  isDisabled && {backgroundColor: '#e0e0e0'}, // gray background
+                ]}
+                placeholder={field.label}
+                keyboardType={field.keyboardType || 'default'}
+                value={form[field.name]}
+                onChangeText={text => handleChange(field.name, text)}
+                editable={!isDisabled}
+              />
+              {errors[field.name] && !field.optional && (
+                <Text style={checkOutStyle.errorText}>
+                  {errors[field.name]}
+                </Text>
+              )}
+            </View>
+          );
+        })}
 
         <View style={checkOutStyle.inputContainer}>
           <Text style={checkOutStyle.label}>Country*</Text>
@@ -218,7 +261,12 @@ const CheckoutForm = () => {
           onPress={handleSaveAddress}
           disabled={loading}>
           {loading ? (
-            <View style={[globalStyle.drow, globalStyle.alignCenter, globalStyle.cg3]}>
+            <View
+              style={[
+                globalStyle.drow,
+                globalStyle.alignCenter,
+                globalStyle.cg3,
+              ]}>
               <ActivityIndicator color="#fff" />
               <Text style={checkOutStyle.saveButtonText}>SAVING...</Text>
             </View>

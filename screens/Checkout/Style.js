@@ -122,5 +122,6 @@ export const checkOutStyle = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    zIndex:10
   },
 });
