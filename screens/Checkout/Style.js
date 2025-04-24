@@ -63,7 +63,7 @@ export const checkOutStyle = StyleSheet.create({
     alignItems: 'center',
     marginTop: verticalScale(10),
   },
-  ChangePassword:{
+  ChangePassword: {
     backgroundColor: '#4267B2',
     height: verticalScale(35),
     borderRadius: horizontalScale(10),
@@ -85,10 +85,10 @@ export const checkOutStyle = StyleSheet.create({
     backgroundColor: '#4267B2',
     height: verticalScale(25),
     borderRadius: horizontalScale(3),
-    width:'100%',
-    display:'flex',
-    alignItems:'center',
-    justifyContent:'center'
+    width: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   addmoreAddressText: {
     color: '#ffffff',
@@ -98,21 +98,29 @@ export const checkOutStyle = StyleSheet.create({
   },
   addmoreAddInner: {
     background: 'transparent',
-    borderWidth:horizontalScale(1.5),
-    borderColor:'#4267B2',
+    borderWidth: horizontalScale(1.5),
+    borderColor: '#4267B2',
     height: verticalScale(32),
     borderRadius: horizontalScale(7),
-    width:'100%',
-    display:'flex',
-    flexDirection:'row',
-    alignItems:'center',
-    justifyContent:'center',
-    gap:horizontalScale(10)
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: horizontalScale(10),
   },
   addmoreAddInnerText: {
     color: '#4267B2',
     fontSize: scaleFontSize(12),
     fontWeight: '700',
     textTransform: 'capitalize',
+  },
+  editAddress: {
+    position:'absolute',
+    right:horizontalScale(10),
+    top:verticalScale(10),
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

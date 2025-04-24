@@ -28,6 +28,9 @@ import {
   SEND_MOBILE_OTP_FAIL,
   SEND_MOBILE_OTP_REQUEST,
   SEND_MOBILE_OTP_SUCCESS,
+  UPDATE_SHIPPING_INFO_FAIL,
+  UPDATE_SHIPPING_INFO_REQUEST,
+  UPDATE_SHIPPING_INFO_SUCCESS,
   VERIFY_EMAIL_OTP_FAIL,
   VERIFY_EMAIL_OTP_FORGOT_FAIL,
   VERIFY_EMAIL_OTP_FORGOT_REQUEST,
@@ -72,6 +75,7 @@ export const UserReducer = (state = initialState, action) => {
     case ADD_SHIPPING_INFO_REQUEST:
     case GET_SHIPPING_INFO_REQUEST:
     case VERIFY_EMAIL_OTP_FORGOT_REQUEST:
+    case UPDATE_SHIPPING_INFO_REQUEST:
       return {
         ...state,
         loading: true,
@@ -92,28 +96,28 @@ export const UserReducer = (state = initialState, action) => {
         userExists: action.payload,
       };
 
-      case REGISTER_USER_SUCCESS:
-        AsyncStorage.setItem('tempUser', JSON.stringify(action.payload)); // Store temporarily for OTP verification
-        return {
-          ...state,
-          loading: false,
-          isAuthenticated: false, 
-          user: action.payload,
-        };
-      
-      case VERIFY_EMAIL_OTP_SUCCESS:
-      case VERIFY_MOBILE_OTP_SUCCESS:
-      case LOGIN_USER_SUCCESS:
-        AsyncStorage.setItem('user', JSON.stringify(action.payload)); // ✅ Now store the real authenticated user
-        return {
-          ...state,
-          loading: false,
-          isAuthenticated: true,
-          user: action.payload,
-          otpVerfiedEmail: action.type === VERIFY_EMAIL_OTP_SUCCESS,
-          otpVerfiedMobile: action.type === VERIFY_MOBILE_OTP_SUCCESS,
-        };
-      
+    case REGISTER_USER_SUCCESS:
+      AsyncStorage.setItem('tempUser', JSON.stringify(action.payload)); // Store temporarily for OTP verification
+      return {
+        ...state,
+        loading: false,
+        isAuthenticated: false,
+        user: action.payload,
+      };
+
+    case VERIFY_EMAIL_OTP_SUCCESS:
+    case VERIFY_MOBILE_OTP_SUCCESS:
+    case LOGIN_USER_SUCCESS:
+      AsyncStorage.setItem('user', JSON.stringify(action.payload)); // ✅ Now store the real authenticated user
+      return {
+        ...state,
+        loading: false,
+        isAuthenticated: true,
+        user: action.payload,
+        otpVerfiedEmail: action.type === VERIFY_EMAIL_OTP_SUCCESS,
+        otpVerfiedMobile: action.type === VERIFY_MOBILE_OTP_SUCCESS,
+      };
+
     case VERIFY_EMAIL_OTP_FORGOT_SUCCESS:
       return {
         ...state,
@@ -155,6 +159,7 @@ export const UserReducer = (state = initialState, action) => {
     case ADD_SHIPPING_INFO_FAIL:
     case GET_SHIPPING_INFO_FAIL:
     case VERIFY_EMAIL_OTP_FORGOT_FAIL:
+    case UPDATE_SHIPPING_INFO_FAIL:
       return {
         ...state,
         loading: false,
@@ -200,6 +205,12 @@ export const UserReducer = (state = initialState, action) => {
         shippingInfo: [...state.shippingInfo, action.payload],
       };
 
+    case UPDATE_SHIPPING_INFO_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        shippingInfo: action.payload,
+      };
     case GET_SHIPPING_INFO_SUCCESS:
       return {
         ...state,

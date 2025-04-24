@@ -27,6 +27,9 @@ import {
   SEND_MOBILE_OTP_FAIL,
   SEND_MOBILE_OTP_REQUEST,
   SEND_MOBILE_OTP_SUCCESS,
+  UPDATE_SHIPPING_INFO_FAIL,
+  UPDATE_SHIPPING_INFO_REQUEST,
+  UPDATE_SHIPPING_INFO_SUCCESS,
   VERIFY_EMAIL_OTP_FAIL,
   VERIFY_EMAIL_OTP_FORGOT_FAIL,
   VERIFY_EMAIL_OTP_FORGOT_REQUEST,
@@ -155,57 +158,59 @@ export const UserLogin = (email, password) => async dispatch => {
 //     }
 //   };
 
-export const verifyOtpAndRegisterUser = ({ name, email, password, mobile, otp }) => async dispatch => {
-  try {
-    dispatch({ type: VERIFY_MOBILE_OTP_REQUEST });
+export const verifyOtpAndRegisterUser =
+  ({name, email, password, mobile, otp}) =>
+  async dispatch => {
+    try {
+      dispatch({type: VERIFY_MOBILE_OTP_REQUEST});
 
-    console.log('Registering new user with:', { name, email, mobile, otp });
+      console.log('Registering new user with:', {name, email, mobile, otp});
 
-    const { data } = await axios.post(`${serverApi}/verify-otp-register`, {
-      name,
-      email,
-      password,
-      mobile,
-      otp,
-    });
-
-    if (data.success) {
-      dispatch({
-        type: VERIFY_MOBILE_OTP_SUCCESS,
-        payload: data.user,
+      const {data} = await axios.post(`${serverApi}/verify-otp-register`, {
+        name,
+        email,
+        password,
+        mobile,
+        otp,
       });
 
-      console.log('Registration + OTP success:', data.user);
-      AsyncStorage.setItem('authToken', data.token);
+      if (data.success) {
+        dispatch({
+          type: VERIFY_MOBILE_OTP_SUCCESS,
+          payload: data.user,
+        });
 
-      return {
-        success: true,
-        user: data.user,
-        token: data.token,
-        isRegistered: true,
-      };
-    } else {
+        console.log('Registration + OTP success:', data.user);
+        AsyncStorage.setItem('authToken', data.token);
+
+        return {
+          success: true,
+          user: data.user,
+          token: data.token,
+          isRegistered: true,
+        };
+      } else {
+        dispatch({
+          type: VERIFY_MOBILE_OTP_FAIL,
+          payload: data.message || 'OTP verification failed',
+        });
+
+        return {success: false, message: data.message};
+      }
+    } catch (error) {
+      console.error('Error in verifyOtpAndRegisterUser:', error);
+
+      const errorMessage =
+        error.response?.data?.message || 'Something went wrong';
+
       dispatch({
         type: VERIFY_MOBILE_OTP_FAIL,
-        payload: data.message || 'OTP verification failed',
+        payload: errorMessage,
       });
 
-      return { success: false, message: data.message };
+      return {success: false, message: errorMessage};
     }
-  } catch (error) {
-    console.error('Error in verifyOtpAndRegisterUser:', error);
-
-    const errorMessage = error.response?.data?.message || 'Something went wrong';
-
-    dispatch({
-      type: VERIFY_MOBILE_OTP_FAIL,
-      payload: errorMessage,
-    });
-
-    return { success: false, message: errorMessage };
-  }
-};
-
+  };
 
 export const SendOTPEmail = email => async dispatch => {
   try {
@@ -367,7 +372,6 @@ export const VerifyMobileOtp = (mobileNumber, otp) => async dispatch => {
         console.log('User is already registered:', data.user);
         console.log('user after verification', data.user);
 
-        
         AsyncStorage.setItem('authToken', data.token);
         return {
           success: true,
@@ -467,6 +471,45 @@ export const getShippingInfo = userId => async dispatch => {
     dispatch({type: GET_SHIPPING_INFO_SUCCESS, payload: {addresses: []}}); // Reset on error
   }
 };
+
+export const editShippingInfo = (userId, address) => async dispatch => {
+  try {
+    dispatch({type: UPDATE_SHIPPING_INFO_REQUEST});
+
+    const updatedFields = {
+      flatNo: address.flatNo,
+      area: address.area,
+      landmark: address.landmark,
+      city: address.city,
+      state: address.state,
+      mobile: address.mobile,
+      pincode: address.pincode,
+      country: address.country,
+      type: address.type,
+      isDefault: address.isDefault,
+    };
+
+    const {data} = await axios.put(`${serverApi}/shippingInfo/update`, {
+      userId,
+      addressId: address._id,
+      updatedFields,
+    });
+
+    dispatch({
+      type: UPDATE_SHIPPING_INFO_SUCCESS,
+      payload: data.shippingInfo,
+    });
+  } catch (error) {
+    dispatch({
+      type: UPDATE_SHIPPING_INFO_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
 
 export const logoutUser = () => async dispatch => {
   await AsyncStorage.removeItem('user');

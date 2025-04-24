@@ -12,19 +12,20 @@ import {
 import Spinner from 'react-native-loading-spinner-overlay';
 import {checkOutStyle} from './Style';
 import {useDispatch, useSelector} from 'react-redux';
-import {useNavigation} from '@react-navigation/native';
-import {addShippingInfo} from '../../redux/actions/UserAction';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {addShippingInfo, editShippingInfo} from '../../redux/actions/UserAction';
 import {globalStyle} from '../../assets/styles/globalStyle';
 
 const CheckoutForm = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
+  const route = useRoute();
 
   const {user} = useSelector(state => state.user);
+  const addressToEdit = route.params?.addressToEdit;
 
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-
   const [fetchingCityState, setFetchingCityState] = useState(false);
   const [cityStateFetched, setCityStateFetched] = useState(false);
 
@@ -43,8 +44,15 @@ const CheckoutForm = () => {
     landmark: '',
   });
 
+  // Prefill on edit
   useEffect(() => {
-    if (user) {
+    if (addressToEdit) {
+      setForm(prevForm => ({
+        ...prevForm,
+        ...addressToEdit,
+      }));
+      setCityStateFetched(true); // If editing, assume data is complete
+    } else if (user) {
       setForm(prevForm => ({
         ...prevForm,
         fullName: user?.name || '',
@@ -52,7 +60,7 @@ const CheckoutForm = () => {
         mobile: user?.mobile || '',
       }));
     }
-  }, [user]);
+  }, [user, addressToEdit]);
 
   const handleChange = (name, value) => {
     setForm(prevForm => ({
@@ -89,9 +97,7 @@ const CheckoutForm = () => {
     setFetchingCityState(true);
     setCityStateFetched(false);
     try {
-      const response = await fetch(
-        `https://api.postalpincode.in/pincode/${pincode}`,
-      );
+      const response = await fetch(`https://api.postalpincode.in/pincode/${pincode}`);
       const data = await response.json();
 
       if (data[0].Status === 'Success') {
@@ -106,7 +112,6 @@ const CheckoutForm = () => {
       }
     } catch (error) {
       Alert.alert('Error', 'Failed to fetch city and state. Try again.');
-      setCityStateFetched(false);
     } finally {
       setFetchingCityState(false);
     }
@@ -128,12 +133,10 @@ const CheckoutForm = () => {
     }
 
     if (!user || !user._id) {
-      console.log('User object:', user); // ✅ Check the user object
       Alert.alert('Error', 'User not authenticated.');
       return;
     }
 
-    // ✅ Fallback values in case any field is null
     const payload = {
       flatNo: form.flatNo || '',
       area: form.area || '',
@@ -147,12 +150,19 @@ const CheckoutForm = () => {
       isDefault: true,
     };
 
-    console.log('Dispatching Payload:', payload); // ✅ Verify before dispatching
-
     setLoading(true);
+
     try {
-      await dispatch(addShippingInfo(user._id, payload));
-      navigation.navigate('SavedAddress');
+      if (addressToEdit && addressToEdit._id) {
+        // Simulate update logic (replace this with updateShippingInfo if available)
+        await dispatch(editShippingInfo(addressToEdit._id,payload));
+        
+        Alert.alert('Success', 'Address updated successfully.');
+      } else {
+        await dispatch(addShippingInfo(user._id, payload));
+      }
+
+      navigation.navigate('SelectAddress');
     } catch (error) {
       console.error('Error:', error);
       Alert.alert('Error', 'Failed to save address.');
@@ -164,58 +174,18 @@ const CheckoutForm = () => {
   return (
     <SafeAreaView style={checkOutStyle.container}>
       <Spinner visible={fetchingCityState}/>
-      <ScrollView
-        contentContainerStyle={{paddingBottom: 20}}
-        showsVerticalScrollIndicator={false}>
+      <ScrollView contentContainerStyle={{paddingBottom: 20}} showsVerticalScrollIndicator={false}>
         {[
-          {
-            name: 'fullName',
-            label: 'Full Name*',
-          },
-          {
-            name: 'email',
-            label: 'Email ID*',
-            keyboardType: 'email-address',
-          },
-          {
-            name: 'mobile',
-            label: 'Mobile Number*',
-            keyboardType: 'phone-pad',
-          },
-          {
-            name: 'altMobile',
-            label: 'Alternate Mobile Number (Optional)',
-            keyboardType: 'phone-pad',
-            optional: true,
-          },
-          {
-            name: 'pincode',
-            label: 'pincode*',
-            keyboardType: 'number-pad',
-          },
-          {
-            name: 'city',
-            label: 'City*',
-            editable: cityStateFetched,
-          },
-          {
-            name: 'state',
-            label: 'State*',
-            editable: cityStateFetched,
-          },
-          {
-            name: 'flatNo',
-            label: 'Flat, House No., Building, Company*',
-          },
-          {
-            name: 'area',
-            label: 'Area, Colony, Street, Sector, Village*',
-          },
-          {
-            name: 'landmark',
-            label: 'Landmark (Optional)',
-            optional: true,
-          },
+          {name: 'fullName', label: 'Full Name*'},
+          {name: 'email', label: 'Email ID*', keyboardType: 'email-address'},
+          {name: 'mobile', label: 'Mobile Number*', keyboardType: 'phone-pad'},
+          {name: 'altMobile', label: 'Alternate Mobile Number (Optional)', keyboardType: 'phone-pad', optional: true},
+          {name: 'pincode', label: 'pincode*', keyboardType: 'number-pad'},
+          {name: 'city', label: 'City*', editable: cityStateFetched},
+          {name: 'state', label: 'State*', editable: cityStateFetched},
+          {name: 'flatNo', label: 'Flat, House No., Building, Company*'},
+          {name: 'area', label: 'Area, Colony, Street, Sector, Village*'},
+          {name: 'landmark', label: 'Landmark (Optional)', optional: true},
         ].map(field => (
           <View key={field.name} style={checkOutStyle.inputContainer}>
             <Text style={checkOutStyle.label}>{field.label}</Text>
@@ -244,21 +214,18 @@ const CheckoutForm = () => {
         </View>
 
         <TouchableOpacity
-          style={[checkOutStyle.saveButton, {opacity: '0.5'}]}
+          style={[checkOutStyle.saveButton, {opacity: loading ? 0.5 : 1}]}
           onPress={handleSaveAddress}
           disabled={loading}>
           {loading ? (
-            <View
-              style={[
-                globalStyle.drow,
-                globalStyle.alignCenter,
-                globalStyle.cg3,
-              ]}>
+            <View style={[globalStyle.drow, globalStyle.alignCenter, globalStyle.cg3]}>
               <ActivityIndicator color="#fff" />
-              <Text style={checkOutStyle.saveButtonText}>SAVE ADDRESS</Text>
+              <Text style={checkOutStyle.saveButtonText}>SAVING...</Text>
             </View>
           ) : (
-            <Text style={checkOutStyle.saveButtonText}>SAVE ADDRESS</Text>
+            <Text style={checkOutStyle.saveButtonText}>
+              {addressToEdit ? 'UPDATE ADDRESS' : 'SAVE ADDRESS'}
+            </Text>
           )}
         </TouchableOpacity>
       </ScrollView>
