@@ -26,12 +26,13 @@ import {CreateOrder} from '../../redux/actions/OrderAction';
 import {SendEmailNotification} from '../../redux/actions/OrderNotificationAction';
 import notifee from '@notifee/react-native';
 import {addNotification} from '../../redux/actions/BellNotiAction';
-import { Routes } from '../../navigation/Routes';
+import {Routes} from '../../navigation/Routes';
 
-const SavedAddress = () => {
+const SavedAddress = ({route}) => {
   const dispatch = useDispatch();
   const {loading, shippingInfo, user} = useSelector(state => state.user);
   const {cart} = useSelector(state => state.cart);
+  const { selectedAddress } = route.params;
 
   const navigation = useNavigation();
   const [loadingPayment, setLoadingPayment] = useState(false);
@@ -183,8 +184,8 @@ const SavedAddress = () => {
         .catch(error => {
           console.log('Payment failed', error);
           Dialog.show({
-            type: ALERT_TYPE.SUCCESS,
-            title: 'Success',
+            type: ALERT_TYPE.DANGER,
+            title: 'Oops..',
             textBody: 'Payment Failed',
             button: 'close',
           });
@@ -208,51 +209,52 @@ const SavedAddress = () => {
               : 'No saved addresses found'}
           </Text>
 
-          {addresses.length > 0 ? (
-            addresses.map((address, index) => (
-              <View
-                key={index}
-                style={[
-                  globalStyle.cardOuter,
-                  globalStyle.my15,
-                  globalStyle.rounded3,
-                ]}>
-                <View style={[globalStyle.card, globalStyle.rounded3]}>
-                  <Text style={[globalStyle.normalText, globalStyle.fw700]}>
-                    {user?.name || 'N/A'}
+          {selectedAddress ? (
+            <View
+              style={[
+                globalStyle.cardOuter,
+                globalStyle.my15,
+                globalStyle.rounded3,
+              ]}>
+              <View style={[globalStyle.card, globalStyle.rounded3]}>
+                <Text style={[globalStyle.normalText, globalStyle.fw700]}>
+                  {user?.name || 'N/A'}
+                </Text>
+                <View style={globalStyle.mt3}>
+                  <Text style={globalStyle.xsSmall}>
+                    {selectedAddress.flatNo}, {selectedAddress.area}
                   </Text>
-                  <View style={globalStyle.mt3}>
-                    <Text style={globalStyle.xsSmall}>
-                      {address.flatNo}, {address.area}
+                  <Text style={globalStyle.xsSmall}>
+                    {selectedAddress.landmark
+                      ? `${selectedAddress.landmark},`
+                      : ''}{' '}
+                    {selectedAddress.city}, {selectedAddress.state}
+                  </Text>
+                  <Text style={globalStyle.xsSmall}>
+                    {selectedAddress.country} - {selectedAddress.pincode}
+                  </Text>
+                  <Text style={globalStyle.xsSmall}>
+                    Mobile: {selectedAddress.mobile}
+                  </Text>
+                </View>
+                <View style={globalStyle.mt10}>
+                  <Pressable
+                    style={[checkOutStyle.addmoreAddress]}
+                    onPress={() => navigation.navigate(Routes.SelectAddress)}>
+                    <Text
+                      style={[
+                        checkOutStyle.addmoreAddressText,
+                        globalStyle.textCenter,
+                      ]}>
+                      Change or add address
                     </Text>
-                    <Text style={globalStyle.xsSmall}>
-                      {address.landmark ? `${address.landmark},` : ''}{' '}
-                      {address.city}, {address.state}
-                    </Text>
-                    <Text style={globalStyle.xsSmall}>
-                      {address.country} - {address.pincode}
-                    </Text>
-                    <Text style={globalStyle.xsSmall}>
-                      Mobile: {address.mobile}
-                    </Text>
-                  </View>
-                  <View style={globalStyle.mt10}>
-                    <Pressable style={[checkOutStyle.addmoreAddress]} onPress={()=>navigation.navigate(Routes.SelectAddress)}>
-                      <Text
-                        style={[
-                          checkOutStyle.addmoreAddressText,
-                          globalStyle.textCenter,
-                        ]}>
-                        Change or add address
-                      </Text>
-                    </Pressable>
-                  </View>
+                  </Pressable>
                 </View>
               </View>
-            ))
+            </View>
           ) : (
             <Text style={[globalStyle.normalText, globalStyle.mt10]}>
-              No saved addresses yet.
+              No address selected yet.
             </Text>
           )}
         </View>

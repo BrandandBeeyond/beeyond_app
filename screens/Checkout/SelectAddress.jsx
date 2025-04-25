@@ -58,7 +58,7 @@ const SelectAddress = () => {
             onPress={() => navigation.navigate(Routes.Checkoutform)}>
             <PlusIcon name="pluscircleo" color={'#4267B2'} size={20} />
             <Text style={checkOutStyle.addmoreAddInnerText}>
-              Add Delivery Address
+              Add New Delivery Address
             </Text>
           </Pressable>
 

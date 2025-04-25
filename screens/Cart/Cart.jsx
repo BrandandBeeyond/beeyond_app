@@ -98,7 +98,8 @@ const Cart = ({navigation}) => {
       }
       // ✅ Skip checkout form if at least 1 address exists
       else if (shippingInfo?.addresses?.length > 0) {
-        navigation.navigate(Routes.SavedAddress);
+        const selectedAddress = shippingInfo?.addresses[0];
+        navigation.navigate(Routes.SavedAddress,{selectedAddress});
       } else {
         navigation.navigate(Routes.Checkoutform);
       }

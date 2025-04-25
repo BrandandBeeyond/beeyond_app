@@ -472,24 +472,38 @@ export const getShippingInfo = userId => async dispatch => {
   }
 };
 
-export const editShippingInfo = (userId, address) => async dispatch => {
+export const editShippingInfo = (userId, address) => async (dispatch) => {
   try {
-    dispatch({type: UPDATE_SHIPPING_INFO_REQUEST});
+    dispatch({ type: UPDATE_SHIPPING_INFO_REQUEST });
+
+    // Prepare updated fields (skip undefined/null values optionally)
+    const {
+      flatNo,
+      area,
+      landmark,
+      city,
+      state,
+      mobile,
+      pincode,
+      country,
+      type,
+      isDefault,
+    } = address;
 
     const updatedFields = {
-      flatNo: address.flatNo,
-      area: address.area,
-      landmark: address.landmark,
-      city: address.city,
-      state: address.state,
-      mobile: address.mobile,
-      pincode: address.pincode,
-      country: address.country,
-      type: address.type,
-      isDefault: address.isDefault,
+      flatNo,
+      area,
+      landmark,
+      city,
+      state,
+      mobile,
+      pincode,
+      country,
+      type,
+      isDefault,
     };
 
-    const {data} = await axios.put(`${serverApi}/shippingInfo/update`, {
+    const { data } = await axios.put(`${serverApi}/shippingInfo/update`, {
       userId,
       addressId: address._id,
       updatedFields,
@@ -503,9 +517,7 @@ export const editShippingInfo = (userId, address) => async dispatch => {
     dispatch({
       type: UPDATE_SHIPPING_INFO_FAIL,
       payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
+        error?.response?.data?.message || error.message || "Something went wrong",
     });
   }
 };

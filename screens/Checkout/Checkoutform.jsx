@@ -173,7 +173,7 @@ const CheckoutForm = () => {
     try {
       if (addressToEdit && addressToEdit._id) {
         // Simulate update logic (replace this with updateShippingInfo if available)
-        await dispatch(editShippingInfo(addressToEdit._id, payload));
+        await dispatch(editShippingInfo(user._id,{...payload,_id:addressToEdit._id}));
 
         Alert.alert('Success', 'Address updated successfully.');
       } else {
