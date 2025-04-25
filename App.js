@@ -7,10 +7,21 @@ import {PersistGate} from 'redux-persist/integration/react';
 import {loadUser} from './redux/actions/UserAction';
 import notifee from '@notifee/react-native';
 import {AlertNotificationRoot} from 'react-native-alert-notification';
+import Bootsplash from 'react-native-bootsplash';
 
 const AppContent = () => {
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    const init = async () => {
+      // …do multiple sync or async tasks
+    };
+
+    init().finally(async () => {
+      await Bootsplash.hide({ fade: true });
+      console.log("BootSplash has been hidden successfully");
+    });
+  }, []);
   useEffect(() => {
     const requestNotificationPermission = async () => {
       const settings = await notifee.requestPermission();
