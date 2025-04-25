@@ -29,12 +29,21 @@ import ShareIcon from 'react-native-vector-icons/Entypo';
 import InfoIcon from 'react-native-vector-icons/AntDesign';
 import PrivacyIcon from 'react-native-vector-icons/MaterialIcons';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
+import Share from 'react-native-share';
 
 const Profile = ({navigation,route}) => {
   const {user, isAuthenticated} = useSelector(state => state.user);
 
 
-
+  const options={};
+  const shareApp=async()=>{
+      try {
+         const res = await Share.open(options);
+      } catch (error) {
+        console.log("error getting on sharing app",error);
+        
+      }
+  }
   
 
    useEffect(() => {
@@ -220,7 +229,7 @@ const Profile = ({navigation,route}) => {
               globalStyle.bgWhite,
               globalStyle.normalBorder,
             ]}>
-            <Pressable style={[ProfileStyle.faq, ProfileStyle.brbtm]}>
+            <Pressable style={[ProfileStyle.faq, ProfileStyle.brbtm]} onPress={()=>shareApp()}>
               <ShareIcon color={'#2B2A2A'} name="share" size={22} />
               <Text style={ProfileStyle.faqText}>Share app</Text>
             </Pressable>
