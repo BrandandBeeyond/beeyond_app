@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import {
   Image,
   Pressable,
@@ -28,53 +28,50 @@ import HeadPhoneIcon from 'react-native-vector-icons/FontAwesome6';
 import ShareIcon from 'react-native-vector-icons/Entypo';
 import InfoIcon from 'react-native-vector-icons/AntDesign';
 import PrivacyIcon from 'react-native-vector-icons/MaterialIcons';
-import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
+import {ALERT_TYPE, Toast} from 'react-native-alert-notification';
 import Share from 'react-native-share';
 
-const Profile = ({navigation,route}) => {
+const Profile = ({navigation, route}) => {
   const {user, isAuthenticated} = useSelector(state => state.user);
 
+  const options = {};
+  const shareApp = async () => {
+    try {
+      const res = await Share.open(options);
+    } catch (error) {
+      console.error('error getting on sharing app', error);
+    }
+  };
 
-  const options={};
-  const shareApp=async()=>{
-      try {
-         const res = await Share.open(options);
-      } catch (error) {
-        console.log("error getting on sharing app",error);
-        
-      }
-  }
-  
-
-   useEffect(() => {
-        if (route.params?.showToast) {
-          Toast.show({
-            type: ALERT_TYPE.SUCCESS,
-            textBody: 'Otp verified Successfully...Signed in!',
-            autoClose: 3000,
-            title: '',
-            theme: 'dark',
-            containerStyle: {
-              height: 20,
-              paddingVertical: 5,
-              borderRadius: 8,
-              backgroundColor: '#1c1c1e',
-              justifyContent: 'center',
-              alignItems: 'center',
-              shadowColor: '#000',
-              shadowOpacity: 0.3,
-              shadowOffset: {width: 0, height: 2},
-              shadowRadius: 4,
-              elevation: 5,
-            },
-            textBodyStyle: {
-              color: '#ffffff',
-              fontSize: 14,
-              fontWeight: '500',
-            },
-          });
-        }
-      }, [route.params]);
+  useEffect(() => {
+    if (route.params?.showToast) {
+      Toast.show({
+        type: ALERT_TYPE.SUCCESS,
+        textBody: 'Otp verified Successfully...Signed in!',
+        autoClose: 3000,
+        title: '',
+        theme: 'dark',
+        containerStyle: {
+          height: 20,
+          paddingVertical: 5,
+          borderRadius: 8,
+          backgroundColor: '#1c1c1e',
+          justifyContent: 'center',
+          alignItems: 'center',
+          shadowColor: '#000',
+          shadowOpacity: 0.3,
+          shadowOffset: {width: 0, height: 2},
+          shadowRadius: 4,
+          elevation: 5,
+        },
+        textBodyStyle: {
+          color: '#ffffff',
+          fontSize: 14,
+          fontWeight: '500',
+        },
+      });
+    }
+  }, [route.params]);
 
   return (
     <SafeAreaView style={[globalStyle.bgTheme, globalStyle.flex]}>
@@ -90,7 +87,9 @@ const Profile = ({navigation,route}) => {
           {isAuthenticated ? (
             <Pressable
               style={ProfileStyle.userAccount}
-              onPress={() => navigation.navigate(Routes.MyAccount,{isMobileVerified:true})}>
+              onPress={() =>
+                navigation.navigate(Routes.MyAccount, {isMobileVerified: true})
+              }>
               <View style={[globalStyle.drow, globalStyle.cg5, globalStyle.p5]}>
                 <View style={globalStyle.avatar}>
                   <View style={globalStyle.avatarInner}>
@@ -229,7 +228,9 @@ const Profile = ({navigation,route}) => {
               globalStyle.bgWhite,
               globalStyle.normalBorder,
             ]}>
-            <Pressable style={[ProfileStyle.faq, ProfileStyle.brbtm]} onPress={()=>shareApp()}>
+            <Pressable
+              style={[ProfileStyle.faq, ProfileStyle.brbtm]}
+              onPress={() => shareApp()}>
               <ShareIcon color={'#2B2A2A'} name="share" size={22} />
               <Text style={ProfileStyle.faqText}>Share app</Text>
             </Pressable>

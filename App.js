@@ -18,10 +18,15 @@ const AppContent = () => {
     };
 
     init().finally(async () => {
-      await Bootsplash.hide({ fade: true });
-      console.log("BootSplash has been hidden successfully");
+      setTimeout(() => {
+        Bootsplash.hide({ fade: true });
+        console.log("BootSplash has been hidden successfully");
+      }, 1500);
+    
     });
   }, []);
+
+  
   useEffect(() => {
     const requestNotificationPermission = async () => {
       const settings = await notifee.requestPermission();

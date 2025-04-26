@@ -1,11 +1,12 @@
 package com.beeyond
-import android.os.Bundle;
+
+import android.os.Bundle
 import com.zoontek.rnbootsplash.RNBootSplash
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnabled
 import com.facebook.react.defaults.DefaultReactActivityDelegate
-
+import android.widget.ImageView
 
 class MainActivity : ReactActivity() {
 
@@ -21,9 +22,24 @@ class MainActivity : ReactActivity() {
    */
   override fun createReactActivityDelegate(): ReactActivityDelegate =
       DefaultReactActivityDelegate(this, mainComponentName, fabricEnabled)
-  
-   override fun onCreate(savedInstanceState: Bundle?) {
+
+  override fun onCreate(savedInstanceState: Bundle?) {
     RNBootSplash.init(this, R.style.BootTheme)
     super.onCreate(savedInstanceState)
+
+    window.decorView.post {
+      val logo = findViewById<ImageView>(R.id.bootsplash_logo)
+      logo?.apply {
+        alpha = 0f
+        translationY = 30f
+
+        animate()
+          .alpha(1f)
+          .translationY(0f)
+          .setDuration(800)
+          .setStartDelay(300)
+          .start()
+      }
+    } // <--- you were missing this closing bracket
   }
 }
