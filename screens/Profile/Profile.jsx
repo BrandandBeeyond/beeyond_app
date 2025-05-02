@@ -209,7 +209,7 @@ const Profile = ({navigation, route}) => {
               globalStyle.bgWhite,
               globalStyle.normalBorder,
             ]}>
-            <Pressable style={[ProfileStyle.faq, ProfileStyle.brbtm]}>
+            <Pressable style={[ProfileStyle.faq, ProfileStyle.brbtm]} onPress={()=>navigation.navigate('FAQ')}>
               <QuestionIcon name="questioncircle" color={'#2B2A2A'} size={18} />
               <Text style={ProfileStyle.faqText}>FAQ's</Text>
             </Pressable>

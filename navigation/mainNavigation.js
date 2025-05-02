@@ -44,6 +44,7 @@ import EmailOtpVerification from '../screens/Otpscreen/EmailOtpVerfication';
 import ChangePassword from '../screens/Login/ChangePassword';
 import OtpScreenNewuser from '../screens/Otpscreen/OtpScreenNewuser';
 import SelectAddress from '../screens/Checkout/SelectAddress';
+import FAQ from '../screens/FAQ/FAQ';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -475,6 +476,15 @@ export const MainNavigation = () => {
           headerLeft: () => <CustomBackButton navigation={navigation} />,
           headerTitleStyle: {fontSize: scaleFontSize(17)},
           headerTitle: 'Contact us',
+        })}
+      />
+      <Stack.Screen
+        name="FAQ"
+        component={FAQ}
+        options={({navigation}) => ({
+          headerLeft: () => <CustomBackButton navigation={navigation} />,
+          headerTitleStyle: {fontSize: scaleFontSize(17)},
+          headerTitle: 'Get help',
         })}
       />
     </Stack.Navigator>

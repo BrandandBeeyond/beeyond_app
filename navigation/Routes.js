@@ -27,6 +27,7 @@ export const Routes = {
   OrderTracking: 'OrderTracking',
   BellNotification: 'BellNotification',
   SelectAddress:'SelectAddress',
+  FAQ:'FAQ',
 
   // static pages
   Contact: 'Contact',
