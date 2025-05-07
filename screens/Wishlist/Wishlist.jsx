@@ -53,7 +53,6 @@ const Wishlist = ({navigation}) => {
                       <Text style={globalStyle.xsSmall}>
                         {item.description}
                       </Text>
-                      <Text style={globalStyle.xsSmall}>{item.price}</Text>
                     </View>
                   </View>
                 </View>

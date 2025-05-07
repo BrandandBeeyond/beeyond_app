@@ -92,5 +92,11 @@ export const LoginStyle = StyleSheet.create({
     top: 42,
     right: 20,
   },
-  
+  signgoogle:{
+    borderWidth:1,
+    borderColor:'#000',
+    justifyContent:'center',
+    padding: horizontalScale(15),
+    borderRadius:horizontalScale(100)
+  }
 });

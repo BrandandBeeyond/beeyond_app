@@ -8,6 +8,7 @@ import {loadUser} from './redux/actions/UserAction';
 import notifee from '@notifee/react-native';
 import {AlertNotificationRoot} from 'react-native-alert-notification';
 import Bootsplash from 'react-native-bootsplash';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
 const AppContent = () => {
   const dispatch = useDispatch();
@@ -19,14 +20,12 @@ const AppContent = () => {
 
     init().finally(async () => {
       setTimeout(() => {
-        Bootsplash.hide({ fade: true });
-        console.log("BootSplash has been hidden successfully");
+        Bootsplash.hide({fade: true});
+        console.log('BootSplash has been hidden successfully');
       }, 1500);
-    
     });
   }, []);
 
-  
   useEffect(() => {
     const requestNotificationPermission = async () => {
       const settings = await notifee.requestPermission();
@@ -40,9 +39,17 @@ const AppContent = () => {
 
     requestNotificationPermission();
   }, []);
+
   useEffect(() => {
+    GoogleSignin.configure({
+      webClientId:
+        '947680701785-t9puk6ct4gh8kmfikukohj6ao7r9hi5i.apps.googleusercontent.com',
+        offlineAccess: true,
+    });
+
     dispatch(loadUser());
   }, [dispatch]);
+  
 
   return (
     <AlertNotificationRoot theme="dark">

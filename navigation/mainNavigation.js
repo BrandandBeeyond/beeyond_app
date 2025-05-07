@@ -45,6 +45,7 @@ import ChangePassword from '../screens/Login/ChangePassword';
 import OtpScreenNewuser from '../screens/Otpscreen/OtpScreenNewuser';
 import SelectAddress from '../screens/Checkout/SelectAddress';
 import FAQ from '../screens/FAQ/FAQ';
+import Privacypolicy from '../screens/Privacy/Privacypolicy';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -485,6 +486,15 @@ export const MainNavigation = () => {
           headerLeft: () => <CustomBackButton navigation={navigation} />,
           headerTitleStyle: {fontSize: scaleFontSize(17)},
           headerTitle: 'Get help',
+        })}
+      />
+      <Stack.Screen
+        name="Privacypolicy"
+        component={Privacypolicy}
+        options={({navigation}) => ({
+          headerLeft: () => <CustomBackButton navigation={navigation} />,
+          headerTitleStyle: {fontSize: scaleFontSize(17)},
+          headerTitle: 'Privacy policy',
         })}
       />
     </Stack.Navigator>

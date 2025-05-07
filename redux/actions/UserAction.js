@@ -9,6 +9,9 @@ import {
   GET_SHIPPING_INFO_FAIL,
   GET_SHIPPING_INFO_REQUEST,
   GET_SHIPPING_INFO_SUCCESS,
+  GOOGLE_LOGIN_FAIL,
+  GOOGLE_LOGIN_REQUEST,
+  GOOGLE_LOGIN_SUCCESS,
   LOAD_USER_FAIL,
   LOAD_USER_SUCCESS,
   LOGIN_USER_FAIL,
@@ -125,6 +128,38 @@ export const UserLogin = (email, password) => async dispatch => {
     };
   }
 };
+
+export const UserGoogleLogin =
+  (idToken, fcmToken = null) =>
+  async dispatch => {
+    try {
+      dispatch({type: GOOGLE_LOGIN_REQUEST});
+
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
+      const {data} = await axios.post(
+        `${serverApi}/auth/google`,
+        {idToken, fcmToken},
+        config,
+      );
+
+      dispatch({
+        type: GOOGLE_LOGIN_SUCCESS,
+        payload: data.user,
+      });
+    } catch (error) {
+      dispatch({
+        type: GOOGLE_LOGIN_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
 
 // export const UserRegister =
 //   (name, mobile, email, password) => async dispatch => {
@@ -472,9 +507,9 @@ export const getShippingInfo = userId => async dispatch => {
   }
 };
 
-export const editShippingInfo = (userId, address) => async (dispatch) => {
+export const editShippingInfo = (userId, address) => async dispatch => {
   try {
-    dispatch({ type: UPDATE_SHIPPING_INFO_REQUEST });
+    dispatch({type: UPDATE_SHIPPING_INFO_REQUEST});
 
     // Prepare updated fields (skip undefined/null values optionally)
     const {
@@ -503,7 +538,7 @@ export const editShippingInfo = (userId, address) => async (dispatch) => {
       isDefault,
     };
 
-    const { data } = await axios.put(`${serverApi}/shippingInfo/update`, {
+    const {data} = await axios.put(`${serverApi}/shippingInfo/update`, {
       userId,
       addressId: address._id,
       updatedFields,
@@ -517,11 +552,12 @@ export const editShippingInfo = (userId, address) => async (dispatch) => {
     dispatch({
       type: UPDATE_SHIPPING_INFO_FAIL,
       payload:
-        error?.response?.data?.message || error.message || "Something went wrong",
+        error?.response?.data?.message ||
+        error.message ||
+        'Something went wrong',
     });
   }
 };
-
 
 export const logoutUser = () => async dispatch => {
   await AsyncStorage.removeItem('user');

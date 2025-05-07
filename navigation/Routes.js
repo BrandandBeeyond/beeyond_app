@@ -1,4 +1,5 @@
 
+
 export const Routes = {
   Home: 'Home',
   Profile: 'Profile',
@@ -28,6 +29,7 @@ export const Routes = {
   BellNotification: 'BellNotification',
   SelectAddress:'SelectAddress',
   FAQ:'FAQ',
+  Privacypolicy:'Privacypolicy',
 
   // static pages
   Contact: 'Contact',

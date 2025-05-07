@@ -240,7 +240,7 @@ const Profile = ({navigation, route}) => {
               <Text style={ProfileStyle.faqText}>About us</Text>
             </Pressable>
 
-            <Pressable style={ProfileStyle.faq}>
+            <Pressable style={ProfileStyle.faq} onPress={()=>navigation.navigate(Routes.Privacypolicy)}>
               <PrivacyIcon color={'#2B2A2A'} name="privacy-tip" size={22} />
               <Text style={ProfileStyle.faqText}>privacy policy</Text>
             </Pressable>

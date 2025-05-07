@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {
   ActivityIndicator,
+  Image,
   Pressable,
   SafeAreaView,
   Text,
@@ -12,13 +13,15 @@ import AuthHeader from './AuthHeader';
 import {Routes} from '../../navigation/Routes';
 import {TextInput} from 'react-native-gesture-handler';
 import {useDispatch} from 'react-redux';
-import {checkUserExists} from '../../redux/actions/UserAction';
+import {checkUserExists, UserGoogleLogin} from '../../redux/actions/UserAction';
 import {
   AlertNotificationRoot,
   ALERT_TYPE,
   Dialog,
   Toast,
 } from 'react-native-alert-notification';
+import {GoogleSignin, GoogleSigninButton} from '@react-native-google-signin/google-signin';
+import GoogleLogo from '../../assets/images/icons/google.png';
 
 const EmailEntry = ({navigation, route}) => {
   const emailRef = useRef(null);
@@ -149,11 +152,35 @@ const EmailEntry = ({navigation, route}) => {
           <Text style={globalStyle.orText}>OR</Text>
           <View style={LoginStyle.line}></View>
         </View>
-        <View style={globalStyle.px10}>
+       
+        <View style={[globalStyle.mt10,globalStyle.px10]}>
           <Pressable
-            style={LoginStyle.mobilebtn}
-            onPress={() => navigation.navigate(Routes.Mobilelogin)}>
-            <Text style={LoginStyle.mobilebtnText}>Continue with mobile</Text>
+          onPress={async () => {
+            try {
+              await GoogleSignin.hasPlayServices();
+              const {idToken} = await GoogleSignin.signIn();
+              const fcmToken = null; 
+        
+              dispatch(UserGoogleLogin(idToken, fcmToken));
+        
+             
+              navigation.navigate(Routes.Home);
+            } catch (error) {
+              console.error('Google Sign-In Error:', error);
+              Toast.show({
+                type: ALERT_TYPE.DANGER,
+                textBody: 'Google sign-in failed. Please try again.',
+              });
+            }
+          }}
+            style={[
+              globalStyle.drow,
+              globalStyle.alignCenter,
+              globalStyle.cg5,
+              LoginStyle.signgoogle
+            ]}>
+            <Image source={GoogleLogo} style={{width: 25, height: 25}} />
+            <Text style={LoginStyle.mobilebtnText}>Sign in with Google</Text>
           </Pressable>
         </View>
       </View>

@@ -10,6 +10,9 @@ import {
   GET_SHIPPING_INFO_FAIL,
   GET_SHIPPING_INFO_REQUEST,
   GET_SHIPPING_INFO_SUCCESS,
+  GOOGLE_LOGIN_FAIL,
+  GOOGLE_LOGIN_REQUEST,
+  GOOGLE_LOGIN_SUCCESS,
   LOAD_USER_FAIL,
   LOAD_USER_SUCCESS,
   LOGIN_USER_FAIL,
@@ -76,6 +79,7 @@ export const UserReducer = (state = initialState, action) => {
     case GET_SHIPPING_INFO_REQUEST:
     case VERIFY_EMAIL_OTP_FORGOT_REQUEST:
     case UPDATE_SHIPPING_INFO_REQUEST:
+    case GOOGLE_LOGIN_REQUEST:
       return {
         ...state,
         loading: true,
@@ -117,6 +121,16 @@ export const UserReducer = (state = initialState, action) => {
         otpVerfiedEmail: action.type === VERIFY_EMAIL_OTP_SUCCESS,
         otpVerfiedMobile: action.type === VERIFY_MOBILE_OTP_SUCCESS,
       };
+
+    case GOOGLE_LOGIN_SUCCESS:
+      AsyncStorage.setItem('user', JSON.stringify(action.payload));
+      return {
+        ...state,
+        loading: false,
+        isAuthenticated: true,
+        user: action.payload,
+      };
+
 
     case VERIFY_EMAIL_OTP_FORGOT_SUCCESS:
       return {
@@ -160,6 +174,7 @@ export const UserReducer = (state = initialState, action) => {
     case GET_SHIPPING_INFO_FAIL:
     case VERIFY_EMAIL_OTP_FORGOT_FAIL:
     case UPDATE_SHIPPING_INFO_FAIL:
+    case GOOGLE_LOGIN_FAIL:
       return {
         ...state,
         loading: false,

@@ -10,11 +10,12 @@ import {LoginStyle} from './Style';
 import {globalStyle} from '../../assets/styles/globalStyle';
 import AuthHeader from './AuthHeader';
 import {Routes} from '../../navigation/Routes';
-import { UserLogin} from '../../redux/actions/UserAction';
+import {UserLogin} from '../../redux/actions/UserAction';
 import {TextInput} from 'react-native-gesture-handler';
 import {useDispatch, useSelector} from 'react-redux';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faEye, faEyeSlash} from '@fortawesome/free-regular-svg-icons';
+import {GoogleSigninButton} from '@react-native-google-signin/google-signin';
 
 const LoginEmail = ({navigation}) => {
   const emailRef = useRef(null);
@@ -141,6 +142,13 @@ const LoginEmail = ({navigation}) => {
             onPress={() => navigation.navigate(Routes.Mobilelogin)}>
             <Text style={LoginStyle.mobilebtnText}>Continue with mobile</Text>
           </Pressable>
+        </View>
+        <View style={globalStyle.px10}>
+          <GoogleSigninButton
+            style={{width: '100%', height: 48}}
+            size={GoogleSigninButton.Size.Wide}
+            color={GoogleSigninButton.Color.Dark}
+          />
         </View>
       </View>
     </SafeAreaView>
