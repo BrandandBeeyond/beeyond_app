@@ -133,6 +133,10 @@ export const UserGoogleLogin =
   (idToken, fcmToken = null) =>
   async dispatch => {
     try {
+      console.log("Logging in with Google:");
+      console.log("ID Token:", idToken);
+      console.log("FCM Token:", fcmToken);
+
       dispatch({type: GOOGLE_LOGIN_REQUEST});
 
       const config = {
@@ -145,7 +149,7 @@ export const UserGoogleLogin =
         {idToken, fcmToken},
         config,
       );
-
+ 
       dispatch({
         type: GOOGLE_LOGIN_SUCCESS,
         payload: data.user,

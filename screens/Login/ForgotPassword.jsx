@@ -109,7 +109,7 @@ const ForgotPassword = ({route, navigation}) => {
               )}
             </Pressable>
 
-            <Pressable onPress={() => navigation.navigate(Routes.Mobilelogin)}>
+            <Pressable onPress={() => navigation.navigate(Routes.EmailEntry)}>
               <Text
                 style={[
                   globalStyle.subtext,

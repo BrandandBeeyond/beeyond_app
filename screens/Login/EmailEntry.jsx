@@ -20,7 +20,10 @@ import {
   Dialog,
   Toast,
 } from 'react-native-alert-notification';
-import {GoogleSignin, GoogleSigninButton} from '@react-native-google-signin/google-signin';
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+} from '@react-native-google-signin/google-signin';
 import GoogleLogo from '../../assets/images/icons/google.png';
 
 const EmailEntry = ({navigation, route}) => {
@@ -152,32 +155,43 @@ const EmailEntry = ({navigation, route}) => {
           <Text style={globalStyle.orText}>OR</Text>
           <View style={LoginStyle.line}></View>
         </View>
-       
-        <View style={[globalStyle.mt10,globalStyle.px10]}>
+
+        <View style={[globalStyle.mt10, globalStyle.px10]}>
           <Pressable
-          onPress={async () => {
-            try {
-              await GoogleSignin.hasPlayServices();
-              const {idToken} = await GoogleSignin.signIn();
-              const fcmToken = null; 
-        
-              dispatch(UserGoogleLogin(idToken, fcmToken));
-        
-             
-              navigation.navigate(Routes.Home);
-            } catch (error) {
-              console.error('Google Sign-In Error:', error);
-              Toast.show({
-                type: ALERT_TYPE.DANGER,
-                textBody: 'Google sign-in failed. Please try again.',
-              });
-            }
-          }}
+            onPress={async () => {
+              try {
+                await GoogleSignin.hasPlayServices();
+                const {idToken} = await GoogleSignin.signIn();
+                const fcmToken = null;
+
+                console.log('Google Sign-In ID Token:', idToken);
+                console.log('FCM Token:', fcmToken);
+
+                if (!idToken) {
+                  Toast.show({
+                    type: ALERT_TYPE.DANGER,
+                    textBody: 'Google sign-in failed. No token received.',
+                  });
+                  return;
+                }
+
+                const res = await dispatch(UserGoogleLogin(idToken, fcmToken));
+                console.log('Google Login API Response:', res); // <-- Optional for debugging
+
+                navigation.navigate(Routes.Home);
+              } catch (error) {
+                console.error('Google Sign-In Error:', error);
+                Toast.show({
+                  type: ALERT_TYPE.DANGER,
+                  textBody: 'Google sign-in failed. Please try again.',
+                });
+              }
+            }}
             style={[
               globalStyle.drow,
               globalStyle.alignCenter,
               globalStyle.cg5,
-              LoginStyle.signgoogle
+              LoginStyle.signgoogle,
             ]}>
             <Image source={GoogleLogo} style={{width: 25, height: 25}} />
             <Text style={LoginStyle.mobilebtnText}>Sign in with Google</Text>

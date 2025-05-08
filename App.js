@@ -9,6 +9,7 @@ import notifee from '@notifee/react-native';
 import {AlertNotificationRoot} from 'react-native-alert-notification';
 import Bootsplash from 'react-native-bootsplash';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import { webClientId } from './config/serverApi';
 
 const AppContent = () => {
   const dispatch = useDispatch();
@@ -41,15 +42,23 @@ const AppContent = () => {
   }, []);
 
   useEffect(() => {
-    GoogleSignin.configure({
-      webClientId:
-        '947680701785-t9puk6ct4gh8kmfikukohj6ao7r9hi5i.apps.googleusercontent.com',
-        offlineAccess: true,
-    });
+
+    async function init(){
+       const has = await GoogleSignin.hasPlayServices();
+
+       if (has) {
+        GoogleSignin.configure({
+          webClientId:webClientId,
+          offlineAccess: true,
+        });
+      }
+
+    }
+    init();
+   
 
     dispatch(loadUser());
   }, [dispatch]);
-  
 
   return (
     <AlertNotificationRoot theme="dark">

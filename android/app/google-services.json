@@ -12,7 +12,12 @@
           "package_name": "com.beeyond"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "947680701785-t9puk6ct4gh8kmfikukohj6ao7r9hi5i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAfsTeWxtkr1EAQ_yG1FXGmZ4LTFoAF-U4"
@@ -20,7 +25,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "947680701785-t9puk6ct4gh8kmfikukohj6ao7r9hi5i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
