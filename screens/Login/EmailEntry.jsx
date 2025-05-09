@@ -63,6 +63,7 @@ const EmailEntry = ({navigation, route}) => {
   const dispatch = useDispatch();
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [isSigningIn, setIsSigningIn] = useState(false);
 
   useEffect(() => {
     if (emailRef.current) {
@@ -100,6 +101,33 @@ const EmailEntry = ({navigation, route}) => {
       console.error('Error checking user:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const onGoogleButtonPress = async () => {
+    if (isSigningIn) return; // Prevent multiple calls
+
+    setIsSigningIn(true);
+    try {
+      await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
+
+      const userInfo = await GoogleSignin.signIn();
+      console.log('Google Sign-In Success:', userInfo);
+
+      Toast.show({
+        type: ALERT_TYPE.SUCCESS,
+        textBody: `Welcome ${userInfo.user.name}`,
+      });
+
+      navigation.navigate(Routes.Home);
+    } catch (error) {
+      console.error('Google Sign-In Error:', error);
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        textBody: 'Google sign-in failed. Please try again.',
+      });
+    } finally {
+      setIsSigningIn(false);
     }
   };
 
@@ -158,35 +186,7 @@ const EmailEntry = ({navigation, route}) => {
 
         <View style={[globalStyle.mt10, globalStyle.px10]}>
           <Pressable
-            onPress={async () => {
-              try {
-                await GoogleSignin.hasPlayServices();
-                const {idToken} = await GoogleSignin.signIn();
-                const fcmToken = null;
-
-                console.log('Google Sign-In ID Token:', idToken);
-                console.log('FCM Token:', fcmToken);
-
-                if (!idToken) {
-                  Toast.show({
-                    type: ALERT_TYPE.DANGER,
-                    textBody: 'Google sign-in failed. No token received.',
-                  });
-                  return;
-                }
-
-                const res = await dispatch(UserGoogleLogin(idToken, fcmToken));
-                console.log('Google Login API Response:', res); // <-- Optional for debugging
-
-                navigation.navigate(Routes.Home);
-              } catch (error) {
-                console.error('Google Sign-In Error:', error);
-                Toast.show({
-                  type: ALERT_TYPE.DANGER,
-                  textBody: 'Google sign-in failed. Please try again.',
-                });
-              }
-            }}
+            onPress={onGoogleButtonPress}
             style={[
               globalStyle.drow,
               globalStyle.alignCenter,
