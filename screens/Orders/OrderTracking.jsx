@@ -12,6 +12,7 @@ import {
 import StepIndicator from 'react-native-step-indicator';
 import {globalStyle} from '../../assets/styles/globalStyle';
 import {CartStyle} from '../Cart/Style';
+import { useNavigation } from '@react-navigation/native';
 
 const labels = ['Processing', 'Shipped', 'Out for Delivery', 'Delivered'];
 
@@ -44,6 +45,7 @@ const OrderTracking = ({route}) => {
 
   const currentPosition = labels.indexOf(orderStatus);
   const isValidStatus = currentPosition !== -1;
+  const navigation =  useNavigation();
 
   useEffect(() => {
     if (!isValidStatus) return;
@@ -248,7 +250,7 @@ const OrderTracking = ({route}) => {
             </Text>
             <Pressable />
           </Pressable>
-          <Pressable style={[globalStyle.bgWhite, globalStyle.simplebtn]}>
+          <Pressable style={[globalStyle.bgWhite, globalStyle.simplebtn]} onPress={()=>navigation.navigate('FAQ')}>
             <Text style={[globalStyle.h6, globalStyle.fw700]}>Need Help?</Text>
             <Pressable />
           </Pressable>

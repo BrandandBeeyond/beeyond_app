@@ -34,6 +34,9 @@ import {
   UPDATE_SHIPPING_INFO_FAIL,
   UPDATE_SHIPPING_INFO_REQUEST,
   UPDATE_SHIPPING_INFO_SUCCESS,
+  UPDATE_USER_FAIL,
+  UPDATE_USER_REQUEST,
+  UPDATE_USER_SUCCESS,
   VERIFY_EMAIL_OTP_FAIL,
   VERIFY_EMAIL_OTP_FORGOT_FAIL,
   VERIFY_EMAIL_OTP_FORGOT_REQUEST,
@@ -130,7 +133,6 @@ export const UserReducer = (state = initialState, action) => {
         isAuthenticated: true,
         user: action.payload,
       };
-
 
     case VERIFY_EMAIL_OTP_FORGOT_SUCCESS:
       return {
@@ -251,4 +253,32 @@ export const UserReducer = (state = initialState, action) => {
   }
 };
 
-export const profileReducer = (state = updateUserInitialState, action) => {};
+export const profileReducer = (state = updateUserInitialState, action) => {
+  switch (action.type) {
+    case UPDATE_USER_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        isUpdated: false,
+      };
+
+    case UPDATE_USER_SUCCESS:
+      AsyncStorage.setItem('user', JSON.stringify(action.payload));
+      return {
+        ...state,
+        loading: false,
+        user: action.payload,
+      };
+
+    case UPDATE_USER_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+        isUpdated: false,
+      };
+
+    default:
+      return state;
+  }
+};

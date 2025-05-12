@@ -33,4 +33,5 @@ export const Routes = {
 
   // static pages
   Contact: 'Contact',
+  About: 'About',
 };

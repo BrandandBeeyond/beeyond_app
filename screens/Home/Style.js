@@ -3,7 +3,7 @@ import {horizontalScale, verticalScale} from '../../assets/styles/Scaling';
 
 export const HomeStyle = StyleSheet.create({
   imageBanner: {
-    height: 160,
+    height: 170,
     width: '100%',
     objectFit: 'cover',
     marginTop: verticalScale(20),

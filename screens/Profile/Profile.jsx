@@ -235,7 +235,7 @@ const Profile = ({navigation, route}) => {
               <Text style={ProfileStyle.faqText}>Share app</Text>
             </Pressable>
 
-            <Pressable style={[ProfileStyle.faq, ProfileStyle.brbtm]}>
+            <Pressable style={[ProfileStyle.faq, ProfileStyle.brbtm]} onPress={()=>navigation.navigate(Routes.About)}>
               <InfoIcon color={'#2B2A2A'} name="infocirlce" size={18} />
               <Text style={ProfileStyle.faqText}>About us</Text>
             </Pressable>

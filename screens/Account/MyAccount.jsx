@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
+  Alert,
   Image,
   Modal,
   Pressable,
@@ -15,17 +16,22 @@ import {useDispatch, useSelector} from 'react-redux';
 import {accountStyle} from './Style';
 import LockIcon from 'react-native-vector-icons/Feather';
 import LogoutIcon from 'react-native-vector-icons/AntDesign';
-import {logoutUser} from '../../redux/actions/UserAction';
+import {logoutUser, updateUserInfo} from '../../redux/actions/UserAction';
 import {CartStyle} from '../Cart/Style';
 import CloseIcon from 'react-native-vector-icons/AntDesign';
 import {LoginStyle} from '../Login/Style';
-import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
+import {ALERT_TYPE, Toast} from 'react-native-alert-notification';
+import axios from 'axios';
+import {serverApi} from '../../config/serverApi';
+import {s} from 'react-native-size-matters';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const MyAccount = ({navigation,route}) => {
+const MyAccount = ({navigation, route}) => {
   const {user} = useSelector(state => state.user) || {};
 
   const [isEditing, setIsEditing] = useState(false);
   const [email, setEmail] = useState(user?.email || '');
+  const [name, setName] = useState(user?.name || '');
   const [modalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingLogout, setLoadingLogout] = useState(false);
@@ -33,34 +39,59 @@ const MyAccount = ({navigation,route}) => {
   const dispatch = useDispatch();
 
    useEffect(() => {
-      if (route.params?.showToast) {
-        Toast.show({
-          type: ALERT_TYPE.SUCCESS,
-          textBody: 'Password changed successfully!',
-          autoClose: 3000,
-          title: '',
-          theme: 'dark',
-          containerStyle: {
-            height: 20,
-            paddingVertical: 5,
-            borderRadius: 8,
-            backgroundColor: '#1c1c1e',
-            justifyContent: 'center',
-            alignItems: 'center',
-            shadowColor: '#000',
-            shadowOpacity: 0.3,
-            shadowOffset: {width: 0, height: 2},
-            shadowRadius: 4,
-            elevation: 5,
-          },
-          textBodyStyle: {
-            color: '#ffffff',
-            fontSize: 14,
-            fontWeight: '500',
-          },
-        });
-      }
-    }, [route.params]);
+    if (user) {
+      setName(user.name);
+      setEmail(user.email);
+    
+    }
+  }, [user]);
+
+  const updateUser = async () => {
+    setLoading(true);
+    try {
+       const updatedData = { name, email };
+
+      await dispatch(updateUserInfo(user._id,updatedData));
+       const updatedUser = { ...user, ...updatedData };
+      await AsyncStorage.setItem('user', JSON.stringify(updatedUser));
+
+      Alert.alert('Success', 'Profile updated successfully');
+    } catch (error) {
+      console.error('Error updating user:', error);
+      alert('Something went wrong');
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    if (route.params?.showToast) {
+      Toast.show({
+        type: ALERT_TYPE.SUCCESS,
+        textBody: 'Password changed successfully!',
+        autoClose: 3000,
+        title: '',
+        theme: 'dark',
+        containerStyle: {
+          height: 20,
+          paddingVertical: 5,
+          borderRadius: 8,
+          backgroundColor: '#1c1c1e',
+          justifyContent: 'center',
+          alignItems: 'center',
+          shadowColor: '#000',
+          shadowOpacity: 0.3,
+          shadowOffset: {width: 0, height: 2},
+          shadowRadius: 4,
+          elevation: 5,
+        },
+        textBodyStyle: {
+          color: '#ffffff',
+          fontSize: 14,
+          fontWeight: '500',
+        },
+      });
+    }
+  }, [route.params]);
 
   const handleEditUser = () => {
     setModalVisible(true);
@@ -262,13 +293,13 @@ const MyAccount = ({navigation,route}) => {
             </View>
             <View style={globalStyle.px10}>
               <View style={[globalStyle.emailInputUpdate, globalStyle.mt20]}>
-                {/* <TextInput value={user.name} onChangeText={setEmail} /> */}
+                <TextInput value={name} onChangeText={text => setName(text)} />
               </View>
             </View>
 
             <View style={[globalStyle.px10, globalStyle.mt10]}>
               <Pressable
-                style={[LoginStyle.loginBtn, {backgroundColor: '#010101'}]}>
+                style={[LoginStyle.loginBtn, {backgroundColor: '#010101'}]} onPress={updateUser} disabled={loading}>
                 {loading ? (
                   <View
                     style={[

@@ -1,5 +1,5 @@
 import {NavigationContainer} from '@react-navigation/native';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {MainNavigation} from './navigation/mainNavigation';
 import {Provider, useDispatch} from 'react-redux';
 import store, {persistor} from './redux/store';
@@ -10,22 +10,28 @@ import {AlertNotificationRoot} from 'react-native-alert-notification';
 import Bootsplash from 'react-native-bootsplash';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import { webClientId } from './config/serverApi';
+import Splashscreen from './screens/Splashscreen/Splashscreen';
 
 const AppContent = () => {
   const dispatch = useDispatch();
+  const [showSplash, setShowSplash] = useState(true);
 
   useEffect(() => {
-    const init = async () => {
-      // …do multiple sync or async tasks
-    };
+  const init = async () => {
+    // Any initial tasks if needed
+  };
 
-    init().finally(async () => {
-      setTimeout(() => {
-        Bootsplash.hide({fade: true});
-        console.log('BootSplash has been hidden successfully');
-      }, 1500);
-    });
-  }, []);
+  init().finally(() => {
+    Bootsplash.hide({fade: true});
+    console.log('BootSplash has been hidden successfully');
+
+    // Show custom splash for 2 seconds
+    setTimeout(() => {
+      setShowSplash(false);
+    }, 2000);
+  });
+}, []);
+
 
   useEffect(() => {
     const requestNotificationPermission = async () => {
@@ -62,9 +68,13 @@ const AppContent = () => {
 
   return (
     <AlertNotificationRoot theme="dark">
-      <NavigationContainer>
-        <MainNavigation />
-      </NavigationContainer>
+      {showSplash ? (
+        <Splashscreen />
+      ) : (
+        <NavigationContainer>
+          <MainNavigation />
+        </NavigationContainer>
+      )}
     </AlertNotificationRoot>
   );
 };

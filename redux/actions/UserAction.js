@@ -33,6 +33,9 @@ import {
   UPDATE_SHIPPING_INFO_FAIL,
   UPDATE_SHIPPING_INFO_REQUEST,
   UPDATE_SHIPPING_INFO_SUCCESS,
+  UPDATE_USER_FAIL,
+  UPDATE_USER_REQUEST,
+  UPDATE_USER_SUCCESS,
   VERIFY_EMAIL_OTP_FAIL,
   VERIFY_EMAIL_OTP_FORGOT_FAIL,
   VERIFY_EMAIL_OTP_FORGOT_REQUEST,
@@ -133,9 +136,9 @@ export const UserGoogleLogin =
   (idToken, fcmToken = null) =>
   async dispatch => {
     try {
-      console.log("Logging in with Google:");
-      console.log("ID Token:", idToken);
-      console.log("FCM Token:", fcmToken);
+      console.log('Logging in with Google:');
+      console.log('ID Token:', idToken);
+      console.log('FCM Token:', fcmToken);
 
       dispatch({type: GOOGLE_LOGIN_REQUEST});
 
@@ -149,7 +152,7 @@ export const UserGoogleLogin =
         {idToken, fcmToken},
         config,
       );
- 
+
       dispatch({
         type: GOOGLE_LOGIN_SUCCESS,
         payload: data.user,
@@ -559,6 +562,26 @@ export const editShippingInfo = (userId, address) => async dispatch => {
         error?.response?.data?.message ||
         error.message ||
         'Something went wrong',
+    });
+  }
+};
+
+export const updateUserInfo = (userId, updatedData) => async dispatch => {
+  dispatch({type: UPDATE_USER_REQUEST});
+
+  try {
+    const {data} = await axios.put(`${serverApi}/edit/${userId}`, updatedData);
+
+    await AsyncStorage.setItem('user', JSON.stringify(data.user));
+
+    dispatch({
+      type: UPDATE_USER_SUCCESS,
+      payload: data.user,
+    });
+  } catch (error) {
+    dispatch({
+      type: UPDATE_USER_FAIL,
+      payload: error.response?.data?.message || error.message,
     });
   }
 };

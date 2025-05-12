@@ -46,6 +46,7 @@ import OtpScreenNewuser from '../screens/Otpscreen/OtpScreenNewuser';
 import SelectAddress from '../screens/Checkout/SelectAddress';
 import FAQ from '../screens/FAQ/FAQ';
 import Privacypolicy from '../screens/Privacy/Privacypolicy';
+import About from '../screens/About/About';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -495,6 +496,15 @@ export const MainNavigation = () => {
           headerLeft: () => <CustomBackButton navigation={navigation} />,
           headerTitleStyle: {fontSize: scaleFontSize(17)},
           headerTitle: 'Privacy policy',
+        })}
+      />
+      <Stack.Screen
+        name="About"
+        component={About}
+        options={({navigation}) => ({
+          headerLeft: () => <CustomBackButton navigation={navigation} />,
+          headerTitleStyle: {fontSize: scaleFontSize(17)},
+          headerTitle: 'About us',
         })}
       />
     </Stack.Navigator>
