@@ -55,10 +55,58 @@ const MyAccount = ({navigation, route}) => {
        const updatedUser = { ...user, ...updatedData };
       await AsyncStorage.setItem('user', JSON.stringify(updatedUser));
 
-      Alert.alert('Success', 'Profile updated successfully');
+        Toast.show({
+        type: ALERT_TYPE.SUCCESS,
+        textBody: 'Profile updated successfully!',
+        autoClose: 3000,
+        title: '',
+        theme: 'dark',
+        containerStyle: {
+          height: 20,
+          paddingVertical: 5,
+          borderRadius: 8,
+          backgroundColor: '#1c1c1e',
+          justifyContent: 'center',
+          alignItems: 'center',
+          shadowColor: '#000',
+          shadowOpacity: 0.3,
+          shadowOffset: {width: 0, height: 2},
+          shadowRadius: 4,
+          elevation: 5,
+        },
+        textBodyStyle: {
+          color: '#ffffff',
+          fontSize: 14,
+          fontWeight: '500',
+        },
+      });
     } catch (error) {
       console.error('Error updating user:', error);
-      alert('Something went wrong');
+        Toast.show({
+        type: ALERT_TYPE.DANGER,
+        textBody: 'Failed to update profile !',
+        autoClose: 3000,
+        title: '',
+        theme: 'dark',
+        containerStyle: {
+          height: 20,
+          paddingVertical: 5,
+          borderRadius: 8,
+          backgroundColor: '#1c1c1e',
+          justifyContent: 'center',
+          alignItems: 'center',
+          shadowColor: '#000',
+          shadowOpacity: 0.3,
+          shadowOffset: {width: 0, height: 2},
+          shadowRadius: 4,
+          elevation: 5,
+        },
+        textBodyStyle: {
+          color: '#ffffff',
+          fontSize: 14,
+          fontWeight: '500',
+        },
+      });
     } finally {
       setLoading(false);
     }
