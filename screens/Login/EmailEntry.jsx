@@ -17,18 +17,21 @@ import {checkUserExists, UserGoogleLogin} from '../../redux/actions/UserAction';
 import {
   AlertNotificationRoot,
   ALERT_TYPE,
-  Dialog,
   Toast,
 } from 'react-native-alert-notification';
-import {
-  GoogleSignin,
-  GoogleSigninButton,
-} from '@react-native-google-signin/google-signin';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
+
 import GoogleLogo from '../../assets/images/icons/google.png';
+import {webClientId} from '../../config/serverApi';
 
 const EmailEntry = ({navigation, route}) => {
   const emailRef = useRef(null);
+  const dispatch = useDispatch();
+
   const [email, setEmail] = useState('');
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [isSigningIn, setIsSigningIn] = useState(false);
 
   useEffect(() => {
     if (route.params?.showToast) {
@@ -38,40 +41,20 @@ const EmailEntry = ({navigation, route}) => {
         autoClose: 3000,
         title: '',
         theme: 'dark',
-        containerStyle: {
-          height: 20,
-          paddingVertical: 5,
-          borderRadius: 8,
-          backgroundColor: '#1c1c1e',
-          justifyContent: 'center',
-          alignItems: 'center',
-          shadowColor: '#000',
-          shadowOpacity: 0.3,
-          shadowOffset: {width: 0, height: 2},
-          shadowRadius: 4,
-          elevation: 5,
-        },
-        textBodyStyle: {
-          color: '#ffffff',
-          fontSize: 14,
-          fontWeight: '500',
-        },
       });
     }
   }, [route.params]);
 
-  const dispatch = useDispatch();
-  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
-  const [loading, setLoading] = useState(false);
-  const [isSigningIn, setIsSigningIn] = useState(false);
-
   useEffect(() => {
+    GoogleSignin.configure({
+      webClientId: '947680701785-580klb4i5i3m3pfa7rhnorg5qq5oo43b.apps.googleusercontent.com',
+      offlineAccess: true,
+    });
+
     if (emailRef.current) {
       emailRef.current.focus();
     }
   }, []);
-
-  // Function to enable/disable button
 
   const isValidEmail = email => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -85,13 +68,9 @@ const EmailEntry = ({navigation, route}) => {
 
   const handleContinue = async () => {
     if (!email.trim()) return;
-
     setLoading(true);
     try {
       const userExist = await dispatch(checkUserExists(email));
-
-      console.log('user availability', userExist);
-
       if (userExist) {
         navigation.navigate(Routes.PasswordEntry, {email});
       } else {
@@ -105,21 +84,22 @@ const EmailEntry = ({navigation, route}) => {
   };
 
   const onGoogleButtonPress = async () => {
-    if (isSigningIn) return; // Prevent multiple calls
-
+    if (isSigningIn) return;
     setIsSigningIn(true);
     try {
       await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
+      const {idToken, user} = await GoogleSignin.signIn();
 
-      const userInfo = await GoogleSignin.signIn();
-      console.log('Google Sign-In Success:', userInfo);
+      // Frontend test only — log token and user info
+      console.log('Google Sign-In Success:', {idToken, user});
 
       Toast.show({
         type: ALERT_TYPE.SUCCESS,
-        textBody: `Welcome ${userInfo.user.name}`,
+        textBody: `Welcome ${user.name}`,
       });
 
-      navigation.navigate(Routes.Home);
+      // Temporarily skip API and navigation for testing
+      // navigation.navigate(Routes.Home); // Optional: enable this if you want post-login navigation
     } catch (error) {
       console.error('Google Sign-In Error:', error);
       Toast.show({
@@ -178,6 +158,7 @@ const EmailEntry = ({navigation, route}) => {
             </Pressable>
           </View>
         </View>
+
         <View style={globalStyle.container}>
           <View style={LoginStyle.line}></View>
           <Text style={globalStyle.orText}>OR</Text>

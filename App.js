@@ -49,20 +49,6 @@ const AppContent = () => {
 
   useEffect(() => {
 
-    async function init(){
-       const has = await GoogleSignin.hasPlayServices();
-
-       if (has) {
-        GoogleSignin.configure({
-          webClientId:webClientId,
-          offlineAccess: true,
-        });
-      }
-
-    }
-    init();
-   
-
     dispatch(loadUser());
   }, [dispatch]);
 
