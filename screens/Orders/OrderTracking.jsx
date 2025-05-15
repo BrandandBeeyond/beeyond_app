@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   Animated,
   View,
@@ -12,7 +12,12 @@ import {
 import StepIndicator from 'react-native-step-indicator';
 import {globalStyle} from '../../assets/styles/globalStyle';
 import {CartStyle} from '../Cart/Style';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
+import notifee from '@notifee/react-native';
+import {cancelOrder} from '../../redux/actions/OrderAction';
+import {useDispatch, useSelector} from 'react-redux';
+import {SendEmailNotification} from '../../redux/actions/OrderNotificationAction';
+import {addNotification} from '../../redux/actions/BellNotiAction';
 
 const labels = ['Processing', 'Shipped', 'Out for Delivery', 'Delivered'];
 
@@ -40,12 +45,18 @@ const customStyles = {
 };
 
 const OrderTracking = ({route}) => {
-  const {orderStatus, orderItems} = route.params;
+  const navigation = useNavigation();
   const rippleAnim = useRef(new Animated.Value(1)).current;
+  const {user} = useSelector(state => state.user);
+
+  const {orderItems, orderId, orderNumber} = route.params;
+
+  const dispatch = useDispatch();
+  // useState added to handle dynamic order status updates
+  const [orderStatus, setOrderStatus] = useState(route.params.orderStatus);
 
   const currentPosition = labels.indexOf(orderStatus);
   const isValidStatus = currentPosition !== -1;
-  const navigation =  useNavigation();
 
   useEffect(() => {
     if (!isValidStatus) return;
@@ -70,14 +81,66 @@ const OrderTracking = ({route}) => {
     return () => animation.stop();
   }, [rippleAnim, isValidStatus]);
 
-  const handleCancelOrder = () => {
+  const handleCancelOrder = orderId => {
     Alert.alert('Cancel Order', 'Are you sure you want to cancel the order?', [
       {text: 'No'},
       {
         text: 'Yes',
-        onPress: () => {
-          console.log('Order cancelled'); // Implement your cancellation logic here
-          Alert.alert('Order Cancelled', 'Your order has been cancelled.');
+        onPress: async () => {
+          try {
+            // const response = await axios.put(`${serverApi}/cancel/${orderId}`);
+            // console.log('Order cancelled:', response.data);
+
+            const orderCancelled = dispatch(cancelOrder(orderId));
+
+            if (orderCancelled) {
+              Alert.alert('Order Cancelled', 'Your order has been cancelled.');
+              setOrderStatus('Cancelled');
+
+              const emailPayload = {
+                eventType: 'order_cancelled',
+                user: {
+                  name: user.name,
+                  email: user.email,
+                  mobile: user.mobile,
+                },
+              };
+
+              const emailResult = await dispatch(
+                SendEmailNotification(emailPayload),
+              );
+
+              console.log('Email dispatch result:', emailResult);
+
+              await notifee.createChannel({
+                id: 'default',
+                name: 'Default Channel',
+              });
+
+              await notifee.displayNotification({
+                title: 'Your Order Has Been Cancelled',
+                body: `Hello, ${user.name}, your order has been Cancelled!`,
+                android: {
+                  channelId: 'default',
+                  smallIcon: 'ic_launcher',
+                },
+              });
+
+              await dispatch(
+                addNotification({
+                  title: 'Order Cancelled!',
+                  message: 'Your order has been successfully placed.',
+                  type: 'order',
+                }),
+              );
+            }
+          } catch (error) {
+            console.error('Cancel Order Error:', error.message);
+            Alert.alert(
+              'Cancellation Failed',
+              error?.response?.data?.message || 'Something went wrong.',
+            );
+          }
         },
       },
     ]);
@@ -152,7 +215,6 @@ const OrderTracking = ({route}) => {
               globalStyle.justifyBetween,
               globalStyle.mb10,
               globalStyle.bgWhite,
-
               globalStyle.rounded3,
             ]}>
             <View style={[globalStyle.flex, globalStyle.mx10]}>
@@ -182,33 +244,20 @@ const OrderTracking = ({route}) => {
             globalStyle.justifyCenter,
             globalStyle.ps3,
           ]}>
-          <Text style={[globalStyle.h6, {color: 'green', marginBottom: 10}]}>
+          <Text
+            style={[
+              globalStyle.h6,
+              {
+                color: orderStatus === 'Cancelled' ? 'red' : 'green',
+                marginBottom: 10,
+              },
+            ]}>
             <Text style={[globalStyle.h6, globalStyle.textGray]}>
               Order Status:
             </Text>{' '}
             {orderStatus}
           </Text>
         </View>
-
-        {/* {currentPosition < 2 ? (
-          <TouchableOpacity
-            onPress={handleCancelOrder}
-            style={{
-              backgroundColor: 'red',
-              padding: 10,
-              borderRadius: 8,
-              alignItems: 'center',
-              marginTop: 10,
-            }}>
-            <Text style={{color: 'white', fontWeight: 'bold'}}>
-              Cancel Order
-            </Text>
-          </TouchableOpacity>
-        ) : (
-          <Text style={{color: '#888', marginTop: 10}}>
-            Cancellation not allowed at this stage.
-          </Text>
-        )} */}
       </View>
 
       <View
@@ -217,7 +266,7 @@ const OrderTracking = ({route}) => {
           globalStyle.bgTheme,
           {alignItems: 'flex-start'},
         ]}>
-        {isValidStatus ? (
+        {isValidStatus && orderStatus !== 'Cancelled' ? (
           <View style={styles.trackerContainer}>
             <StepIndicator
               direction="vertical"
@@ -228,6 +277,13 @@ const OrderTracking = ({route}) => {
               renderStepIndicator={renderStepIndicator}
               renderSeparator={renderSeparator}
             />
+          </View>
+        ) : orderStatus === 'Cancelled' ? (
+          <View
+            style={[[globalStyle.mx15, globalStyle.py10, globalStyle.mb20]]}>
+            <Text style={[globalStyle.h4]}>
+              Order Id {orderNumber} has been cancelled..
+            </Text>
           </View>
         ) : (
           <View style={styles.invalidStatusContainer}>
@@ -244,15 +300,29 @@ const OrderTracking = ({route}) => {
             globalStyle.mx15,
             globalStyle.cg5,
           ]}>
-          <Pressable style={[globalStyle.bgWhite, globalStyle.simplebtn]} onPress={handleCancelOrder}>
-            <Text style={[globalStyle.h6, globalStyle.fw700]}>
-              Cancel order
+          <Pressable
+            style={[
+              globalStyle.simplebtn,
+              orderStatus === 'Cancelled'
+                ? {backgroundColor: '#ccc'} // Disabled look
+                : globalStyle.bgWhite, // Active look
+            ]}
+            onPress={() => handleCancelOrder(orderId)}
+            disabled={orderStatus === 'Cancelled'}>
+            <Text
+              style={[
+                globalStyle.h6,
+                globalStyle.fw700,
+                {color: orderStatus === 'Cancelled' ? '#888' : '#000'},
+              ]}>
+              Cancel Order
             </Text>
-            <Pressable />
           </Pressable>
-          <Pressable style={[globalStyle.bgWhite, globalStyle.simplebtn]} onPress={()=>navigation.navigate('FAQ')}>
+
+          <Pressable
+            style={[globalStyle.bgWhite, globalStyle.simplebtn]}
+            onPress={() => navigation.navigate('FAQ')}>
             <Text style={[globalStyle.h6, globalStyle.fw700]}>Need Help?</Text>
-            <Pressable />
           </Pressable>
         </View>
       </View>
@@ -302,6 +372,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+
+    marginTop: 10,
   },
   invalidStatusText: {
     color: '#999',

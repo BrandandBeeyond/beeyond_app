@@ -1,5 +1,8 @@
 import axios from 'axios';
 import {
+  CANCEL_ORDER_FAIL,
+  CANCEL_ORDER_REQUEST,
+  CANCEL_ORDER_SUCCESS,
   CREATE_ORDER_FAIL,
   CREATE_ORDER_REQUEST,
   CREATE_ORDER_SUCCESS,
@@ -72,6 +75,27 @@ export const getUserOrders = userId => async dispatch => {
   } catch (error) {
     dispatch({
       type: GET_ORDER_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const cancelOrder = orderId => async dispatch => {
+  try {
+    dispatch({type: CANCEL_ORDER_REQUEST});
+
+    const {data} = await axios.put(`${serverApi}/cancel/${orderId}`);
+
+    dispatch({
+      type: CANCEL_ORDER_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: CANCEL_ORDER_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message
