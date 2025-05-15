@@ -19,14 +19,16 @@ import {useDispatch, useSelector} from 'react-redux';
 import {AddtoCart} from '../../redux/actions/CartAction';
 import {AddNotification} from '../../redux/actions/NotificationAction';
 import Notification from '../../components/Notification/Notification';
+import {useNavigation} from '@react-navigation/native';
 
 const ProductDetail = ({route}) => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [added, setAdded] = useState(false);
   const {notifications} = useSelector(state => state.notifications);
-
+  const navigation = useNavigation();
   const {product} = route.params;
+
   const discount = Math.round(
     ((product.cuttedPrice - product.price) / product.cuttedPrice) * 100,
   );
@@ -42,9 +44,13 @@ const ProductDetail = ({route}) => {
     }, 2500);
     dispatch(AddtoCart(product));
   };
+
+  const goTocart = () => {
+    navigation.navigate('Cart');
+  };
   return (
     <SafeAreaView style={[globalStyle.bgTheme, globalStyle.flex]}>
-      <ScrollView>
+      <ScrollView scrollEnabled={true}>
         <View style={globalStyle.bgWhite}>
           <View
             style={[
@@ -54,7 +60,7 @@ const ProductDetail = ({route}) => {
               globalStyle.g2,
             ]}>
             <Image
-              source={product.thumbnail}
+              source={{uri: product.images?.[0]?.url}}
               style={ProductDetailStyle.wrapImage}
             />
             <Text style={ProductDetailStyle.titleProduct}>{product.title}</Text>
@@ -105,6 +111,42 @@ const ProductDetail = ({route}) => {
             </View>
           </View>
         </View>
+
+        <View style={globalStyle.mt10}>
+          <View
+            style={[globalStyle.bgWhite, globalStyle.px10, globalStyle.py10]}>
+            <Text
+              style={[
+                globalStyle.h2,
+                {
+                  borderBottomColor: 'grey',
+                  borderBottomWidth: 0.5,
+                  paddingBottom: 8,
+                  fontWeight: '600',
+                },
+              ]}>
+              About this product
+            </Text>
+
+            <View style={globalStyle.mt10}>
+              <Text style={globalStyle.h6}>{product.description}</Text>
+
+              <View style={[globalStyle.dcol, globalStyle.mb80]}>
+                <View style={[globalStyle.drow]}>
+                  <Text style={[globalStyle.h6, globalStyle.fw700]}>
+                    Category :
+                  </Text>
+                  <Text style={[globalStyle.h6]}> {product.category}</Text>
+
+                 
+                </View>
+                 <View style={globalStyle.drow}>
+                    <Text style={globalStyle.h6}>Hello</Text>
+                  </View>
+              </View>
+            </View>
+          </View>
+        </View>
       </ScrollView>
       <View style={ProductDetailStyle.stickyButtonContainer}>
         <Pressable
@@ -112,8 +154,8 @@ const ProductDetail = ({route}) => {
             ProductDetailStyle.addtocart,
             added && ProductDetailStyle.addedToCart,
           ]}
-          onPress={handleAddToCart}
-          disabled={loading || added}>
+          onPress={added ? goTocart : handleAddToCart}
+          disabled={loading}>
           {loading ? (
             <ActivityIndicator size="small" color={'#111'} />
           ) : (

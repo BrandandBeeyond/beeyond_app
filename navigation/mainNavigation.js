@@ -96,6 +96,39 @@ const CustomHeaderIcons = () => {
     </View>
   );
 };
+const CustomHeaderIconsProductDetail = () => {
+  const navigation = useNavigation();
+  const {cart} = useSelector(state => state.cart);
+
+  return (
+    <View
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        columnGap: 20,
+        marginRight: 15,
+      }}>
+     
+      <TouchableOpacity
+        style={globalStyle.relative}
+        onPress={() => navigation.navigate(Routes.Cart)}>
+        <BagIcon name="shopping-bag" size={20} />
+        {cart.length > 0 && (
+          <View style={CartStyle.CountCart}>
+            <Text
+              style={{
+                color: '#fff',
+                fontSize: scaleFontSize(10),
+                fontWeight: 'bold',
+              }}>
+              {cart.length}
+            </Text>
+          </View>
+        )}
+      </TouchableOpacity>
+    </View>
+  );
+};
 
 export const BottomTabs = () => {
   return (
@@ -198,7 +231,7 @@ export const MainNavigation = () => {
         options={({navigation}) => ({
           headerTitle: () => null,
           headerLeft: () => <CustomBackButton navigation={navigation} />,
-          headerRight: () => <CustomHeaderIcons />,
+          headerRight: () => <CustomHeaderIconsProductDetail />,
         })}
       />
       <Stack.Screen
