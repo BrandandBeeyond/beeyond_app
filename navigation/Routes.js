@@ -1,5 +1,6 @@
 
 
+
 export const Routes = {
   Home: 'Home',
   Profile: 'Profile',
@@ -34,4 +35,5 @@ export const Routes = {
   // static pages
   Contact: 'Contact',
   About: 'About',
+  Search: 'Search',
 };

@@ -14,16 +14,12 @@
       },
       "oauth_client": [
         {
-          "client_id": "947680701785-580klb4i5i3m3pfa7rhnorg5qq5oo43b.apps.googleusercontent.com",
+          "client_id": "947680701785-6cb3a7lrgq4cb321bmkskemkl1ohcchq.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.beeyond",
             "certificate_hash": "4bd9acd1b6442d2b4cc4db7686b5114ededbe2c9"
           }
-        },
-        {
-          "client_id": "947680701785-t9puk6ct4gh8kmfikukohj6ao7r9hi5i.apps.googleusercontent.com",
-          "client_type": 3
         }
       ],
       "api_key": [
@@ -33,12 +29,7 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "947680701785-t9puk6ct4gh8kmfikukohj6ao7r9hi5i.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

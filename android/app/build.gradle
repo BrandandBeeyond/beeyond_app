@@ -111,14 +111,22 @@ android {
 }
 
 dependencies {
-    // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
     implementation project(':react-native-vector-icons')
 
+    // Google Sign-In (React Native)
     implementation 'com.google.android.gms:play-services-auth:20.7.0'
+
+    // (Optional) Firebase Auth if using it
+    implementation 'com.google.firebase:firebase-auth:22.3.0'
+
+    // (Optional) Firebase Analytics
+    implementation 'com.google.firebase:firebase-analytics:21.6.1'
+
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
     } else {
         implementation jscFlavor
     }
 }
+

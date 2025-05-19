@@ -137,12 +137,12 @@ const ProductDetail = ({route}) => {
                     Category :
                   </Text>
                   <Text style={[globalStyle.h6]}> {product.category}</Text>
-
-                 
                 </View>
-                 <View style={globalStyle.drow}>
-                    <Text style={globalStyle.h6}>Hello</Text>
-                  </View>
+                <View style={globalStyle.dcol}>
+                  {product.specifications.map((spec, index) => (
+                   <Text style={[globalStyle.h6]}>• {spec.description}</Text>
+                  ))}
+                </View>
               </View>
             </View>
           </View>

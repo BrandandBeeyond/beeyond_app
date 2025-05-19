@@ -32,7 +32,7 @@ const persistWishlistConfig = {
 const persistBellNotiConfig = {
   key: 'bellnotifications',
   storage: AsyncStorage,
-  whitelist: ['bellnotifications'],
+  whitelist: ['items'],
 };
 const persistedUserReducer = persistReducer(persistUserConfig, UserReducer);
 const persistedCartReducer = persistReducer(persistCartConfig, CartReducer);

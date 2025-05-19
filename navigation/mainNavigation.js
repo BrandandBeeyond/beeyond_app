@@ -47,6 +47,7 @@ import SelectAddress from '../screens/Checkout/SelectAddress';
 import FAQ from '../screens/FAQ/FAQ';
 import Privacypolicy from '../screens/Privacy/Privacypolicy';
 import About from '../screens/About/About';
+import Search from '../screens/Search/Search';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -73,7 +74,7 @@ const CustomHeaderIcons = () => {
         columnGap: 20,
         marginRight: 15,
       }}>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate(Routes.Search)}>
         <SearchIcon name="search" size={20} />
       </TouchableOpacity>
       <TouchableOpacity
@@ -492,7 +493,7 @@ export const MainNavigation = () => {
           headerTitleStyle: {fontSize: scaleFontSize(17)},
           headerTitle: 'Select Delivery Address',
         })}
-        component={SelectAddress} // ✅ No need for ProtectedRoute
+        component={SelectAddress} 
       />
       <Stack.Screen
         name="BellNotification"
@@ -502,6 +503,13 @@ export const MainNavigation = () => {
           headerTitleStyle: {fontSize: scaleFontSize(17)},
           headerTitle: 'Notifications',
         })}
+      />
+      <Stack.Screen
+        name="Search"
+        component={Search}
+         options={{
+          header: () => null,
+        }}
       />
 
       <Stack.Screen

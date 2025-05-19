@@ -47,7 +47,7 @@ const EmailEntry = ({navigation, route}) => {
 
   useEffect(() => {
     GoogleSignin.configure({
-      webClientId: '947680701785-k2u8oos8v5mo4askagns1vabpsevd9bh.apps.googleusercontent.com',
+      webClientId: '947680701785-6cb3a7lrgq4cb321bmkskemkl1ohcchq.apps.googleusercontent.com',
       offlineAccess: true,
     });
 

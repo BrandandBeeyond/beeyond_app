@@ -2,6 +2,8 @@ import React, {useState, useEffect} from 'react';
 import {Pressable, TextInput, View} from 'react-native';
 import SearchIcon from 'react-native-vector-icons/Feather';
 import {SearchStyle} from './Style';
+import { Routes } from '../../navigation/Routes';
+import { useNavigation } from '@react-navigation/native';
 
 const searchPhrases = ['diaries', 'journals', 'gifts'];
 
@@ -10,6 +12,7 @@ const Searchbar = () => {
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [charIndex, setCharIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
+  const navigation = useNavigation();
 
   useEffect(() => {
     const currentPhrase = searchPhrases[phraseIndex];
@@ -44,6 +47,7 @@ const Searchbar = () => {
         <TextInput
           placeholder={`Search ${displayText}`}
           placeholderTextColor="#888"
+           onFocus={()=>navigation.navigate(Routes.Search)}
           style={{flex: 1}}
         />
       </Pressable>
