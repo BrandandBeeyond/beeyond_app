@@ -76,7 +76,7 @@ const Products = () => {
     if (selectedProduct) {
       dispatch(AddtoCart(selectedProduct));
       setModalVisible(false);
-      dispatch(AddNotification('Product added to cart'));
+      dispatch(AddNotification('Product added to cart','cart'));
     }
   };
 
@@ -84,10 +84,10 @@ const Products = () => {
     try {
       if (isIteminWishlist(product)) {
         dispatch(RemoveFromWishlist(product.id));
-        dispatch(AddNotification('Product removed from wishlist'));
+        dispatch(AddNotification('Product removed from wishlist','wishlist'));
       } else {
         dispatch(AddtoWishlist(product));
-        dispatch(AddNotification('product added to wishlist'));
+        dispatch(AddNotification('product added to wishlist','wishlist'));
       }
     } catch (error) {
       console.error('unable to add product in wishlist');
@@ -279,6 +279,7 @@ const Products = () => {
         <Notification
           key={notification.id}
           message={notification.message}
+          type={notification.type}
           showCartButton={true}
         />
       ))}

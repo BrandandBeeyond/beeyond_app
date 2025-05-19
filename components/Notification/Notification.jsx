@@ -4,22 +4,29 @@ import {NotificationStyle} from './Style';
 import {useNavigation} from '@react-navigation/native';
 import {Routes} from '../../navigation/Routes';
 
-const Notification = ({message, showCartButton = false}) => {
+const Notification = ({message, type = 'cart'}) => {
   const navigation = useNavigation();
 
   if (!message) {
     return null;
   }
+
+  const handleNavigate = () => {
+    if (type === 'cart') {
+      navigation.navigate(Routes.Cart);
+    } else if (type === 'wishlist') {
+      navigation.navigate(Routes.Wishlist);
+    }
+  };
   return (
     <View style={NotificationStyle.notification}>
       <Text style={NotificationStyle.notiText}>{message}</Text>
-      {showCartButton && (
-        <Pressable
-          style={NotificationStyle.ViewCart}
-          onPress={() => navigation.navigate(Routes.Cart)}>
-          <Text style={NotificationStyle.ViewCartText}>View Cart</Text>
-        </Pressable>
-      )}
+
+      <Pressable style={NotificationStyle.ViewCart} onPress={handleNavigate}>
+        <Text style={NotificationStyle.ViewCartText}>
+          {type === 'cart' ? 'View Cart':'View Wishlist'}
+        </Text>
+      </Pressable>
     </View>
   );
 };

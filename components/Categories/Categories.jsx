@@ -5,7 +5,7 @@ import {CategoryStyle} from './Style';
 import PropTypes from 'prop-types';
 import { globalStyle } from '../../assets/styles/globalStyle';
 
-const Categories = ({categories}) => {
+const Categories = ({categories,navigation}) => {
   return (
     <View style={CategoryStyle.category}>
       <Header type={3} title={'Featured categories'} />
@@ -16,7 +16,7 @@ const Categories = ({categories}) => {
         showsHorizontalScrollIndicator={false}
         keyExtractor={item => item.id.toString()}
         renderItem={({item}) => (
-          <View >
+          <View onpress={() => navigation.navigate(item.url)}>
             <View style={CategoryStyle.featured}>
               <Image
                 source={item.image}

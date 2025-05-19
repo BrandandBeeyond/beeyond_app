@@ -15,16 +15,19 @@ const Home = ({navigation, route}) => {
       id: 1,
       title: 'Diaries',
       image: require('../../assets/images/categories/diary.png'),
+      url: 'NoRecords',
     },
     {
       id: 2,
       title: 'Journals',
       image: require('../../assets/images/categories/journal.png'),
+      url: 'Products',
     },
     {
       id: 3,
       title: 'Gifts',
       image: require('../../assets/images/categories/gift-box.png'),
+      url: 'NoRecords',
     },
   ];
 

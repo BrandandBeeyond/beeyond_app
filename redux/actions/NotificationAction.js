@@ -3,7 +3,7 @@ import {
   REMOVE_NOTIFICATIONS,
 } from '../constants/NotificationConstants';
 
-export const AddNotification = (message, type = 'success') => {
+export const AddNotification = (message, type = 'cart') => {
   return dispatch => {
     const notification = {
       id: Date.now(),
