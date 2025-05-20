@@ -14,13 +14,9 @@ import {Routes} from '../../navigation/Routes';
 import {TextInput} from 'react-native-gesture-handler';
 import {useDispatch} from 'react-redux';
 import {checkUserExists, UserGoogleLogin} from '../../redux/actions/UserAction';
-import {
-  AlertNotificationRoot,
-  ALERT_TYPE,
-  Toast,
-} from 'react-native-alert-notification';
+import {ALERT_TYPE, Toast} from 'react-native-alert-notification';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
-
+import auth from '@react-native-firebase/auth';
 import GoogleLogo from '../../assets/images/icons/google.png';
 import {webClientId} from '../../config/serverApi';
 
@@ -47,10 +43,10 @@ const EmailEntry = ({navigation, route}) => {
 
   useEffect(() => {
     GoogleSignin.configure({
-      webClientId: '947680701785-6cb3a7lrgq4cb321bmkskemkl1ohcchq.apps.googleusercontent.com',
+      webClientId:
+        '947680701785-t9puk6ct4gh8kmfikukohj6ao7r9hi5i.apps.googleusercontent.com',
       offlineAccess: true,
     });
-
     if (emailRef.current) {
       emailRef.current.focus();
     }
@@ -87,21 +83,37 @@ const EmailEntry = ({navigation, route}) => {
     if (isSigningIn) return;
     setIsSigningIn(true);
     try {
-      await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
-      const {idToken, user} = await GoogleSignin.signIn();
+      const isAvailable = await GoogleSignin.hasPlayServices({
+        showPlayServicesUpdateDialog: true,
+      });
+      console.log('Play Services Available:', isAvailable);
 
-      // Frontend test only — log token and user info
-      console.log('Google Sign-In Success:', {idToken, user});
+      // 🔑 Sign in with Google SDK
+      const {idToken} = await GoogleSignin.signIn();
+
+      // 🔐 Create a Firebase credential with the token
+      const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+
+      // 🔓 Sign-in the user with Firebase
+      const userCredential = await auth().signInWithCredential(
+        googleCredential,
+      );
+
+      console.log('Firebase Google Sign-In Success:', userCredential.user);
 
       Toast.show({
         type: ALERT_TYPE.SUCCESS,
-        textBody: `Welcome ${user.name}`,
+        textBody: `Welcome ${userCredential.user.displayName}`,
       });
 
-      // Temporarily skip API and navigation for testing
-      // navigation.navigate(Routes.Home); // Optional: enable this if you want post-login navigation
+      // 👇 Navigate to your post-login screen
+      navigation.navigate(Routes.Home);
     } catch (error) {
-      console.error('Google Sign-In Error:', error);
+      console.error(
+        'Firebase Google Sign-In Error:',
+        JSON.stringify(error, null, 2),
+      );
+
       Toast.show({
         type: ALERT_TYPE.DANGER,
         textBody: 'Google sign-in failed. Please try again.',
