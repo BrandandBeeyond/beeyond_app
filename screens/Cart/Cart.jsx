@@ -39,11 +39,13 @@ import {
   Dialog,
   Toast,
 } from 'react-native-alert-notification';
+import {AddtoWishlist} from '../../redux/actions/WishlistAction';
 
 const Cart = ({navigation}) => {
   const dispatch = useDispatch();
   const {cart} = useSelector(state => state.cart);
-  const {notifications} = useSelector(state => state.notifications);
+  const {wishlist} = useSelector(state => state.wishlist);
+
   const {isAuthenticated, shippingInfo, user} = useSelector(
     state => state.user,
   );
@@ -51,6 +53,10 @@ const Cart = ({navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingSpinner, setLoadingSpinner] = useState(false);
+
+  const alreadyInWishlist = wishlist.some(
+    item => item.id === selectedProduct?.id,
+  );
 
   const CalculateCartTotal = () => {
     return cart.reduce((total, item) => total + item.price * item.quantity, 0);
@@ -96,10 +102,10 @@ const Cart = ({navigation}) => {
       if (!isAuthenticated) {
         navigation.navigate(Routes.EmailEntry);
       }
-      // ✅ Skip checkout form if at least 1 address exists
+   
       else if (shippingInfo?.addresses?.length > 0) {
         const selectedAddress = shippingInfo?.addresses[0];
-        navigation.navigate(Routes.SavedAddress,{selectedAddress});
+        navigation.navigate(Routes.SavedAddress, {selectedAddress});
       } else {
         navigation.navigate(Routes.Checkoutform);
       }
@@ -212,13 +218,45 @@ const Cart = ({navigation}) => {
     }, 1000);
   };
 
+  const handleWishListAddCartRemove = () => {
+    if (selectedProduct) {
+      dispatch(AddtoWishlist(selectedProduct));
+      dispatch(RemovefromCart(selectedProduct.id));
+
+      Toast.show({
+        type: ALERT_TYPE.SUCCESS,
+        textBody: 'Moved to wishlist successfully!',
+        autoClose: 3000,
+        theme: 'dark',
+        containerStyle: {
+          height: 20,
+          paddingVertical: 5,
+          borderRadius: 8,
+          backgroundColor: '#1c1c1e',
+          justifyContent: 'center',
+          alignItems: 'center',
+          elevation: 5,
+        },
+        textBodyStyle: {
+          color: '#ffffff',
+          fontSize: 14,
+          fontWeight: '500',
+        },
+      });
+
+      setModalVisible(false);
+      setSelectedProduct(null);
+    }
+  };
+
   return (
     <SafeAreaView style={[globalStyle.flex, globalStyle.bgTheme]}>
       <Spinner visible={loadingSpinner} />
       {cart.length > 0 ? (
         <>
           <ScrollView showsVerticalScrollIndicator={false}>
-            <View
+            <Pressable
+            onPress={() => navigation.navigate(Routes.Coupon)}
               style={[
                 globalStyle.bgWhite,
                 globalStyle.drow,
@@ -234,7 +272,7 @@ const Cart = ({navigation}) => {
               <Text style={[globalStyle.subtext, globalStyle.fw700]}>
                 Apply Coupon
               </Text>
-            </View>
+            </Pressable>
 
             <Notification />
 
@@ -550,9 +588,17 @@ const Cart = ({navigation}) => {
                       <Text style={CartStyle.removeFromCartText}>Remove</Text>
                     </View>
                   </Pressable>
-                  <Pressable style={CartStyle.wishlistBtn}>
+                  <Pressable
+                    style={[
+                      CartStyle.wishlistBtn,
+                      alreadyInWishlist && {opacity: 0.7},
+                    ]}
+                    onPress={handleWishListAddCartRemove}
+                    disabled={alreadyInWishlist}>
                     <Text style={CartStyle.wishlistBtnText}>
-                      Move to wishlist
+                      {alreadyInWishlist
+                        ? 'Already in Wishlist'
+                        : 'Move to wishlist'}
                     </Text>
                   </Pressable>
                 </View>

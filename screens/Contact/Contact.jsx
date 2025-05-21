@@ -1,11 +1,40 @@
 import React from 'react';
-import {Image, SafeAreaView, ScrollView, Text, View} from 'react-native';
+import {
+  Image,
+  Linking,
+  Pressable,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  View,
+} from 'react-native';
 import {globalStyle} from '../../assets/styles/globalStyle';
 import DocIcon from 'react-native-vector-icons/Ionicons';
 import WhatsAppIcon from 'react-native-vector-icons/Ionicons';
 import CallIcon from 'react-native-vector-icons/MaterialIcons';
+import {useNavigation} from '@react-navigation/native';
 
 const Contact = () => {
+
+  const navigation = useNavigation();
+  
+  const sendOnWhatsapp = async () => {
+    const phoneNumber = '+917030087111';
+    const message = 'Hello, I need assistance.';
+    const url = `whatsapp://send?phone=${phoneNumber}&text=${encodeURIComponent(
+      message,
+    )}`;
+
+    const supported = await Linking.canOpenURL(url);
+
+    if (supported) {
+      Linking.openURL(url);
+    } else {
+      alert('WhatsApp is not installed on your device.');
+    }
+  };
+
+  
   return (
     <SafeAreaView style={[globalStyle.flex, globalStyle.bgTheme]}>
       <ScrollView>
@@ -66,7 +95,8 @@ const Contact = () => {
                 globalStyle.drow,
                 globalStyle.alignCenter,
                 globalStyle.cg5,
-              ]}>
+              ]}
+              onpress={() => navigation.navigate('FAQ')}>
               <DocIcon name="document" size={20} color={'#000'} />
               <View style={globalStyle.dcol}>
                 <Text style={globalStyle.contentHead}>FAQ</Text>
@@ -84,18 +114,20 @@ const Contact = () => {
               globalStyle.p5,
               globalStyle.mt15,
             ]}>
-            <View
-              style={[
-                globalStyle.drow,
-                globalStyle.alignCenter,
-                globalStyle.cg5,
-              ]}>
-              <WhatsAppIcon name="logo-whatsapp" size={20} color={'#000'} />
-              <View style={globalStyle.dcol}>
-                <Text style={globalStyle.contentHead}>Need Assistance ?</Text>
-                <Text style={globalStyle.contnentPara}>whatsApp us</Text>
+            <Pressable onPress={sendOnWhatsapp}>
+              <View
+                style={[
+                  globalStyle.drow,
+                  globalStyle.alignCenter,
+                  globalStyle.cg5,
+                ]}>
+                <WhatsAppIcon name="logo-whatsapp" size={20} color={'#000'} />
+                <View style={globalStyle.dcol}>
+                  <Text style={globalStyle.contentHead}>Need Assistance ?</Text>
+                  <Text style={globalStyle.contnentPara}>whatsApp us</Text>
+                </View>
               </View>
-            </View>
+            </Pressable>
           </View>
           <View
             style={[
@@ -116,7 +148,7 @@ const Contact = () => {
                 <Text style={globalStyle.contentHead}>
                   10:00 AM to 05:00 PM (Mon to Sat)
                 </Text>
-                <Text style={globalStyle.contnentPara}>+91 9876543210</Text>
+                <Text style={globalStyle.contnentPara}>+91 7030087111</Text>
               </View>
             </View>
           </View>

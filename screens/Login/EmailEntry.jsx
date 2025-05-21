@@ -41,12 +41,13 @@ const EmailEntry = ({navigation, route}) => {
     }
   }, [route.params]);
 
+  GoogleSignin.configure({
+    webClientId:
+      '947680701785-54p2qd7vu918l4u0uufd7lohejbq6cse.apps.googleusercontent.com',
+    offlineAccess: true,
+  });
+
   useEffect(() => {
-    GoogleSignin.configure({
-      webClientId:
-        '947680701785-t9puk6ct4gh8kmfikukohj6ao7r9hi5i.apps.googleusercontent.com',
-      offlineAccess: true,
-    });
     if (emailRef.current) {
       emailRef.current.focus();
     }

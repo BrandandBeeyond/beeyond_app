@@ -17,4 +17,16 @@ export const SearchStyle = StyleSheet.create({
     paddingLeft: horizontalScale(10),
     paddingVertical: verticalScale(1),
   },
+  flexInputcontainer:{
+     width:'75%',
+       display: 'flex',
+    flexDirection: 'row',
+    columnGap: 10,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 10,
+    paddingLeft: horizontalScale(10),
+    paddingVertical: verticalScale(1),
+  }
 });

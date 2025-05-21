@@ -10,6 +10,9 @@ const initialState = {
 export const WishlistReducer = (state = initialState, action) => {
   switch (action.type) {
     case ADD_TO_WISHLIST:
+      const exists = state.wishlist.some(item => item.id === action.payload.id);
+
+      if (exists) return state;
       return {
         ...state,
         wishlist: [...state.wishlist, action.payload],

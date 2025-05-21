@@ -48,6 +48,8 @@ import FAQ from '../screens/FAQ/FAQ';
 import Privacypolicy from '../screens/Privacy/Privacypolicy';
 import About from '../screens/About/About';
 import Search from '../screens/Search/Search';
+import NoRecords from '../screens/NoRecords/NoRecords';
+import Coupon from '../screens/Cart/Coupon';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -539,6 +541,25 @@ export const MainNavigation = () => {
           headerTitle: 'Privacy policy',
         })}
       />
+      <Stack.Screen
+        name="NoRecords"
+        component={NoRecords}
+        options={({navigation}) => ({
+          headerLeft: () => <CustomBackButton navigation={navigation} />,
+          headerTitleStyle: {fontSize: scaleFontSize(17)},
+          headerTitle: 'Products',
+        })}
+      />
+      <Stack.Screen
+        name="Coupon"
+        component={Coupon}
+        options={({navigation}) => ({
+          headerLeft: () => <CustomBackButton navigation={navigation} />,
+          headerTitleStyle: {fontSize: scaleFontSize(17)},
+          headerTitle: 'Apply Coupon',
+        })}
+      />
+
       <Stack.Screen
         name="About"
         component={About}

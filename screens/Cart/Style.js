@@ -226,4 +226,23 @@ export const CartStyle = StyleSheet.create({
     width: horizontalScale(60),
     borderRadius: horizontalScale(13),
   },
+  applycoupon:{
+     backgroundColor:'rgba(0, 0, 0, 0.5)',
+     height:verticalScale(35),
+     width:'23%',
+     borderRadius:horizontalScale(10),
+     paddingHorizontal:horizontalScale(10),
+     paddingVertical:verticalScale(5),
+     opacity:0.8,
+     display:'flex',
+    alignItems:'center', 
+    justifyContent:'center',
+  },
+  applycouponText:{ 
+    color:'#fff',
+    fontSize:scaleFontSize(13),
+    fontWeight:'700',
+    textTransform:'uppercase',
+   
+  }
 });

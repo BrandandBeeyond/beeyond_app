@@ -114,7 +114,7 @@ const Home = ({navigation, route}) => {
             </Swiper>
           </View>
 
-          <Categories categories={categoryData} />
+          <Categories categories={categoryData} navigation={navigation}/>
           <Mostbuys />
         </View>
       </ScrollView>

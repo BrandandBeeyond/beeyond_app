@@ -1,6 +1,5 @@
 
 
-
 export const Routes = {
   Home: 'Home',
   Profile: 'Profile',
@@ -31,6 +30,8 @@ export const Routes = {
   SelectAddress:'SelectAddress',
   FAQ:'FAQ',
   Privacypolicy:'Privacypolicy',
+  NoRecords : 'NoRecords',
+  Coupon: 'Coupon',
 
   // static pages
   Contact: 'Contact',

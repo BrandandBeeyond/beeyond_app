@@ -11,22 +11,22 @@ import {CartStyle} from '../Cart/Style';
 import {globalStyle} from '../../assets/styles/globalStyle';
 import LottieView from 'lottie-react-native';
 import {Routes} from '../../navigation/Routes';
-import {useSelector} from 'react-redux';
-import {productStyle} from '../Products/Style';
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {faStar} from '@fortawesome/free-solid-svg-icons';
+import {useDispatch, useSelector} from 'react-redux';
+import HeartIcon from 'react-native-vector-icons/Ionicons';
+import {RemoveFromWishlist} from '../../redux/actions/WishlistAction';
+import { verticalScale } from 'react-native-size-matters';
 
 const Wishlist = ({navigation}) => {
   const {wishlist} = useSelector(state => state.wishlist);
-
-  console.log(wishlist);
+  const dispatch = useDispatch();
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={[globalStyle.flex, globalStyle.bgTheme]}>
       {wishlist.length > 0 ? (
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           {wishlist.map((item, i) => (
             <View
+              key={i}
               style={[
                 globalStyle.mx10,
                 globalStyle.py10,
@@ -35,7 +35,17 @@ const Wishlist = ({navigation}) => {
                 globalStyle.px10,
                 globalStyle.rounded3,
                 globalStyle.dcol,
+                {position: 'relative'},
               ]}>
+              <View
+                style={{position: 'absolute', top: 10, right: 10, zIndex: 1}}>
+                <Pressable
+                  onPress={() => dispatch(RemoveFromWishlist(item.id))}>
+                  <HeartIcon name="heart" size={20} color="#f35c6e" />
+                </Pressable>
+              </View>
+
+              {/* Wishlist Item Info */}
               <View
                 style={[
                   globalStyle.drow,
@@ -48,9 +58,11 @@ const Wishlist = ({navigation}) => {
                 />
                 <View style={globalStyle.dcol}>
                   <View style={globalStyle.small}>
-                    <Text>{item.name}</Text>
-                    <View>
-                      <Text style={globalStyle.xsSmall}>
+                    <Text style={globalStyle.fw700}>{item.name}</Text>
+                    <View style={{flex: 1}}>
+                      <Text
+                        style={[globalStyle.normalText,globalStyle.mt10, {flexWrap: 'wrap'}]} numberOfLines={5}
+    ellipsizeMode="tail">
                         {item.description}
                       </Text>
                     </View>
