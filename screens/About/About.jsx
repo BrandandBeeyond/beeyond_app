@@ -9,7 +9,7 @@ const About = () => {
       <ScrollView>
         <View style={[globalStyle.bgTheme, globalStyle.mx10]}>
           <View style={globalStyle.mt15}>
-            <Text style={globalStyle.contentHead}>About Beeyond</Text>
+            <Text style={[globalStyle.h4,globalStyle.fw700]}>About Beeyond</Text>
             <Text style={[globalStyle.normalText, globalStyle.mt10]}>
               At Beeyond, we believe that a journal is more than just paper — it’s a canvas for dreams,
               memories, and growth.

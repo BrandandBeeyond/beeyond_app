@@ -18,7 +18,7 @@ import {ALERT_TYPE, Toast} from 'react-native-alert-notification';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
 import GoogleLogo from '../../assets/images/icons/google.png';
-import {webClientId} from '../../config/serverApi';
+
 
 const EmailEntry = ({navigation, route}) => {
   const emailRef = useRef(null);
@@ -89,13 +89,14 @@ const EmailEntry = ({navigation, route}) => {
       });
       console.log('Play Services Available:', isAvailable);
 
-      // 🔑 Sign in with Google SDK
+      if (!isAvailable) {
+        throw new Error('Play services are not available on the device');
+      }
+
       const {idToken} = await GoogleSignin.signIn();
 
-      // 🔐 Create a Firebase credential with the token
       const googleCredential = auth.GoogleAuthProvider.credential(idToken);
 
-      // 🔓 Sign-in the user with Firebase
       const userCredential = await auth().signInWithCredential(
         googleCredential,
       );
@@ -107,17 +108,12 @@ const EmailEntry = ({navigation, route}) => {
         textBody: `Welcome ${userCredential.user.displayName}`,
       });
 
-      // 👇 Navigate to your post-login screen
       navigation.navigate(Routes.Home);
     } catch (error) {
-      console.error(
-        'Firebase Google Sign-In Error:',
-        JSON.stringify(error, null, 2),
-      );
-
+      console.error('Firebase Google Sign-In Error:', error);
       Toast.show({
         type: ALERT_TYPE.DANGER,
-        textBody: 'Google sign-in failed. Please try again.',
+        textBody: `Google sign-in failed. Please try again. Error: ${error.message}`,
       });
     } finally {
       setIsSigningIn(false);
@@ -126,7 +122,10 @@ const EmailEntry = ({navigation, route}) => {
 
   return (
     <SafeAreaView style={[LoginStyle.loginBg, globalStyle.flex]}>
-      <AuthHeader title={'Enter email to get started'}  description={'Shopping gets more rewarding'}/>
+      <AuthHeader
+        title={'Enter email to get started'}
+        description={'Shopping gets more rewarding'}
+      />
       <View
         style={[
           globalStyle.bgWhite,
