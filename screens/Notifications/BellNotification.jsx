@@ -29,6 +29,7 @@ const BellNotification = () => {
           <View style={[globalStyle.flex,globalStyle.alignCenter,globalStyle.justifyCenter,globalStyle.h100]}>
                <View style={[globalStyle.dcol,globalStyle.alignCenter]}>
                   <Image source={require('../../assets/images/icons/bell.png')} width={'60px'}/>
+                   <Text style={[globalStyle.h6,globalStyle.fw700,globalStyle.textGray,globalStyle.mt10]}>No Notifications</Text>
                </View>
           </View>
         </>

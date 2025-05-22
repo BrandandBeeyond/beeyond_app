@@ -194,8 +194,7 @@ const Profile = ({navigation, route}) => {
                   globalStyle.xsSmall,
                   globalStyle.pt10,
                 ]}>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus
-                animi vero iure.
+                Login/ Signup for tracking your orders,use wishlist,and get exclusive offers
               </Text>
             </View>
           )}

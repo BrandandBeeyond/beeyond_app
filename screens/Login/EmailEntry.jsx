@@ -126,7 +126,7 @@ const EmailEntry = ({navigation, route}) => {
 
   return (
     <SafeAreaView style={[LoginStyle.loginBg, globalStyle.flex]}>
-      <AuthHeader title={'Enter email to get started'} />
+      <AuthHeader title={'Enter email to get started'}  description={'Shopping gets more rewarding'}/>
       <View
         style={[
           globalStyle.bgWhite,

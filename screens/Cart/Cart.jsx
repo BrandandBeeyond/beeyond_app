@@ -34,9 +34,7 @@ import {getShippingInfo} from '../../redux/actions/UserAction';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {useFocusEffect} from '@react-navigation/native';
 import {
-  AlertNotificationRoot,
   ALERT_TYPE,
-  Dialog,
   Toast,
 } from 'react-native-alert-notification';
 import {AddtoWishlist} from '../../redux/actions/WishlistAction';

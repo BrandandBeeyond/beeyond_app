@@ -1,5 +1,5 @@
 import React from 'react';
-import {Pressable, Text, View} from 'react-native';
+import {Pressable, StyleSheet, Text, View} from 'react-native';
 import {TopbarStyle} from './Style';
 import {globalStyle} from '../../assets/styles/globalStyle';
 import {Routes} from '../../navigation/Routes';
@@ -14,6 +14,10 @@ import {useSelector} from 'react-redux';
 const Topbar = ({navigation}) => {
   const {cart} = useSelector(state => state.cart);
   const {isAuthenticated, user} = useSelector(state => state.user);
+  const {items} = useSelector(state => state.bellnotifications); // Get the bell notifications from redux state
+
+  // Condition to check if there are any notifications
+  const hasNotifications = items.length > 0;
 
   return (
     <View style={TopbarStyle.topbar}>
@@ -40,10 +44,17 @@ const Topbar = ({navigation}) => {
           <Pressable onPress={() => navigation.navigate(Routes.Wishlist)}>
             <HeartIcon name="heart" size={20} />
           </Pressable>
-          <Pressable
-            onPress={() => navigation.navigate(Routes.BellNotification)}>
-            <BellIcon name="bell" size={20} />
+          
+          {/* Bell Icon with Badge for Notifications */}
+          <Pressable onPress={() => navigation.navigate(Routes.BellNotification)}>
+            <View style={globalStyle.relative}>
+              <BellIcon name="bell" size={20} />
+              {hasNotifications && (
+                <View style={TopbarStyle.notificationBadge} />
+              )}
+            </View>
           </Pressable>
+
           <Pressable
             onPress={() => navigation.navigate(Routes.Cart)}
             style={globalStyle.relative}>
@@ -66,5 +77,7 @@ const Topbar = ({navigation}) => {
     </View>
   );
 };
+
+
 
 export default Topbar;

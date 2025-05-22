@@ -8,6 +8,8 @@ import {
   TouchableOpacity,
   Alert,
   Pressable,
+  Modal,
+  Linking,
 } from 'react-native';
 import StepIndicator from 'react-native-step-indicator';
 import {globalStyle} from '../../assets/styles/globalStyle';
@@ -18,7 +20,10 @@ import {cancelOrder} from '../../redux/actions/OrderAction';
 import {useDispatch, useSelector} from 'react-redux';
 import {SendEmailNotification} from '../../redux/actions/OrderNotificationAction';
 import {addNotification} from '../../redux/actions/BellNotiAction';
-
+import CloseIcon from 'react-native-vector-icons/AntDesign';
+import CallIcon from '../../assets/images/icons/phone.png';
+import WhatsappIcon from '../../assets/images/icons/whatsapp.png';
+import EmailIcon from '../../assets/images/icons/gmail.png';
 const labels = ['Processing', 'Shipped', 'Out for Delivery', 'Delivered'];
 
 const customStyles = {
@@ -52,11 +57,37 @@ const OrderTracking = ({route}) => {
   const {orderItems, orderId, orderNumber} = route.params;
 
   const dispatch = useDispatch();
-  // useState added to handle dynamic order status updates
   const [orderStatus, setOrderStatus] = useState(route.params.orderStatus);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const currentPosition = labels.indexOf(orderStatus);
   const isValidStatus = currentPosition !== -1;
+
+
+  const handleCallPress=()=>{
+      const phoneNumber = 'tel:7030087111';
+      Linking.openURL(phoneNumber).catch((err)=>console.error('Error opening call:', err));   
+  }
+
+ const handleWhatsAppPress = () => {
+  const phoneNumber = '7030087111'; // Phone number without the country code
+  const countryCode = '+91'; // India country code
+
+  // Format the URL properly
+  const whatsappURL = `whatsapp://send?phone=${countryCode}${phoneNumber}`;
+  
+  // Try to open WhatsApp
+  Linking.openURL(whatsappURL)
+    .catch((err) => {
+      console.error('Error opening WhatsApp:', err);
+      Alert.alert('WhatsApp is not installed or there was an issue opening it.');
+    });
+};
+
+const handleEmailPress = () => {
+  const emailURL = 'mailto:beeyondhappiness@gmail.com';
+  Linking.openURL(emailURL).catch((err) => console.error('Error opening email:', err));
+};
 
   useEffect(() => {
     if (!isValidStatus) return;
@@ -87,58 +118,46 @@ const OrderTracking = ({route}) => {
       {
         text: 'Yes',
         onPress: async () => {
-          try {
-            // const response = await axios.put(`${serverApi}/cancel/${orderId}`);
-            // console.log('Order cancelled:', response.data);
+          const orderCancelled = dispatch(cancelOrder(orderId));
 
-            const orderCancelled = dispatch(cancelOrder(orderId));
+          if (orderCancelled) {
+            Alert.alert('Order Cancelled', 'Your order has been cancelled.');
+            setOrderStatus('Cancelled');
 
-            if (orderCancelled) {
-              Alert.alert('Order Cancelled', 'Your order has been cancelled.');
-              setOrderStatus('Cancelled');
+            const emailPayload = {
+              eventType: 'order_cancelled',
+              user: {
+                name: user.name,
+                email: user.email,
+                mobile: user.mobile,
+              },
+            };
 
-              const emailPayload = {
-                eventType: 'order_cancelled',
-                user: {
-                  name: user.name,
-                  email: user.email,
-                  mobile: user.mobile,
-                },
-              };
+            const emailResult = await dispatch(
+              SendEmailNotification(emailPayload),
+            );
+            console.log('Email dispatch result:', emailResult);
 
-              const emailResult = await dispatch(
-                SendEmailNotification(emailPayload),
-              );
+            await notifee.createChannel({
+              id: 'default',
+              name: 'Default Channel',
+            });
 
-              console.log('Email dispatch result:', emailResult);
+            await notifee.displayNotification({
+              title: 'Your Order Has Been Cancelled',
+              body: `Hello, ${user.name}, your order has been cancelled!`,
+              android: {
+                channelId: 'default',
+                smallIcon: 'ic_launcher',
+              },
+            });
 
-              await notifee.createChannel({
-                id: 'default',
-                name: 'Default Channel',
-              });
-
-              await notifee.displayNotification({
-                title: 'Your Order Has Been Cancelled',
-                body: `Hello, ${user.name}, your order has been Cancelled!`,
-                android: {
-                  channelId: 'default',
-                  smallIcon: 'ic_launcher',
-                },
-              });
-
-              await dispatch(
-                addNotification({
-                  title: 'Order Cancelled!',
-                  message: 'Your order has been successfully placed.',
-                  type: 'order',
-                }),
-              );
-            }
-          } catch (error) {
-            console.error('Cancel Order Error:', error.message);
-            Alert.alert(
-              'Cancellation Failed',
-              error?.response?.data?.message || 'Something went wrong.',
+            await dispatch(
+              addNotification({
+                title: 'Order Cancelled!',
+                message: 'Your order has been successfully cancelled.',
+                type: 'order',
+              }),
             );
           }
         },
@@ -219,14 +238,24 @@ const OrderTracking = ({route}) => {
             ]}>
             <View style={[globalStyle.flex, globalStyle.mx10]}>
               <Text style={[globalStyle.h2]}>{item.name}</Text>
-              <Text
-                style={[
-                  globalStyle.h4,
-                  globalStyle.fw700,
-                  globalStyle.textGray,
-                ]}>
-                ₹ {item.price}
-              </Text>
+              <View style={[globalStyle.dflex, globalStyle.justifyCenter]}>
+                <Text
+                  style={[
+                    globalStyle.h4,
+                    globalStyle.fwsemibold,
+                    {
+                      color:
+                        orderStatus === 'Cancelled'
+                          ? 'red'
+                          : orderStatus === 'Delivered'
+                          ? 'green'
+                          : 'orange',
+                      marginBottom: 10,
+                    },
+                  ]}>
+                  {orderStatus}
+                </Text>
+              </View>
             </View>
             <Image
               source={{uri: item.image}}
@@ -238,26 +267,6 @@ const OrderTracking = ({route}) => {
             />
           </View>
         ))}
-        <View
-          style={[
-            globalStyle.dflex,
-            globalStyle.justifyCenter,
-            globalStyle.ps3,
-          ]}>
-          <Text
-            style={[
-              globalStyle.h6,
-              {
-                color: orderStatus === 'Cancelled' ? 'red' : 'green',
-                marginBottom: 10,
-              },
-            ]}>
-            <Text style={[globalStyle.h6, globalStyle.textGray]}>
-              Order Status:
-            </Text>{' '}
-            {orderStatus}
-          </Text>
-        </View>
       </View>
 
       <View
@@ -266,7 +275,9 @@ const OrderTracking = ({route}) => {
           globalStyle.bgTheme,
           {alignItems: 'flex-start'},
         ]}>
-        {isValidStatus && orderStatus !== 'Cancelled' ? (
+        {isValidStatus &&
+        orderStatus !== 'Cancelled' &&
+        orderStatus !== 'Delivered' ? (
           <View style={styles.trackerContainer}>
             <StepIndicator
               direction="vertical"
@@ -279,10 +290,15 @@ const OrderTracking = ({route}) => {
             />
           </View>
         ) : orderStatus === 'Cancelled' ? (
-          <View
-            style={[[globalStyle.mx15, globalStyle.py10, globalStyle.mb20]]}>
+          <View style={[globalStyle.mx15, globalStyle.py10, globalStyle.mb20]}>
             <Text style={[globalStyle.h4]}>
-              Order Id {orderNumber} has been cancelled..
+              Order Id {orderNumber} has been cancelled.
+            </Text>
+          </View>
+        ) : orderStatus === 'Delivered' ? (
+          <View style={[globalStyle.mx15, globalStyle.py10, globalStyle.mb20]}>
+            <Text style={[globalStyle.h4]}>
+              Order Id {orderNumber} has been Delivered.
             </Text>
           </View>
         ) : (
@@ -292,6 +308,7 @@ const OrderTracking = ({route}) => {
             </Animated.Text>
           </View>
         )}
+
         <View
           style={[
             globalStyle.dflex,
@@ -300,32 +317,113 @@ const OrderTracking = ({route}) => {
             globalStyle.mx15,
             globalStyle.cg5,
           ]}>
-          <Pressable
-            style={[
-              globalStyle.simplebtn,
-              orderStatus === 'Cancelled'
-                ? {backgroundColor: '#ccc'} // Disabled look
-                : globalStyle.bgWhite, // Active look
-            ]}
-            onPress={() => handleCancelOrder(orderId)}
-            disabled={orderStatus === 'Cancelled'}>
-            <Text
-              style={[
-                globalStyle.h6,
-                globalStyle.fw700,
-                {color: orderStatus === 'Cancelled' ? '#888' : '#000'},
-              ]}>
-              Cancel Order
-            </Text>
-          </Pressable>
-
-          <Pressable
-            style={[globalStyle.bgWhite, globalStyle.simplebtn]}
-            onPress={() => navigation.navigate('FAQ')}>
-            <Text style={[globalStyle.h6, globalStyle.fw700]}>Need Help?</Text>
-          </Pressable>
+          {orderStatus !== 'Delivered' ? (
+            <>
+              {' '}
+              <Pressable
+                style={[
+                  globalStyle.simplebtn,
+                  orderStatus === 'Cancelled' || orderStatus === 'Delivered'
+                    ? {backgroundColor: '#ccc'}
+                    : globalStyle.bgWhite,
+                ]}
+                onPress={() => handleCancelOrder(orderId)}
+                disabled={
+                  orderStatus === 'Cancelled' || orderStatus === 'Delivered'
+                }>
+                <Text
+                  style={[
+                    globalStyle.h6,
+                    globalStyle.fw700,
+                    {
+                      color:
+                        orderStatus === 'Cancelled' ||
+                        orderStatus === 'Delivered'
+                          ? '#888'
+                          : '#000',
+                    },
+                  ]}>
+                  Cancel Order
+                </Text>
+              </Pressable>
+              <Pressable
+                style={[globalStyle.bgWhite, globalStyle.simplebtn]}
+                onPress={() => navigation.navigate('FAQ')}>
+                <Text style={[globalStyle.h6, globalStyle.fw700]}>
+                  Need Help?
+                </Text>
+              </Pressable>
+            </>
+          ) : (
+            <>
+              <Pressable
+                style={[
+                  globalStyle.bgSemiLight,
+                  globalStyle.drow,
+                  globalStyle.justifyCenter,
+                  globalStyle.alignCenter,
+                  globalStyle.px10,
+                  globalStyle.py10,
+                  globalStyle.flex,
+                  globalStyle.rounded3,
+                  globalStyle.mt30,
+                ]}
+                onPress={() => setModalVisible(true)}>
+                <Text
+                  style={[
+                    globalStyle.h6,
+                    globalStyle.fw700,
+                    globalStyle.textGray,
+                  ]}>
+                  Need Help with this order ?
+                </Text>
+              </Pressable>
+            </>
+          )}
         </View>
       </View>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}>
+        <View style={CartStyle.modalOverlay}>
+          <View style={CartStyle.modalContent}>
+            <View style={[globalStyle.drow, globalStyle.justifyBetween]}>
+              <View>
+                <Text style={[globalStyle.subtext, globalStyle.fwbold]}>
+                  Connect with us now
+                </Text>
+              </View>
+              <Pressable onPress={() => setModalVisible(false)}>
+                <CloseIcon name="closecircle" size={20} />
+              </Pressable>
+            </View>
+
+            <View
+              style={[
+                globalStyle.px20,
+                globalStyle.py10,
+                globalStyle.drow,
+                globalStyle.alignCenter,
+                globalStyle.justifyCenter,
+              ]}>
+              <View style={[globalStyle.p8,globalStyle.justifyBetween,globalStyle.drow,globalStyle.alignCenter,globalStyle.cg10]}>
+                <Pressable onPress={handleCallPress}>
+                  <Image source={CallIcon} style={styles.deliveredIcon}/>
+                </Pressable>
+                <Pressable onPress={handleWhatsAppPress}>
+                  <Image source={WhatsappIcon} style={styles.deliveredIcon}/>
+                </Pressable>
+                <Pressable onPress={handleEmailPress}>
+                  <Image source={EmailIcon} style={styles.deliveredIcon}/>
+                </Pressable>
+              </View>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </>
   );
 };
@@ -372,12 +470,21 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-
     marginTop: 10,
   },
   invalidStatusText: {
     color: '#999',
     fontSize: 16,
+  },
+  deliveredContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  deliveredIcon: {
+    width: 45,
+    height:45,
+    marginTop: 20,
   },
 });
 

@@ -243,6 +243,14 @@ export const CartStyle = StyleSheet.create({
     fontSize:scaleFontSize(13),
     fontWeight:'700',
     textTransform:'uppercase',
-   
+  },
+  offersec:{
+    display:'flex',
+    justifyContent:'center',
+    alignItems:'center',
+    height:verticalScale(300),
+    width:'100%',
+    borderRadius:horizontalScale(20),
   }
+
 });

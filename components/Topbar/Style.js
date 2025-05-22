@@ -29,4 +29,13 @@ export const TopbarStyle = StyleSheet.create({
     columnGap: 20,
     marginRight: 8,
   },
+  notificationBadge: {
+    position: 'absolute',
+    top: -5,
+    right: -5,
+    width: horizontalScale(7),
+    height: verticalScale(6),
+    borderRadius: 5,
+    backgroundColor: '#ed3e61',
+  },
 });

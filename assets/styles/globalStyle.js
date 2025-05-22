@@ -59,8 +59,11 @@ export const globalStyle = StyleSheet.create({
   justifyBetween: {
     justifyContent: 'space-between',
   },
+  cg10:{
+     columnGap:horizontalScale(60)
+  },
   cg20: {
-    columnGap: 120,
+    columnGap:horizontalScale(120),
   },
   HelloText: {
     fontSize: 12,

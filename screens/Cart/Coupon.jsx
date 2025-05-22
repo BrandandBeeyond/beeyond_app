@@ -10,6 +10,8 @@ import {
 import {globalStyle} from '../../assets/styles/globalStyle';
 import {SearchStyle} from '../../components/Searchbar/Style';
 import { CartStyle } from './Style';
+import { Image } from 'react-native';
+import DiscountIcon from '../../assets/images/icons/discount.png';
 
 const Coupon = () => {
   const searchInputRef = useRef(null);
@@ -35,6 +37,11 @@ const Coupon = () => {
           <Pressable style={CartStyle.applycoupon}>
             <Text style={[CartStyle.applycouponText]}>Apply</Text>
           </Pressable>
+        </View>
+
+        <View style={[globalStyle.mt30,CartStyle.offersec]}>
+           <Image source={DiscountIcon}/>
+           <Text style={[globalStyle.h6,globalStyle.fw700,globalStyle.textGray,globalStyle.mt10]}>No Coupons Available</Text>
         </View>
       </ScrollView>
     </SafeAreaView>
