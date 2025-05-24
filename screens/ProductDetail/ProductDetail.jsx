@@ -20,6 +20,7 @@ import {AddtoCart} from '../../redux/actions/CartAction';
 import {AddNotification} from '../../redux/actions/NotificationAction';
 import Notification from '../../components/Notification/Notification';
 import {useNavigation} from '@react-navigation/native';
+import Swiper from 'react-native-swiper';
 
 const ProductDetail = ({route}) => {
   const dispatch = useDispatch();
@@ -59,10 +60,41 @@ const ProductDetail = ({route}) => {
               globalStyle.dcol,
               globalStyle.g2,
             ]}>
-            <Image
-              source={{uri: product.images?.[0]?.url}}
-              style={ProductDetailStyle.wrapImage}
-            />
+            <Swiper
+              autoplay={true}
+              showsPagination={true}
+              autoplayTimeout={3}
+              height={250} dot={
+                              <View
+                                style={{
+                                  backgroundColor: '#ccc',
+                                  width: 8,
+                                  height: 8,
+                                  borderRadius: 4,
+                                  marginHorizontal: 3,
+                                }}
+                              />
+                            }
+                            activeDot={
+                              <View
+                                style={{
+                                  backgroundColor: '#fff',
+                                  width: 8,
+                                  height: 8,
+                                  borderRadius: 5,
+                                  marginHorizontal: 3,
+                                }}
+                              />
+                            }>
+              {product?.images?.map(img => (
+                <Image
+                  source={{uri: img.url}}
+                  key={img.id}
+                  style={ProductDetailStyle.wrapImage}
+                />
+              ))}
+            </Swiper>
+
             <Text style={ProductDetailStyle.titleProduct}>{product.title}</Text>
             <View
               style={[
@@ -140,7 +172,7 @@ const ProductDetail = ({route}) => {
                 </View>
                 <View style={globalStyle.dcol}>
                   {product.specifications.map((spec, index) => (
-                   <Text style={[globalStyle.h6]}>• {spec.description}</Text>
+                    <Text style={[globalStyle.h6]}>• {spec.description}</Text>
                   ))}
                 </View>
               </View>

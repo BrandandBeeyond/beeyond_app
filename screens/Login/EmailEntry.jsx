@@ -19,7 +19,6 @@ import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
 import GoogleLogo from '../../assets/images/icons/google.png';
 
-
 const EmailEntry = ({navigation, route}) => {
   const emailRef = useRef(null);
   const dispatch = useDispatch();

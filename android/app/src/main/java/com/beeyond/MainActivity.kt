@@ -31,15 +31,17 @@ class MainActivity : ReactActivity() {
       val logo = findViewById<ImageView>(R.id.bootsplash_logo)
       logo?.apply {
         alpha = 0f
-        translationY = 30f
+        scaleX = 0.8f
+        scaleY = 0.8f
 
         animate()
           .alpha(1f)
-          .translationY(0f)
-          .setDuration(800)
-          .setStartDelay(300)
+          .scaleX(1f)
+          .scaleY(1f)
+          .setDuration(500)
+          .setStartDelay(100)
           .start()
       }
-    } // <--- you were missing this closing bracket
+    }
   }
 }

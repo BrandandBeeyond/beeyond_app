@@ -6,7 +6,7 @@ const {StyleSheet} = require('react-native');
 export const ProductDetailStyle = StyleSheet.create({
   wrapImage: {
     width: '100%',
-    height: verticalScale(250),
+    height: verticalScale(210),
   },
   titleProduct: {
     fontSize: scaleFontSize(16),

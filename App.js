@@ -28,7 +28,7 @@ const AppContent = () => {
     // Show custom splash for 2 seconds
     setTimeout(() => {
       setShowSplash(false);
-    }, 2000);
+    }, 1800);
   });
 }, []);
 

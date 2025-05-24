@@ -354,6 +354,10 @@ export const globalStyle = StyleSheet.create({
     fontSize: scaleFontSize(19),
     marginTop: verticalScale(10),
   },
+  h5: {
+    fontSize: scaleFontSize(15),
+
+  },
   h6: {
     fontSize: scaleFontSize(13),
     marginVertical: verticalScale(5),
