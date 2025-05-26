@@ -21,6 +21,11 @@ import {AddNotification} from '../../redux/actions/NotificationAction';
 import Notification from '../../components/Notification/Notification';
 import {useNavigation} from '@react-navigation/native';
 import Swiper from 'react-native-swiper';
+import Hearticon from 'react-native-vector-icons/AntDesign';
+import {
+  AddtoWishlist,
+  RemoveFromWishlist,
+} from '../../redux/actions/WishlistAction';
 
 const ProductDetail = ({route}) => {
   const dispatch = useDispatch();
@@ -29,10 +34,25 @@ const ProductDetail = ({route}) => {
   const {notifications} = useSelector(state => state.notifications);
   const navigation = useNavigation();
   const {product} = route.params;
+  const {wishlist} = useSelector(state => state.wishlist);
 
   const discount = Math.round(
     ((product.cuttedPrice - product.price) / product.cuttedPrice) * 100,
   );
+
+  const isIteminWishlist = product => {
+    return wishlist.some(wishItem => wishItem.id === product.id);
+  };
+
+  const handleWishlistToggle = () => {
+    if (isIteminWishlist(product)) {
+      dispatch(RemoveFromWishlist(product.id));
+      dispatch(AddNotification('Product removed from wishlist', 'wishlist'));
+    } else {
+      dispatch(AddtoWishlist(product));
+      dispatch(AddNotification('Product added to wishlist', 'wishlist'));
+    }
+  };
 
   const handleAddToCart = () => {
     setLoading(true);
@@ -64,28 +84,29 @@ const ProductDetail = ({route}) => {
               autoplay={true}
               showsPagination={true}
               autoplayTimeout={3}
-              height={250} dot={
-                              <View
-                                style={{
-                                  backgroundColor: '#ccc',
-                                  width: 8,
-                                  height: 8,
-                                  borderRadius: 4,
-                                  marginHorizontal: 3,
-                                }}
-                              />
-                            }
-                            activeDot={
-                              <View
-                                style={{
-                                  backgroundColor: '#fff',
-                                  width: 8,
-                                  height: 8,
-                                  borderRadius: 5,
-                                  marginHorizontal: 3,
-                                }}
-                              />
-                            }>
+              height={250}
+              dot={
+                <View
+                  style={{
+                    backgroundColor: '#ccc',
+                    width: 8,
+                    height: 8,
+                    borderRadius: 4,
+                    marginHorizontal: 3,
+                  }}
+                />
+              }
+              activeDot={
+                <View
+                  style={{
+                    backgroundColor: '#fff',
+                    width: 8,
+                    height: 8,
+                    borderRadius: 5,
+                    marginHorizontal: 3,
+                  }}
+                />
+              }>
               {product?.images?.map(img => (
                 <Image
                   source={{uri: img.url}}
@@ -207,8 +228,21 @@ const ProductDetail = ({route}) => {
             </>
           )}
         </Pressable>
-        <Pressable style={ProductDetailStyle.buynow}>
-          <Text style={ProductDetailStyle.buynowText}>Buy now</Text>
+        <Pressable
+          style={[
+            ProductDetailStyle.buynow,
+            isIteminWishlist(product) && {backgroundColor: '#ccc'}, // greyed out
+          ]}
+          onPress={handleWishlistToggle}
+          disabled={isIteminWishlist(product)}>
+          <Hearticon
+            name={isIteminWishlist(product) ? 'heart' : 'hearto'}
+            color={'#fff'}
+            size={17}
+          />
+          <Text style={ProductDetailStyle.buynowText}>
+            {isIteminWishlist(product) ? 'Wishlisted' : 'Wishlist'}
+          </Text>
         </Pressable>
       </View>
       {notifications.map(notification => (

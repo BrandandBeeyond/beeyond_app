@@ -26,7 +26,7 @@ const Coupon = () => {
           style={[globalStyle.drow, globalStyle.alignCenter, globalStyle.cg5,globalStyle.mt15]}>
           <Pressable style={SearchStyle.flexInputcontainer}>
             <TextInput
-              placeholder={`Search`}
+              placeholder={`Enter Coupon Code`}
               placeholderTextColor="#888"
               style={{flex: 1}}
               returnKeyType="search"

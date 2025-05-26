@@ -50,6 +50,7 @@ import About from '../screens/About/About';
 import Search from '../screens/Search/Search';
 import NoRecords from '../screens/NoRecords/NoRecords';
 import Coupon from '../screens/Cart/Coupon';
+import Hearticon from 'react-native-vector-icons/Feather';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -112,6 +113,12 @@ const CustomHeaderIconsProductDetail = () => {
         marginRight: 15,
       }}>
      
+      <TouchableOpacity
+        style={globalStyle.relative}
+        onPress={() => navigation.navigate(Routes.Wishlist)}>
+        <Hearticon name="heart" size={20} />
+       
+      </TouchableOpacity>
       <TouchableOpacity
         style={globalStyle.relative}
         onPress={() => navigation.navigate(Routes.Cart)}>
