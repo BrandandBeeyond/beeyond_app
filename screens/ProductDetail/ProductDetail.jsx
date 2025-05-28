@@ -249,6 +249,7 @@ const ProductDetail = ({route}) => {
         <Notification
           key={notification.id}
           message={notification.message}
+          type={notification.type}
           showCartButton={true}
         />
       ))}

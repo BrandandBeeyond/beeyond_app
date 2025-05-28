@@ -22,7 +22,7 @@ const NoRecords = () => {
         autoPlay
         loop
       />
-      <Text style={[globalStyle.h4,globalStyle.fw700]}>Comming soon</Text>
+      <Text style={[globalStyle.h4,globalStyle.fw700]}>Coming soon</Text>
     </SafeAreaView>
   );
 };
