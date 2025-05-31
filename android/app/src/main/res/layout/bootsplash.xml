@@ -12,6 +12,5 @@
         android:layout_centerInParent="true"
         android:src="@drawable/bootsplash_logo"
         android:alpha="0"
-        android:translationY="30dp"
         android:scaleType="centerInside" />
 </RelativeLayout>

@@ -1,27 +1,34 @@
 // BrandLogoSplash.js
-import React, {useEffect, useRef} from 'react';
-import {View, Animated, Image, StyleSheet} from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { View, Animated, Image, StyleSheet } from 'react-native';
 import Bootsplash from 'react-native-bootsplash';
 
 const Brandbootsplash = ({ onAnimationEnd }) => {
-  const scaleAnim = useRef(new Animated.Value(0.8)).current;
+  const scaleAnim = useRef(new Animated.Value(0.5)).current;
   const opacityAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    // 👇 Hide the native splash immediately before animation
     Bootsplash.hide({ fade: true });
 
     Animated.parallel([
-      Animated.timing(scaleAnim, {
-        toValue: 1,
-        duration: 800,
-        useNativeDriver: true,
-      }),
       Animated.timing(opacityAnim, {
         toValue: 1,
-        duration: 800,
+        duration: 400,
         useNativeDriver: true,
       }),
+      Animated.sequence([
+        Animated.spring(scaleAnim, {
+          toValue: 1.1,
+          friction: 4,
+          tension: 80,
+          useNativeDriver: true,
+        }),
+        Animated.timing(scaleAnim, {
+          toValue: 1,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+      ]),
     ]).start(() => {
       setTimeout(() => {
         onAnimationEnd();
@@ -46,11 +53,10 @@ const Brandbootsplash = ({ onAnimationEnd }) => {
   );
 };
 
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#272727', // match your brand color
+    backgroundColor: '#272727',
     justifyContent: 'center',
     alignItems: 'center',
   },

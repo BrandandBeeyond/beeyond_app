@@ -23,25 +23,37 @@ class MainActivity : ReactActivity() {
   override fun createReactActivityDelegate(): ReactActivityDelegate =
       DefaultReactActivityDelegate(this, mainComponentName, fabricEnabled)
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    RNBootSplash.init(this, R.style.BootTheme)
+override fun onCreate(savedInstanceState: Bundle?) {
+    RNBootSplash.init(this, R.style.BootTheme) // Keep this
     super.onCreate(savedInstanceState)
 
+    // Post animation logic
     window.decorView.post {
-      val logo = findViewById<ImageView>(R.id.bootsplash_logo)
-      logo?.apply {
-        alpha = 0f
-        scaleX = 0.8f
-        scaleY = 0.8f
+        val logo = findViewById<ImageView>(R.id.bootsplash_logo)
+        logo?.apply {
+            scaleX = 0.6f
+            scaleY = 0.6f
+            alpha = 0f
 
-        animate()
-          .alpha(1f)
-          .scaleX(1f)
-          .scaleY(1f)
-          .setDuration(500)
-          .setStartDelay(100)
-          .start()
-      }
+            animate()
+                .alpha(1f)
+                .scaleX(1.1f)
+                .scaleY(1.1f)
+                .setDuration(500)
+                .setStartDelay(100)
+                .withEndAction {
+                    // Bounce back to 1f scale
+                    animate()
+                        .scaleX(1f)
+                        .scaleY(1f)
+                        .setDuration(200)
+                        .start()
+                }
+                .start()
+        }
     }
-  }
+}
+
+
+
 }

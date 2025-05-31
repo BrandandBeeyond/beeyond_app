@@ -1,6 +1,6 @@
 import {StyleSheet} from 'react-native';
-import {horizontalScale, scaleFontSize} from '../../assets/styles/Scaling';
-import {scale, verticalScale} from 'react-native-size-matters';
+import {horizontalScale, scaleFontSize, verticalScale} from '../../assets/styles/Scaling';
+
 
 export const NotificationStyle = StyleSheet.create({
   notification: {
@@ -9,7 +9,7 @@ export const NotificationStyle = StyleSheet.create({
     position: 'absolute',
     top: verticalScale(4),
     left: horizontalScale(6),
-    width: 380,
+    width: horizontalScale(340),
     borderRadius: horizontalScale(7),
     display: 'flex',
     flexDirection: 'row',
