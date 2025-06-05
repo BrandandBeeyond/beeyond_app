@@ -21,6 +21,7 @@ export const LoginStyle = StyleSheet.create({
   emailpass: {
     height: verticalScale(45),
     padding: horizontalScale(16),
+    color:'#000'
   },
   loginBtn: {
     width: '100%',

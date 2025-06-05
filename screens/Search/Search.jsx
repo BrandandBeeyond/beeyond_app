@@ -88,6 +88,7 @@ const Search = ({navigation}) => {
               <TextInput
                 placeholder={`Search`}
                 placeholderTextColor="#888"
+                color="#000"
                 style={{flex: 1}}
                 returnKeyType="search"
                 ref={searchInputRef}

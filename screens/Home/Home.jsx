@@ -36,8 +36,8 @@ const Home = ({navigation, route}) => {
 
   const bannerData = [
     require('../../assets/images/banner.jpg'),
-    require('../../assets/images/banner1.png'),
     require('../../assets/images/banner2.jpg'),
+    require('../../assets/images/banner3.jpg'),
   ];
 
   const SLIDER_WIDTH = Dimensions.get('window').width;

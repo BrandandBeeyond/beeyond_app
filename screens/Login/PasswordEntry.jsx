@@ -94,6 +94,7 @@ const PasswordEntry = ({route, navigation}) => {
               <TextInput
                 placeholder="Password"
                 style={LoginStyle.emailpass}
+                placeholderTextColor={'#000'}
                 value={password}
                 onChangeText={text => {
                   setPassword(text);

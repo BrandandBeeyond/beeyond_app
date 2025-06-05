@@ -64,13 +64,15 @@ const EmailEntry = ({navigation, route}) => {
 
   const handleContinue = async () => {
     if (!email.trim()) return;
+
+   const normalizedEmail = email.trim().toLowerCase();
     setLoading(true);
     try {
-      const userExist = await dispatch(checkUserExists(email));
+      const userExist = await dispatch(checkUserExists(normalizedEmail));
       if (userExist) {
-        navigation.navigate(Routes.PasswordEntry, {email});
+        navigation.navigate(Routes.PasswordEntry, {email:normalizedEmail});
       } else {
-        navigation.navigate(Routes.Signup, {email});
+        navigation.navigate(Routes.Signup, {email:normalizedEmail});
       }
     } catch (error) {
       console.error('Error checking user:', error);
@@ -137,11 +139,13 @@ const EmailEntry = ({navigation, route}) => {
             <TextInput
               placeholder="Email"
               style={LoginStyle.emailpass}
+              placeholderTextColor={'#000'}
               ref={emailRef}
               value={email}
               keyboardType="email-address"
               autoCapitalize="none"
               onChangeText={handleEmailChange}
+            
             />
           </View>
 

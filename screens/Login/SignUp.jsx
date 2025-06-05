@@ -81,6 +81,7 @@ const Signup = ({navigation, route}) => {
           <View style={LoginStyle.emailinput}>
             <TextInput
               placeholder="User Name"
+              placeholderTextColor={'#000'}
               style={LoginStyle.emailpass}
               value={name}
               onChangeText={text => setName(text)}
@@ -90,6 +91,7 @@ const Signup = ({navigation, route}) => {
             <TextInput
               placeholder="Mobile No"
               style={LoginStyle.emailpass}
+              placeholderTextColor={'#000'}
               keyboardType="numeric"
               value={mobile}
               onChangeText={text => setMobile(text)}
@@ -100,6 +102,7 @@ const Signup = ({navigation, route}) => {
             <View style={globalStyle.relative}>
               <TextInput
                 placeholder="Password"
+                placeholderTextColor={'#000'}
                 style={LoginStyle.emailpass}
                 value={password}
                 onChangeText={text => setPassword(text)}
