@@ -154,10 +154,7 @@ const SavedAddress = ({route}) => {
             );
             console.log('Email dispatch result:', emailResult);
 
-            await notifee.createChannel({
-              id: 'default',
-              name: 'Default Channel',
-            });
+           
 
             await notifee.displayNotification({
               title: 'Order Placed Successfully 🎉',

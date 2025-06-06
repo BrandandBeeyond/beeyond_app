@@ -11,6 +11,8 @@ import {PaymentReducer} from './reducers/PaymentReducer';
 import {orderReducer} from './reducers/orderReducer';
 import {OrderNotificationReducer} from './reducers/OrderNotificationReducer';
 import {BellNotiReducer} from './reducers/BellNotiReducer';
+import expireReducer from 'redux-persist-transform-expire';
+
 
 const persistUserConfig = {
   key: 'user',
@@ -32,12 +34,24 @@ const persistWishlistConfig = {
 const persistBellNotiConfig = {
   key: 'bellnotifications',
   storage: AsyncStorage,
-  whitelist: ['items'],
+  transforms: [
+    expireReducer('bellnotifications', {
+      expireSeconds: 86400,
+      expiredState: [],
+      autoExpire: true,
+    }),
+  ],
 };
 const persistedUserReducer = persistReducer(persistUserConfig, UserReducer);
 const persistedCartReducer = persistReducer(persistCartConfig, CartReducer);
-const persistedWishlistReducer = persistReducer(persistWishlistConfig, WishlistReducer);
-const persistedBellNotiReducer = persistReducer(persistBellNotiConfig, BellNotiReducer);
+const persistedWishlistReducer = persistReducer(
+  persistWishlistConfig,
+  WishlistReducer,
+);
+const persistedBellNotiReducer = persistReducer(
+  persistBellNotiConfig,
+  BellNotiReducer,
+);
 
 const store = configureStore({
   reducer: {

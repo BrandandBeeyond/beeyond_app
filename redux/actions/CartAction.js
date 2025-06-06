@@ -18,7 +18,7 @@ export const AddtoCart = product => (dispatch, getState) => {
   } else {
     dispatch({
       type: ADD_TO_CART,
-      payload: {...product, quantity: 1},
+      payload: {...product, quantity: 1, addedAt:Date.now()},
     });
   }
 };

@@ -27,7 +27,7 @@ const EmailOtpScreen = ({route, navigation}) => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigation.replace('Profile');
+      navigation.replace('Home');
     }
   }, [isAuthenticated,navigation]);
 
