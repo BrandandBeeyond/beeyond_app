@@ -29,9 +29,10 @@ const ChangePassword = ({navigation}) => {
   const [loadingChange, setLoadingChange] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [error, setError] = useState('');
-  const [passwordVisible, setPasswordVisible] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
 
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   useEffect(() => {
     if (newPassword.length > 0 && newPassword.length <= 8) {
       setError('Password must be more than 8 characters');
@@ -109,17 +110,18 @@ const ChangePassword = ({navigation}) => {
         <View style={checkOutStyle.inputContainer}>
           <Text style={checkOutStyle.label}>Current Password</Text>
           <TextInput
-            style={checkOutStyle.input}
+            style={[checkOutStyle.input,{color:'#000'}]}
             placeholder="Enter current password"
             value={currentPassword}
             onChangeText={setCurrentPassword}
-            secureTextEntry={!showPassword}
+            placeholderTextColor={'#000'}
+            secureTextEntry={!showCurrentPassword}
           />
           <Pressable
             style={LoginStyle.showCloseIconChangePass}
-            onPress={() => setPasswordVisible(!passwordVisible)}>
+            onPress={() => setShowCurrentPassword(prev=>!prev)}>
             <FontAwesomeIcon
-              icon={passwordVisible ? faEye : faEyeSlash}
+              icon={showCurrentPassword ? faEye : faEyeSlash}
               size={18}
               color={'#010101'}
             />
@@ -129,17 +131,18 @@ const ChangePassword = ({navigation}) => {
         <View style={checkOutStyle.inputContainer}>
           <Text style={checkOutStyle.label}>New Password</Text>
           <TextInput
-            style={checkOutStyle.input}
+             style={[checkOutStyle.input,{color:'#000'}]}
             placeholder="Enter new password"
             value={newPassword}
             onChangeText={setNewPassword}
-            secureTextEntry={!showPassword}
+                placeholderTextColor={'#000'}
+            secureTextEntry={!showNewPassword}
           />
            <Pressable
             style={LoginStyle.showCloseIconChangePass}
-            onPress={() => setPasswordVisible(!passwordVisible)}>
+            onPress={() => setShowNewPassword(prev=>!prev)}>
             <FontAwesomeIcon
-              icon={passwordVisible ? faEye : faEyeSlash}
+              icon={showNewPassword ? faEye : faEyeSlash}
               size={18}
               color={'#010101'}
             />
@@ -149,17 +152,18 @@ const ChangePassword = ({navigation}) => {
         <View style={checkOutStyle.inputContainer}>
           <Text style={checkOutStyle.label}>Confirm Password</Text>
           <TextInput
-            style={checkOutStyle.input}
+           style={[checkOutStyle.input,{color:'#000'}]}
             placeholder="Confirm new password"
             value={confirmPassword}
             onChangeText={setConfirmPassword}
-            secureTextEntry={!showPassword}
+                placeholderTextColor={'#000'}
+            secureTextEntry={!showConfirmPassword}
           />
            <Pressable
             style={LoginStyle.showCloseIconChangePass}
-            onPress={() => setPasswordVisible(!passwordVisible)}>
+            onPress={() => setShowConfirmPassword(prev=>!prev)}>
             <FontAwesomeIcon
-              icon={passwordVisible ? faEye : faEyeSlash}
+              icon={showConfirmPassword ? faEye : faEyeSlash}
               size={18}
               color={'#010101'}
             />

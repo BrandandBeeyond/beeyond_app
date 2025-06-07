@@ -23,8 +23,10 @@ const ResetPassword = ({route, navigation}) => {
 
   const {email} = route.params || '';
   const [password, setPassword] = useState('');
-  const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState('');
+
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -86,16 +88,17 @@ const ResetPassword = ({route, navigation}) => {
           <View style={globalStyle.relative}>
             <TextInput
               placeholder="Create Password"
-              style={LoginStyle.emailpass}
+              style={[LoginStyle.emailpass,{color:'#000'}]}
+              placeholderTextColor={'#000'}
               value={password}
               onChangeText={setPassword}
-              secureTextEntry={!passwordVisible}
+              secureTextEntry={!showNewPassword}
             />
             <Pressable
               style={LoginStyle.showCloseIcon}
-              onPress={() => setPasswordVisible(!passwordVisible)}>
+              onPress={() => setShowNewPassword(prev=>!prev)}>
               <FontAwesomeIcon
-                icon={passwordVisible ? faEye : faEyeSlash}
+                icon={showNewPassword ? faEye : faEyeSlash}
                 size={18}
                 color={'#010101'}
               />
@@ -106,16 +109,17 @@ const ResetPassword = ({route, navigation}) => {
           <View style={globalStyle.relative}>
             <TextInput
               placeholder="Confirm Password"
-              style={LoginStyle.emailpass}
+             style={[LoginStyle.emailpass,{color:'#000'}]}
               value={confirmPassword}
+              placeholderTextColor={'#000'}
               onChangeText={setConfirmPassword}
-              secureTextEntry={!passwordVisible}
+              secureTextEntry={!showConfirmPassword}
             />
             <Pressable
               style={LoginStyle.showCloseIcon}
-              onPress={() => setPasswordVisible(!passwordVisible)}>
+              onPress={() => setShowConfirmPassword(prev=>!prev)}>
               <FontAwesomeIcon
-                icon={passwordVisible ? faEye : faEyeSlash}
+                icon={showConfirmPassword ? faEye : faEyeSlash}
                 size={18}
                 color={'#010101'}
               />

@@ -8,8 +8,8 @@ export const mostbyStyle = StyleSheet.create({
     marginTop: verticalScale(10),
   },
   thumbnail: {
-    height: verticalScale(100),
-    width: horizontalScale(100),
+    height: verticalScale(80),
+    width: horizontalScale(80),
     backgroundColor: '#c9c9c9',
     borderRadius: horizontalScale(20),
   },

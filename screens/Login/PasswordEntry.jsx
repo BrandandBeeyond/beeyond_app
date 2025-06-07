@@ -16,6 +16,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faEye, faEyeSlash} from '@fortawesome/free-regular-svg-icons';
 import {Routes} from '../../navigation/Routes';
 import {FlowTypes} from '../../flowTypes';
+import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 
 const PasswordEntry = ({route, navigation}) => {
   const {email} = route.params;
@@ -41,7 +42,31 @@ const PasswordEntry = ({route, navigation}) => {
       if (response.success) {
         setErrorMessage('');
       } else {
-        setErrorMessage(response.message || 'Invalid credentials');
+        Toast.show({
+              type: ALERT_TYPE.DANGER,
+              textBody: 'Incorrect password!',
+              autoClose: 3000,
+              title: '',
+              theme: 'dark',
+              containerStyle: {
+                height: 20,
+                paddingVertical: 5,
+                borderRadius: 8,
+                backgroundColor: '#1c1c1e',
+                justifyContent: 'center',
+                alignItems: 'center',
+                shadowColor: '#000',
+                shadowOpacity: 0.3,
+                shadowOffset: {width: 0, height: 2},
+                shadowRadius: 4,
+                elevation: 5,
+              },
+              textBodyStyle: {
+                color: '#ffffff',
+                fontSize: 14,
+                fontWeight: '500',
+              },
+            });
       }
     } catch (error) {
       let errMsg = 'Something went wrong';
@@ -71,7 +96,10 @@ const PasswordEntry = ({route, navigation}) => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigation.replace('BottomTabs');
+      navigation.reset({
+         index:0,
+          routes: [{ name: 'BottomTabs'}],
+      });
     }
   }, [isAuthenticated, navigation]);
 

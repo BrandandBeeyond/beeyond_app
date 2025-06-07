@@ -23,7 +23,6 @@ import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import ProductDetail from '../screens/ProductDetail/ProductDetail';
 import Signup from '../screens/Login/SignUp';
-import LoginEmail from '../screens/Login/LoginEmail';
 import EmailEntry from '../screens/Login/EmailEntry';
 import PasswordEntry from '../screens/Login/PasswordEntry';
 import MyAccount from '../screens/Account/MyAccount';
@@ -276,20 +275,7 @@ export const MainNavigation = () => {
         }}
       />
 
-      {/* <Stack.Screen
-        name={Routes.LoginEmail}
-        component={LoginEmail}
-        options={{
-          headerTitleStyle: {fontSize: scaleFontSize(17)},
-          headerTitle: 'Login',
-          headerStyle: {
-            backgroundColor: '#f9b000',
-            elevation: 0,
-            shadowOpacity: 0,
-          },
-        }}
-      /> */}
-
+    
       {/* Email entry screen */}
 
       <Stack.Screen

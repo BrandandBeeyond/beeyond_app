@@ -27,7 +27,10 @@ const EmailOtpScreen = ({route, navigation}) => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigation.replace('Home');
+     navigation.reset({
+         index:0,
+          routes: [{ name: 'BottomTabs'}],
+      });
     }
   }, [isAuthenticated,navigation]);
 
