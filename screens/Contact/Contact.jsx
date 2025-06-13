@@ -90,13 +90,13 @@ const Contact = () => {
               globalStyle.p5,
               globalStyle.mt15,
             ]}>
-            <View
+            <Pressable
               style={[
                 globalStyle.drow,
                 globalStyle.alignCenter,
                 globalStyle.cg5,
               ]}
-              onpress={() => navigation.navigate('FAQ')}>
+             onPress={()=>navigation.navigate('FAQ')}>
               <DocIcon name="document" size={20} color={'#000'} />
               <View style={globalStyle.dcol}>
                 <Text style={globalStyle.contentHead}>FAQ</Text>
@@ -104,7 +104,7 @@ const Contact = () => {
                   You can manage your orders in Orders section
                 </Text>
               </View>
-            </View>
+            </Pressable>
           </View>
           <View
             style={[

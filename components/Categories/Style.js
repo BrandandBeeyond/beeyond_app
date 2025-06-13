@@ -9,7 +9,7 @@ export const CategoryStyle = StyleSheet.create({
   },
   featured: {
     height: verticalScale(60),
-    width: horizontalScale(67),
+    width: horizontalScale(66),
     backgroundColor: '#f3eee4',
     marginRight: horizontalScale(15),
     borderRadius: horizontalScale(120),
@@ -19,8 +19,8 @@ export const CategoryStyle = StyleSheet.create({
     marginVertical: verticalScale(10),
   },
   featuredImg: {
-    height: verticalScale(30),
-    width: horizontalScale(30),
+    height: verticalScale(25),
+    width: horizontalScale(25),
   },
   pr5: {
     paddingRight: horizontalScale(15),

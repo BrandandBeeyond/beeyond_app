@@ -1,6 +1,7 @@
-import {StyleSheet} from 'react-native';
+import {Dimensions, StyleSheet} from 'react-native';
 import {horizontalScale, scaleFontSize, verticalScale} from '../../assets/styles/Scaling';
 
+const SCREEN_WIDTH =  Dimensions.get('window').width;
 
 export const NotificationStyle = StyleSheet.create({
   notification: {
@@ -9,7 +10,7 @@ export const NotificationStyle = StyleSheet.create({
     position: 'absolute',
     top: verticalScale(4),
     left: horizontalScale(6),
-    width: horizontalScale(340),
+   width:SCREEN_WIDTH - horizontalScale(12),
     borderRadius: horizontalScale(7),
     display: 'flex',
     flexDirection: 'row',

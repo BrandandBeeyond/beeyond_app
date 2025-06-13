@@ -1,9 +1,13 @@
 import React from 'react';
-import {View} from 'react-native';
+import {Image, View} from 'react-native';
 import {mostbyStyle} from './Style';
 
-const Products = () => {
-  return <View style={mostbyStyle.thumbnail}></View>;
+const Products = ({mostBuys}) => {
+  return (
+    <View style={mostbyStyle.thumbnail}>
+      <Image source={mostBuys.image} />
+    </View>
+  );
 };
 
 export default Products;

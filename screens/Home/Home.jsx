@@ -1,5 +1,12 @@
 import React, {useEffect} from 'react';
-import {Dimensions, Image, SafeAreaView, ScrollView, Text, View} from 'react-native';
+import {
+  Dimensions,
+  Image,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  View,
+} from 'react-native';
 import {globalStyle} from '../../assets/styles/globalStyle';
 import Topbar from '../../components/Topbar/Topbar';
 import Searchbar from '../../components/Searchbar/Searchbar';
@@ -34,13 +41,25 @@ const Home = ({navigation, route}) => {
     },
   ];
 
+  const mostBuys = [
+    {
+      id: 1,
+      image: require('../../assets/images/dream_mani.jpg'),
+      url: 'ProductDetail',
+    },
+    {
+      id: 1,
+      image: require('../../assets/images/golden_chronicles.jpeg'),
+      url: 'NoRecords',
+    },
+  ];
+
   const bannerData = [
     require('../../assets/images/banner.jpg'),
     require('../../assets/images/banner2.jpg'),
     require('../../assets/images/banner3.jpg'),
   ];
 
-  const SLIDER_WIDTH = Dimensions.get('window').width;
 
   useEffect(() => {
     if (route.params?.showToast) {
@@ -117,38 +136,57 @@ const Home = ({navigation, route}) => {
             </Swiper>
           </View>
 
-          <View style={[HomeStyle.weofferSlab,globalStyle.mx10,globalStyle.drow,globalStyle.alignCenter,globalStyle.justifyBetween]}>
-                <View style={[HomeStyle.offer1,globalStyle.drow,globalStyle.alignCenter,globalStyle.cg5]}>
-                     <CheckIcon name="shield-checkmark-outline" size={20}/>
-                     <View style={globalStyle.dcol}>
-                          <Text style={[globalStyle.h6,globalStyle.fw700]}>
-                             100%
-                          </Text>
-                          <Text style={HomeStyle.smText}>Original products</Text>
-                     </View>
-                </View>
-                <View style={[HomeStyle.offer1,globalStyle.drow,globalStyle.alignCenter,globalStyle.cg5]}>
-                     <StockIcon name="box" size={20}/>
-                     <View style={globalStyle.dcol}>
-                          <Text style={[globalStyle.h6,globalStyle.fw700]}>
-                             300 + 
-                          </Text>
-                          <Text style={HomeStyle.smText}>Orders Delivered</Text>
-                     </View>
-                </View>
-                <View style={[HomeStyle.offer1,globalStyle.drow,globalStyle.alignCenter,globalStyle.cg5]}>
-                     <HappyIcon name="emoji-happy" size={18}/>
-                     <View style={globalStyle.dcol}>
-                          <Text style={[globalStyle.h6,globalStyle.fw700]}>
-                             200 +
-                          </Text>
-                          <Text style={HomeStyle.smText}>Happy Customers</Text>
-                     </View>
-                </View>
+          <View
+            style={[
+              HomeStyle.weofferSlab,
+              globalStyle.mx10,
+              globalStyle.drow,
+              globalStyle.alignCenter,
+              globalStyle.justifyBetween,
+            ]}>
+            <View
+              style={[
+                HomeStyle.offer1,
+                globalStyle.drow,
+                globalStyle.alignCenter,
+                globalStyle.cg5,
+              ]}>
+              <CheckIcon name="shield-checkmark-outline" size={20} />
+              <View style={globalStyle.dcol}>
+                <Text style={[globalStyle.h6, globalStyle.fw700]}>100%</Text>
+                <Text style={HomeStyle.smText}>Original products</Text>
+              </View>
+            </View>
+            <View
+              style={[
+                HomeStyle.offer1,
+                globalStyle.drow,
+                globalStyle.alignCenter,
+                globalStyle.cg5,
+              ]}>
+              <StockIcon name="box" size={20} />
+              <View style={globalStyle.dcol}>
+                <Text style={[globalStyle.h6, globalStyle.fw700]}>300 +</Text>
+                <Text style={HomeStyle.smText}>Orders Delivered</Text>
+              </View>
+            </View>
+            <View
+              style={[
+                HomeStyle.offer1,
+                globalStyle.drow,
+                globalStyle.alignCenter,
+                globalStyle.cg5,
+              ]}>
+              <HappyIcon name="emoji-happy" size={18} />
+              <View style={globalStyle.dcol}>
+                <Text style={[globalStyle.h6, globalStyle.fw700]}>200 +</Text>
+                <Text style={HomeStyle.smText}>Happy Customers</Text>
+              </View>
+            </View>
           </View>
 
-          <Categories categories={categoryData} navigation={navigation}/>
-          <Mostbuys />
+          <Categories categories={categoryData} navigation={navigation} />
+          <Mostbuys mostBuys={mostBuys}/>
         </View>
       </ScrollView>
     </SafeAreaView>
